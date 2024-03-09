@@ -1,0 +1,39 @@
+<div class="card-container relative rounded-xl shadow-lg shadow-gray-500/50 text-2xl font-bold">
+
+  <!-- ! BACKGROUND STYLE -->
+  @switch (icon) {
+    @case ('heroClipboardDocumentListSolid') {
+      <div class="w-3/4 h-full absolute right-0 top-0 bg-gradient-to-l from-gray-900 to-white rounded-xl "></div>
+    }
+    @case ('heroUserGroupSolid') {
+      <div class="w-3/4 h-full absolute right-0 top-0 bg-gradient-to-l from-orange-900 to-white rounded-xl "></div>
+    }
+    @case ('heroUserSolid') {
+      <div class="w-3/4 h-full absolute right-0 top-0 bg-gradient-to-l from-teal-900 to-white rounded-xl "></div>
+    }
+    @case ('heroBuildingOfficeSolid') {
+      <div class="w-3/4 h-full absolute right-0 top-0 bg-gradient-to-l from-emerald-900 to-white rounded-xl "></div>
+    }
+    @case ('heroShieldCheckSolid') {
+      <div class="w-3/4 h-full absolute right-0 top-0 bg-gradient-to-l from-red-900 to-white rounded-xl "></div>
+    }
+    @default {
+      <div class="w-3/4 h-full absolute right-0 top-0 bg-gradient-to-l from-gray-900 to-white rounded-xl "></div>
+    }
+  }
+
+  <img class="absolute left-0 w-3/4 h-full rounded-xl object-cover rotate-180" src="assets/shapes/wave.svg">
+  <img class="absolute right-0 w-3/4 h-full rounded-xl object-cover rotate-180" src="assets/shapes/wave-2.svg">
+  <!-- ! END BACKGROUND STYLE -->
+
+  <div class="w-full h-full absolute p-4">
+    <div class="w-full h-full flex flex-col justify-between">
+      <div class="flex justify-start align-sub">
+        <ng-icon size="2rem" [name]="icon" ></ng-icon>
+        <h1 class="m-0 p-0">{{text}}</h1>
+      </div>
+      <hr>
+      <h1 class="text-end text-white">N° {{quantity}}</h1>
+    </div>
+  </div>
+</div>

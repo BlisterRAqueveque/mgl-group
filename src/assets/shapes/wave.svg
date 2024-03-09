@@ -1,0 +1,6 @@
+<svg id="visual" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+  <path
+    d="M282 600L303.8 575C325.7 550 369.3 500 360.8 450C352.3 400 291.7 350 263 300C234.3 250 237.7 200 279.5 150C321.3 100 401.7 50 441.8 25L482 0L900 0L900 25C900 50 900 100 900 150C900 200 900 250 900 300C900 350 900 400 900 450C900 500 900 550 900 575L900 600Z"
+    fill="#FFFFFF" stroke-linecap="round" stroke-linejoin="miter"></path>
+</svg>
