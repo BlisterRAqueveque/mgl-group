@@ -1,0 +1,106 @@
+<p-dialog [(visible)]="visible" [modal]="true" [style]="{ width: '90vw', height: '70vh' }">
+  <ng-template pTemplate="header">
+    <div class="inline-flex align-items-center justify-content-center gap-2">
+      <span class="font-bold white-space-nowrap text-2xl">Agregar pericia</span>
+    </div>
+  </ng-template>
+  <div class="grid grid-cols-12 gap-4">
+    <!-- Fecha de asignación -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700 w-full">Fecha de asignación</label>
+      <p-calendar class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+        focus:border-indigo-500" panelStyleClass="panel" [style]="{ 'width': '100%' }" appendTo="body"
+        placeholder="Ingrese fecha" />
+    </div>
+
+    <!-- Aseguradora -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700 w-full">Aseguradora</label>
+      <p-dropdown id="drop" class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
+        focus:border-indigo-500" appendTo="body" [options]="cities" [(ngModel)]="selectedCity" optionLabel="name"
+        [showClear]="true" placeholder="Seleccione una aseguradora" panelStyleClass="panel"
+        [style]="{ 'width': '100%' }" />
+    </div>
+
+    <!-- Número de siniestro -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700">N° siniestro</label>
+      <input pInputText id="siniestro" type="number" class="mt-1 p-3 w-full border border-gray-300
+        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese siniestro">
+    </div>
+
+    <!-- Número de denuncia -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700">N° denuncia</label>
+      <input pInputText id="denuncia" type="number" class="mt-1 p-3 w-full border border-gray-300
+        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese denuncia">
+    </div>
+
+    <!-- Nombre asegurado -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700 w-full">Nombre completo del asegurado</label>
+      <input pInputText id="name" type="text" class="mt-1 p-3 w-full border border-gray-300
+        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese nombre completo">
+    </div>
+
+    <!-- Dirección asegurado -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700 w-full">Dirección del asegurado</label>
+      <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
+        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese dirección">
+    </div>
+
+    <!-- Teléfono del asegurado -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700 w-full">Teléfono del asegurado</label>
+      <p-inputMask class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+        focus:border-indigo-500" mask="+54 (299) 999-9999" placeholder="+54 (999) 999-9999"></p-inputMask>
+    </div>
+
+    <!-- Correo asegurado -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700 w-full">Correo del asegurado</label>
+      <input pInputText id="direction" type="email" class="mt-1 p-3 w-full border border-gray-300
+        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese correo electrónico">
+    </div>
+
+    <!-- Tipo siniestro -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700 w-full">Tipo de siniestro</label>
+      <p-dropdown id="drop" class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
+        focus:border-indigo-500" appendTo="body" [options]="cities" [(ngModel)]="selectedCity" optionLabel="name"
+        [showClear]="true" placeholder="Seleccione un tipo" panelStyleClass="panel" [style]="{ 'width': '100%' }" />
+    </div>
+
+    <!-- Vehículo asegurado -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700 w-full">Vehículo del asegurado</label>
+      <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
+        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese el vehículo">
+    </div>
+
+    <!-- Patente asegurado -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700 w-full">Patente del asegurado</label>
+      <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
+        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese patente">
+    </div>
+
+    <!-- Usuario verificador -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700 w-full">Verificador</label>
+      <p-dropdown id="drop" class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
+        focus:border-indigo-500" appendTo="body" [options]="cities" [(ngModel)]="selectedCity" optionLabel="name"
+        [showClear]="true" placeholder="Seleccione verificador" panelStyleClass="panel" [style]="{ 'width': '100%' }" />
+    </div>
+
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="w-full flex justify-end items-center">
+      <div pRipple
+        class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-gray-800 rounded-full flex items-center justify-center p-5">
+        <p class="text-white">Agregar pericia</p>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>

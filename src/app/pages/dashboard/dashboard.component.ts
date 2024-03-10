@@ -1,3 +1,4 @@
+import { FooterComponent } from './../../shared/footer/footer.component';
 import { Component } from '@angular/core';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { CardComponent } from '../../shared/card/card.component';
@@ -8,6 +9,7 @@ import { CardComponent } from '../../shared/card/card.component';
   imports: [
     NavbarComponent,
     CardComponent,
+    FooterComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
