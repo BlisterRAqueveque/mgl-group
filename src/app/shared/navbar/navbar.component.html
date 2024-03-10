@@ -2,10 +2,10 @@
   <div class="bg-gray-800 w-full h-20 rounded-xl flex justify-between items-center text-white px-3 text-xl shadow-lg shadow-gray-500/50">
     <img src="assets/img/logo-removebg.png" alt="Logo" width="40">
 
-    <a class="md:block hidden" [routerLink]="['/home/dashboard']" >Inicio</a>
-    <a class="md:block hidden" [routerLink]="['/home/pericias']" >Pericias</a>
+    <a class="md:block hidden" [routerLink]="['/home/dashboard']" (click)="show = !show" >Inicio</a>
+    <a class="md:block hidden" [routerLink]="['/home/pericias']" (click)="show = !show" >Pericias</a>
     <a class="md:block hidden" href="">Informes</a>
-    <a class="md:block hidden" href="">Asesores</a>
+    <a class="md:block hidden" [routerLink]="['/home/asesores']" (click)="show = !show" >Asesores</a>
     <a class="md:block hidden" href="">Aseguradoras</a>
     <a class="md:block hidden" href="">Siniestros</a>
     <a class="md:block hidden" href="">Usuarios</a>
@@ -47,31 +47,38 @@
   </div>
 
   <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3 text-ellipsis overflow-hidden">
+    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+      text-ellipsis overflow-hidden" [routerLink]="['/home/dashboard']" (click)="show = !show" >
     <a>Inicio</a>
   </div>
   <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3 text-ellipsis overflow-hidden">
+    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+      text-ellipsis overflow-hidden" [routerLink]="['/home/pericias']" (click)="show = !show" >
     <a>Pericias</a>
   </div>
   <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3 text-ellipsis overflow-hidden">
+    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+      text-ellipsis overflow-hidden">
     <a>Informes</a>
   </div>
   <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3 text-ellipsis overflow-hidden">
+    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+      text-ellipsis overflow-hidden" [routerLink]="['/home/asesores']" (click)="show = !show" >
     <a>Asesores</a>
   </div>
   <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3 text-ellipsis overflow-hidden">
+    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+      text-ellipsis overflow-hidden">
     <a>Aseguradoras</a>
   </div>
   <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3 text-ellipsis overflow-hidden">
+    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+      text-ellipsis overflow-hidden">
     <a>Siniestros</a>
   </div>
   <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3 text-ellipsis overflow-hidden">
+    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+      text-ellipsis overflow-hidden">
     <a class="" href="">Usuarios</a>
   </div>
 </div>

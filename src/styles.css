@@ -12,3 +12,12 @@
 .panel {
   border: solid 1px rgb(209 213 219);
 }
+
+input {
+  padding: 8px;
+}
+
+.p-button {
+  background: #1F2937 !important;
+  color: white;
+}

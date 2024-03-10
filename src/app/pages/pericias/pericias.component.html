@@ -1,73 +1,9 @@
-<div class="bg-gray-100 w-screen h-screen pt-36 px-6 relative pb-36">
-  <p-paginator #paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
-    [totalRecords]="totalRecords" [style]="{ 'width': '100%' }" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
+<div class="relative">
 
-  <p-table #table [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
-    [styleClass]="'p-datatable-sm mt-3'" [value]="forms" dataKey="id" (onSort)="onSort($event)">
-    <ng-template pTemplate="header">
-      <tr class="dark-tr">
-        <th pSortableColumn="id_visible">
-          ID <ng-icon name="{{asc ? 'heroBarsArrowUpSolid' : 'heroBarsArrowDownSolid'}}" />
-        </th>
-        <th>Estado</th>
-        <th>Fecha</th>
-        <th>Asignado</th>
-        <th>Siniestro n°</th>
-        <th>Denuncia n°</th>
-        <th>Nombre</th>
-        <th>Acciones</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-form>
-      <tr class="item" (click)="onRowSelect(form)">
-        <td>
-          <p pTooltip="form.id_visible">form.id_visible</p>
-        </td>
-        <td>
-          <p pTooltip="form.name">form.name</p>
-        </td>
-        <td>
-          <p pTooltip="form.type ? form.type.name : '-NO APLICA-'">form.type ?
-            form.type.name : '-NO APLICA-'</p>
-        </td>
-        <td>
-          <p pTooltip="form.category ? form.category.name : '-NO APLICA-'">form.category ? form.category.name : '-NO
-            APLICA-'
-          </p>
-        </td>
-        <td>
-          <p pTooltip="form.start_date_time | date : 'dd/MM/yyyy'">form.start_date_time | date : "dd/MM/yyyy"</p>
-        </td>
-        <td>
-          <p pTooltip="form.upload_date | date : 'dd/MM/yyyy'">form.upload_date | date : "dd/MM/yyyy"</p>
-        </td>
-        <td>
-          <p pTooltip="form.upload_user ? form.upload_user.name + ' ' + form.upload_user.last_name : '-NO APLICA-'">
-            form.upload_user ? form.upload_user.name + ' ' + form.upload_user.last_name : '-NO APLICA-'</p>
-        </td>
-        <td>
-          <p pTooltip="form.upload_user ? form.upload_user.name + ' ' + form.upload_user.last_name : '-NO APLICA-'">
-            form.upload_user ? form.upload_user.name + ' ' + form.upload_user.last_name : '-NO APLICA-'</p>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-
-  <p-paginator #paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
-    [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
-
-
-  <div pRipple class="group shadow-lg shadow-gray-500/50 absolute bottom-28 right-6
-    w-16 h-16 bg-gray-800 rounded-full hover:w-48 transition-all duration-200 flex
-    justify-end" (click)="modal.showModal()">
-    <div class="bottom-28 right-6 w-16 h-16 rounded-full flex flex-row justify-center
-      items-center pointer-events-none">
-      <p class="text-white fixed right-20 opacity-0 group-hover:opacity-100">Agregar pericia</p>
-      <ng-icon name="heroPlusCircleSolid" color="white" size="2.5rem"/>
-    </div>
-  </div>
-
-  <app-modal-add #modal />
+  <app-table-pericias />
 
 </div>
 
+<app-modal-add #modal />
+
+<app-button [text]="'Agregar pericia'" (click)="modal.showModal()" />

@@ -1,0 +1,6 @@
+::ng-deep .tooltip-custom .p-tooltip-text {
+  color: white;
+  background: #1f2937e0 !important;
+  max-width: 50vw !important;
+  max-height: 50vh;
+}

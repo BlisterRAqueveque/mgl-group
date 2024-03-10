@@ -1,0 +1,15 @@
+<div class="relative">
+  <div class="grid grid-cols-12 gap-4">
+    <div class="lg:col-span-2 sm:col-span-6 md:col-span-3 col-span-6">
+      <app-card-users />
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <app-table-users />
+  </div>
+</div>
+
+<app-modal-add-users #modal />
+
+<app-button [text]="'Agregar asesor'" (click)="modal.showModal()" />
