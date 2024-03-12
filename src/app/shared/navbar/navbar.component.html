@@ -11,7 +11,7 @@
     <a class="md:block hidden" href="">Usuarios</a>
 
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-      class="w-6 h-6 md:block hidden">
+      class="w-6 h-6 md:block hidden" (click)="logout()">
       <path stroke-linecap="round" stroke-linejoin="round"
         d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
     </svg>
@@ -81,9 +81,17 @@
       text-ellipsis overflow-hidden">
     <a class="" href="">Usuarios</a>
   </div>
+  <div
+    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+      text-ellipsis overflow-hidden" (click)="logout()">
+    <a class="">Salir</a>
+  </div>
 </div>
 
 <!-- ! BACKDROP -->
 <div (click)="show = !show"
   class="md:hidden h-screen w-screen bg-gray-800/75 fixed top-0 left-0 transition-all duration-200 z-40"
   [ngClass]="{'opacity-0': !show, 'pointer-events-none': !show}"></div>
+
+
+<app-dialog #dialog />

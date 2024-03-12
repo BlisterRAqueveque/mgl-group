@@ -1,0 +1,31 @@
+<p-toast></p-toast>
+<p-confirmDialog class="max-w-full" #cd>
+  <ng-template pTemplate="headless" let-message>
+    <div class="flex flex-col items-center px-16 pt-16 rounded-2xl bg-white relative max-w-full">
+      <div class="rounded-full bg-gray-800 inline-flex justify-center items-center h-32 w-32 -mt-8 absolute -top-8">
+        <ng-icon name="{{ !error ? 'heroQuestionMarkCircleSolid' : 'heroExclamationTriangleSolid' }}" size="5rem" class="text-white" />
+      </div>
+      <span class="font-bold text-2xl mb-2 mt-4 break-words w-full">{{ message.header }}</span>
+      <p class="mb-0 w-full break-words">{{ message.message }}</p>
+      <div *ngIf="showButtons; else acceptOnly" class="flex items-center justify-between mt-4 w-full">
+        <button pButton label="Aceptar" (click)="cd.accept()" class="p-3 m-3"></button>
+        <button pButton label="Cancelar" (click)="cd.reject()" class="p-3 m-3 cancel"></button>
+      </div>
+      <ng-template #acceptOnly>
+        <div class="flex items-center justify-between mt-4 w-full">
+          <button pButton label="Aceptar" (click)="cd.accept()" class="p-3 m-3"></button>
+        </div>
+      </ng-template>
+
+    </div>
+  </ng-template>
+</p-confirmDialog>
+
+<div class="h-screen w-screen bg-black/75 fixed top-0 left-0
+  z-50 flex justify-center items-center duration-200 transition-all"
+  [ngClass]="{ 'opacity-1': loading, 'opacity-0' : !loading,
+    'pointer-events-auto': loading, 'pointer-events-none': !loading }"
+>
+  <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
+</div>
+

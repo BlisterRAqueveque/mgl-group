@@ -21,3 +21,12 @@ input {
   background: #1F2937 !important;
   color: white;
 }
+
+.p-button.cancel {
+  background: rgb(129, 18, 18) !important;
+  color: white;
+}
+
+.p-confirm-dialog {
+  max-width: 90vw !important;
+}
