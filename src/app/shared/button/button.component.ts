@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
@@ -11,6 +12,7 @@ import { RippleModule } from 'primeng/ripple';
   imports: [
     NgIconComponent,
     RippleModule,
+    CommonModule,
   ],
   providers: [
     provideIcons({
@@ -21,6 +23,8 @@ import { RippleModule } from 'primeng/ripple';
   styleUrl: './button.component.css'
 })
 export class ButtonComponent {
+
+  @Input() moreWidth = false
 
   @Input() text!: string
 

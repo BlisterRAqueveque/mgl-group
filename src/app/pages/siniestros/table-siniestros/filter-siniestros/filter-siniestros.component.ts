@@ -1,26 +1,34 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
-  selector: 'app-filter-pericias',
+  selector: 'app-filter-siniestros',
   standalone: true,
-  imports: [FormsModule, DropdownModule, CalendarModule],
-  templateUrl: './filter-pericias.component.html',
-  styleUrl: './filter-pericias.component.css',
+  imports: [
+    InputTextModule,
+    CalendarModule,
+    FormsModule,
+    CommonModule,
+    DropdownModule,
+  ],
+  templateUrl: './filter-siniestros.component.html',
+  styleUrl: './filter-siniestros.component.css',
 })
-export class FilterPericiasComponent {
+export class FilterSiniestrosComponent {
+  @Output('changeInput') private event = new EventEmitter<{
+    key: string;
+    value: string;
+  }>();
+
   option: any;
   open_list = [
     { label: 'Abierto', value: true },
     { label: 'Cerrado', value: false },
   ];
-
-  @Output('changeInput') private event = new EventEmitter<{
-    key: string;
-    value: string;
-  }>();
 
   changeInput(key: string, value: string) {
     if (key === 'year' && value !== '') {

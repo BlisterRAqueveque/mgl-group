@@ -1,0 +1,81 @@
+<h5>Filtros</h5>
+<div class="grid grid-cols-12 gap-y-8 gap-4 my-4">
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12">
+    <span class="p-float-label">
+      <input
+        class="pl-2"
+        (change)="changeInput(id.id, id.value)"
+        #id
+        pInputText
+        id="id"
+        type="number"
+        [style]="{ width: '100%', height: '48px' }"
+      />
+      <label htmlFor="id">#ID</label>
+    </span>
+  </div>
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12">
+    <span class="p-float-label">
+      <input
+        class="pl-2"
+        (change)="changeInput(nombre.id, nombre.value)"
+        #nombre
+        pInputText
+        id="nombre"
+        type="text"
+        [style]="{ width: '100%', height: '48px' }"
+      />
+      <label htmlFor="nombre">Nombre</label>
+    </span>
+  </div>
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12">
+    <span class="p-float-label">
+      <input
+        class="pl-2"
+        (change)="changeInput(CUIT.id, CUIT.value)"
+        #CUIT
+        pInputText
+        id="CUIT"
+        type="text"
+        [style]="{ width: '100%', height: '48px' }"
+      />
+      <label htmlFor="CUIT">CUIT</label>
+    </span>
+  </div>
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12">
+    <span class="p-float-label">
+      <p-calendar
+        class="pl-2"
+        (onSelect)="changeInput('fecha_creado', fecha_creado.value)"
+        (onBlur)="changeInput('fecha_creado', fecha_creado.value ? fecha_creado.value : '')"
+        dateFormat="dd/MM/yyyy"
+        #fecha_creado
+        id="fecha_creado"
+        class="p-inputtext-sm"
+        [showIcon]="true"
+        [style]="{ width: '100%', height: '48px' }"
+        [showClear]="true"
+        (onClear)="changeInput('fecha_creado', '')"
+        appendTo="body"
+        panelStyleClass="panel"
+      ></p-calendar>
+      <label htmlFor="upload_user">Fecha de carga</label>
+    </span>
+  </div>
+
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12">
+    <span class="p-float-label">
+      <input
+        class="pl-2"
+        (change)="changeInput(usuario_carga.id, usuario_carga.value)"
+        #usuario_carga
+        pInputText
+        id="usuario_carga"
+        type="text"
+        [style]="{ width: '100%', height: '48px' }"
+      />
+      <label htmlFor="usuario_carga">Cargado por</label>
+    </span>
+  </div>
+
+</div>

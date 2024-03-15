@@ -6,6 +6,7 @@ import {
   catchError,
   firstValueFrom,
   ignoreElements,
+  map,
   of,
   switchMap,
   take,
@@ -38,15 +39,16 @@ export class AuthService {
     let url = this.url + 'users/auth/login';
 
     return this.http
-      .post<UserWithToken>(url, {
+      .post<{ok: boolean, result: UserWithToken, msg: string}>(url, {
         username: user,
         password: pass,
       })
       .pipe(
+        map((data) => data.result),
         tap((userToken) => this.saveTokenToCookie(userToken.token)),
         tap((userToken) => this.pushNewUser(userToken)),
         tap(() => this.redirect(param)),
-        ignoreElements()
+        //ignoreElements()
       );
   }
 

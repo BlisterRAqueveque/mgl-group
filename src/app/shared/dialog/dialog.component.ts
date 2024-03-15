@@ -42,9 +42,7 @@ export class DialogComponent {
   /** @description Muestra cartel de error */
   error = false
 
-  /** @description
-   *  Muestra el dialogo de confirmación.
-   */
+  /** @description Muestra el dialogo de confirmación. */
   confirm(header: string, message: string, fx?: Function) {
     this.confirmationService.confirm({
       header: header,
@@ -69,10 +67,7 @@ export class DialogComponent {
     });
   }
 
-  /** @description
-   *  Muestra un dialogo de confirmación después de una acción.
-   *  Detiene también el spinner
-   * */
+  /** @description Muestra un dialogo de confirmación después de una acción. Detiene también el spinner */
   alertMessage(header: string, message: string, fx?: Function, error?: boolean) {
     this.loading = false
     if(error !== undefined) this.error = error

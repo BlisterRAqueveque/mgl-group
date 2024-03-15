@@ -1,17 +1,25 @@
 <div class="w-full p-2 md:p-6 fixed top-0 z-50 bg-transparent">
-  <div class="bg-gray-800 w-full h-20 rounded-xl flex justify-between items-center text-white px-3 text-xl shadow-lg shadow-gray-500/50">
+  <div
+    class="bg-gray-800 relative w-full h-20 rounded-xl flex justify-between items-center text-white px-3 lg:text-xl md:text-sm text-base shadow-lg shadow-gray-500/50">
     <img src="assets/img/logo-removebg.png" alt="Logo" width="40">
 
-    <a class="md:block hidden" [routerLink]="['/home/dashboard']" (click)="show = !show" >Inicio</a>
-    <a class="md:block hidden" [routerLink]="['/home/pericias']" (click)="show = !show" >Pericias</a>
-    <a class="md:block hidden" href="">Informes</a>
-    <a class="md:block hidden" [routerLink]="['/home/asesores']" (click)="show = !show" >Asesores</a>
-    <a class="md:block hidden" href="">Aseguradoras</a>
-    <a class="md:block hidden" href="">Siniestros</a>
-    <a class="md:block hidden" href="">Usuarios</a>
+    <a class="md:block relative hidden rounded-xl" [routerLink]="['dashboard']"
+      (click)="show = !show" [routerLinkActive]="['active']" #inicio (isActiveChange)="onRouterLinkActive(inicio)">Inicio</a>
+    <a class="md:block relative hidden rounded-xl" [routerLink]="['pericias']"
+      (click)="show = !show" [routerLinkActive]="['active']" #pericia (isActiveChange)="onRouterLinkActive(pericia)">Pericias</a>
+    <a class="md:block relative hidden rounded-xl">Informes</a>
+    <a class="md:block relative hidden rounded-xl" [routerLink]="['asesores']"
+      (click)="show = !show" [routerLinkActive]="['active']" #asesores (isActiveChange)="onRouterLinkActive(asesores)">Asesores</a>
+    <a class="md:block relative hidden rounded-xl" [routerLink]="['aseguradoras']"
+      (click)="show = !show" [routerLinkActive]="['active']" #aseguradoras (isActiveChange)="onRouterLinkActive(aseguradoras)">Aseguradoras</a>
+    <a class="md:block relative hidden rounded-xl" [routerLink]="['siniestros']"
+      (click)="show = !show" [routerLinkActive]="['active']" #siniestros (isActiveChange)="onRouterLinkActive(siniestros)">Siniestros</a>
+    <a class="md:block relative hidden rounded-xl">Usuarios</a>
+
+    <div class="md:block hidden absolute bg-gray-600/75 opacity-0 rounded-xl" #active></div>
 
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-      class="w-6 h-6 md:block hidden" (click)="logout()">
+      class="w-6 h-6 md:block hidden cursor-pointer" (click)="logout()">
       <path stroke-linecap="round" stroke-linejoin="round"
         d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
     </svg>
@@ -46,43 +54,35 @@
     </svg>
   </div>
 
-  <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
-      text-ellipsis overflow-hidden" [routerLink]="['/home/dashboard']" (click)="show = !show" >
+  <div class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+      text-ellipsis overflow-hidden" [routerLink]="['/home/dashboard']" (click)="show = !show">
     <a>Inicio</a>
   </div>
-  <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
-      text-ellipsis overflow-hidden" [routerLink]="['/home/pericias']" (click)="show = !show" >
+  <div class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+      text-ellipsis overflow-hidden" [routerLink]="['/home/pericias']" (click)="show = !show">
     <a>Pericias</a>
   </div>
-  <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+  <div class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
       text-ellipsis overflow-hidden">
     <a>Informes</a>
   </div>
-  <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
-      text-ellipsis overflow-hidden" [routerLink]="['/home/asesores']" (click)="show = !show" >
+  <div class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+      text-ellipsis overflow-hidden" [routerLink]="['/home/asesores']" (click)="show = !show">
     <a>Asesores</a>
   </div>
-  <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
-      text-ellipsis overflow-hidden">
+  <div class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+      text-ellipsis overflow-hidden" [routerLink]="['/home/aseguradoras']">
     <a>Aseguradoras</a>
   </div>
-  <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+  <div class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
       text-ellipsis overflow-hidden">
     <a>Siniestros</a>
   </div>
-  <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+  <div class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
       text-ellipsis overflow-hidden">
     <a class="" href="">Usuarios</a>
   </div>
-  <div
-    class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+  <div class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
       text-ellipsis overflow-hidden" (click)="logout()">
     <a class="">Salir</a>
   </div>
@@ -95,3 +95,4 @@
 
 
 <app-dialog #dialog />
+

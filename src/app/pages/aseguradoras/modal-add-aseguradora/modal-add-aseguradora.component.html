@@ -1,0 +1,32 @@
+<p-dialog [(visible)]="visible" [modal]="true" [draggable]="false" [style]="{ width: '90vw' }">
+  <ng-template pTemplate="header">
+    <div class="inline-flex align-items-center justify-content-center gap-2">
+      <span class="font-bold white-space-nowrap text-2xl">Agregar aseguradora</span>
+    </div>
+  </ng-template>
+  <div class="grid grid-cols-12 gap-4">
+
+    <!-- Nombre aseguradora -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700 w-full">Nombre de la aseguradora</label>
+      <input pInputText id="name" type="text" class="mt-1 p-3 w-full border border-gray-300
+        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese nombre de la aseguradora">
+    </div>
+
+    <!-- CUIT -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700 w-full">CUIT</label>
+      <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
+        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese CUIT *opcional">
+    </div>
+
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="w-full flex justify-end items-center mt-2">
+      <div pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-gray-800 rounded-full flex
+        items-center justify-center p-5 cursor-pointer">
+        <p class="text-white">Agregar aseguradora</p>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>

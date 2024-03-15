@@ -1,4 +1,5 @@
-<app-filter-pericias (changeInput)="filter($event)" />
+<!-- ! Filter-->
+<app-filter-siniestros (changeInput)="filter($event)" />
 
 <p-paginator #paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
     [totalRecords]="totalRecords" [style]="{ 'width': '100%' }" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
@@ -10,13 +11,10 @@
         <th pSortableColumn="id_visible">
           ID <ng-icon name="{{asc ? 'heroBarsArrowUpSolid' : 'heroBarsArrowDownSolid'}}" />
         </th>
-        <th>Estado</th>
-        <th>Fecha</th>
-        <th>Asignado</th>
-        <th>Siniestro n°</th>
-        <th>Denuncia n°</th>
         <th>Nombre</th>
-        <th>Acciones</th>
+        <th>Estado</th>
+        <th>Fecha creación</th>
+        <th>Cargado por:</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-form>
@@ -38,17 +36,6 @@
         </td>
         <td>
           <p pTooltip="form.start_date_time | date : 'dd/MM/yyyy'">form.start_date_time | date : "dd/MM/yyyy"</p>
-        </td>
-        <td>
-          <p pTooltip="form.upload_date | date : 'dd/MM/yyyy'">form.upload_date | date : "dd/MM/yyyy"</p>
-        </td>
-        <td>
-          <p pTooltip="form.upload_user ? form.upload_user.name + ' ' + form.upload_user.last_name : '-NO APLICA-'">
-            form.upload_user ? form.upload_user.name + ' ' + form.upload_user.last_name : '-NO APLICA-'</p>
-        </td>
-        <td>
-          <p pTooltip="form.upload_user ? form.upload_user.name + ' ' + form.upload_user.last_name : '-NO APLICA-'">
-            form.upload_user ? form.upload_user.name + ' ' + form.upload_user.last_name : '-NO APLICA-'</p>
         </td>
       </tr>
     </ng-template>

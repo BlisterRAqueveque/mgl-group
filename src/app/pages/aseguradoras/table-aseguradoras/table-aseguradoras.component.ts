@@ -1,21 +1,24 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroBarsArrowUpSolid, heroBarsArrowDownSolid } from '@ng-icons/heroicons/solid';
+import {
+  heroBarsArrowUpSolid,
+  heroBarsArrowDownSolid,
+} from '@ng-icons/heroicons/solid';
 import { Paginator, PaginatorModule } from 'primeng/paginator';
 import { Table, TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { FilterPericiasComponent } from './filter-pericias/filter-pericias.component';
+import { FilterAseguradorasComponent } from './filter-aseguradoras/filter-aseguradoras.component';
 
 @Component({
-  selector: 'app-table-pericias',
+  selector: 'app-table-aseguradoras',
   standalone: true,
   imports: [
     TableModule,
     PaginatorModule,
     TooltipModule,
     NgIconComponent,
-    FilterPericiasComponent,
+    FilterAseguradorasComponent,
   ],
   providers: [
     provideIcons({
@@ -23,10 +26,10 @@ import { FilterPericiasComponent } from './filter-pericias/filter-pericias.compo
       heroBarsArrowDownSolid,
     }),
   ],
-  templateUrl: './table-pericias.component.html',
-  styleUrl: './table-pericias.component.css'
+  templateUrl: './table-aseguradoras.component.html',
+  styleUrl: './table-aseguradoras.component.css',
 })
-export class TablePericiasComponent {
+export class TableAseguradorasComponent {
   lob: string | undefined;
 
   params = new HttpParams();
@@ -82,9 +85,9 @@ export class TablePericiasComponent {
     this.selectedRow.emit(selectedItem);
   }
 
-  asc = true
+  asc = true;
   onSort(ev: any) {
-    this.asc = !this.asc
+    this.asc = !this.asc;
     switch (ev.order) {
       case 1: {
         if (this.params.get('sortBy') !== 'ASC') {

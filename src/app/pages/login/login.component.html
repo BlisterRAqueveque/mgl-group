@@ -1,5 +1,5 @@
 <div
-    class="bg-purple-900 absolute top-0 left-0 bg-gradient-to-b from-gray-900 via-gray-900 to-purple-800 bottom-0 leading-5 h-full w-full overflow-hidden">
+    class="bg-gray-900 absolute top-0 left-0 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-700 bottom-0 leading-5 h-full w-full overflow-hidden">
 
 </div>
 <div class="relative   min-h-screen  sm:flex sm:flex-row  justify-center bg-transparent rounded-3xl shadow-xl">
@@ -17,34 +17,34 @@
             <div class="mb-7">
                 <h3 class="font-semibold text-2xl text-gray-800">Ingresar </h3>
                 <!-- <p class="text-gray-400">¿Olvido su contraseña? <a href="#"
-                        class="text-sm text-purple-700 hover:text-purple-700">Ingresar</a></p> -->
+                        class="text-sm text-gray-700 hover:text-gray-700">Ingresar</a></p> -->
             </div>
             <form action="post">
                 <div class="space-y-6">
                     <div class="">
                         <input #username class="w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border
-                        border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" type="text"
+                        border-gray-200 rounded-lg focus:outline-none focus:border-gray-400" type="text"
                             placeholder="Usuario">
                     </div>
 
                     <div class="relative" x-data="{ show: true }">
                         <input #password placeholder="Password" type="{{!show ? 'password' : 'text'}}" class="w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border
-                      border-gray-200 rounded-lg focus:outline-none focus:border-purple-400">
+                      border-gray-200 rounded-lg focus:outline-none focus:border-gray-400">
                         <ng-icon name="{{!show ? 'heroEyeSolid' : 'heroEyeSlashSolid'}}" size="1.5rem"
-                            class="text-purple-700 transition-all duration-200 absolute top-3 right-2" [ngClass]="{ 'rotate-180': show }"
+                            class="text-gray-700 transition-all duration-200 absolute top-3 right-2" [ngClass]="{ 'rotate-180': show }"
                             (click)="show = !show" />
                     </div>
 
                     <div class="flex items-center justify-between">
 
                         <div class="text-sm ml-auto">
-                            <a href="#" class="text-purple-700 hover:text-purple-600">
+                            <a href="#" class="text-gray-700 hover:text-gray-600">
                                 ¿Olvido su contraseña?
                             </a>
                         </div>
                     </div>
                     <div>
-                        <button type="submit" (click)="login($event, username.value, password.value)" class="w-full flex justify-center bg-purple-800  hover:bg-purple-700 text-gray-100 p-3
+                        <button type="submit" (click)="login($event, username.value, password.value)" class="w-full flex justify-center bg-gray-800  hover:bg-gray-700 text-gray-100 p-3
                       rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500">
                             Ingresar
                         </button>
@@ -99,7 +99,7 @@
                 <span>
                     Copyright © 2024
                     <a href="" rel="" target="_blank" title="HvDevs"
-                        class="text-purple-500 hover:text-purple-600 ">HvDevs</a></span>
+                        class="text-gray-500 hover:text-gray-600 ">HvDevs</a></span>
             </div>
         </div>
     </div>
@@ -109,7 +109,7 @@
         <div class="flex mr-auto">
             <a href="" target="_blank" title="HvDevs"
                 class="text-center text-gray-700 focus:outline-none">
-                <img src="assets/img/logo-hvdevs.svg" class="object-cover bg-purple-700 p-1 mx-auto rounded-full w-12 h-12">
+                <img src="assets/img/logo-hvdevs.svg" class="object-cover bg-gray-700 p-1 mx-auto rounded-full w-12 h-12">
                 <p class="text-xl">Hv<strong>Devs</strong></p>
             </a>
         </div>

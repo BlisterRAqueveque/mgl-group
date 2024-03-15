@@ -1,0 +1,15 @@
+<div class="relative">
+  <div class="grid grid-cols-12 gap-4">
+    <div class="lg:col-span-2 sm:col-span-6 md:col-span-3 col-span-6">
+      <app-card-users />
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <app-table-aseguradoras />
+  </div>
+</div>
+
+<app-modal-add-aseguradora #modal />
+
+<app-button [text]="'Agregar aseguradora'" [moreWidth]="true" (click)="modal.showModal()" />
