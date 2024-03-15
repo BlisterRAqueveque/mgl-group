@@ -65,7 +65,7 @@ export class AuthService {
   /** @description Una vez que pasa las autenticaciones, redirigimos al usuario. */
   private redirect(param: any) {
     if (param) this.router.navigate([param]);
-    else this.router.navigate(['home/dashboard']);
+    else this.router.navigate(['home']);
   }
 
   async returnUserInfo() {
@@ -104,6 +104,7 @@ export class AuthService {
     this.removeUserFromCookie();
     this.user.next(null);
     this.router.navigate(['login'], { replaceUrl: true });
+    window.location.reload()
   }
 
   private removeUserFromCookie() {

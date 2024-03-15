@@ -6,16 +6,21 @@ import { LoginComponent } from './pages/login/login.component';
 import { PericiasComponent } from './pages/pericias/pericias.component';
 import { UsersComponent } from './pages/users/users.component';
 import { SiniestrosComponent } from './pages/siniestros/siniestros.component';
+import { authGuard } from './guards/login.guard';
 
 export const routes: Routes = [
-    { path: '',   redirectTo: '/login', pathMatch: 'full' }, // redirect to `first-component`
-    { path: 'login', component: LoginComponent },
-    { path: 'home', component: HomeComponent, children: [
-      { path: 'dashboard', component: DashboardComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' }, // redirect to `first-component`
+  { path: 'login', component: LoginComponent },
+  {
+    path: '',
+    component: HomeComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: 'home', component: DashboardComponent },
       { path: 'pericias', component: PericiasComponent },
       { path: 'asesores', component: UsersComponent },
       { path: 'aseguradoras', component: AseguradorasComponent },
       { path: 'siniestros', component: SiniestrosComponent },
-    ] },
-
+    ],
+  },
 ];
