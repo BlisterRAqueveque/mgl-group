@@ -69,7 +69,7 @@ export class AuthService {
   }
 
   async returnUserInfo() {
-    let direction = `${this.url}users/user-info`;
+    let direction = `${this.url}users/user/info`;
     try {
       const userData = await firstValueFrom(
         this.user.pipe(
@@ -90,6 +90,7 @@ export class AuthService {
       );
       if (userData) return userData.user;
       else {
+        console.log('logout')
         this.logout();
         return null;
       }

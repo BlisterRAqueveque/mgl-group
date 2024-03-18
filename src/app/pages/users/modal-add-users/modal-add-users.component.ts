@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
@@ -8,6 +8,10 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
 import { TooltipModule } from 'primeng/tooltip';
+import { Roles, UsuarioI } from '../../../interfaces/user-token.interface';
+import { AsesorService } from '../../../services/asesores/asesores.service';
+import { AuthService } from '../../../services/auth/auth.service';
+import { DialogComponent } from '../../../shared/dialog/dialog.component';
 
 @Component({
   selector: 'app-modal-add-users',
@@ -22,6 +26,7 @@ import { TooltipModule } from 'primeng/tooltip';
     InputMaskModule,
     RippleModule,
     TooltipModule,
+    DialogComponent,
   ],
   templateUrl: './modal-add-users.component.html',
   styleUrl: './modal-add-users.component.css',
@@ -32,25 +37,138 @@ export class ModalAddUsersComponent {
   /** @description Set the visibility of the modal */
   visible = false;
 
+  /** @description Con esta variable controlamos la carga de los campos */
+  error = false;
+
+  /** @description Muestra el modal */
   showModal() {
     this.visible = true;
   }
 
+  /** @description Esconde el modal */
   dismissModal() {
+    this.error = false;
     this.visible = false;
+    //* Reiniciamos el valor de los usuarios
+    this.newUser = {
+      nombre: '',
+      apellido: '',
+      username: '',
+      tel: '',
+      email: '',
+      rol: Roles.user,
+    };
   }
 
-  cities: any[] | undefined;
+  /** @description Roles del usuario */
+  roles = [
+    { name: 'Administrador', rol: Roles.admin },
+    { name: 'Solo asesor', rol: Roles.user },
+    { name: 'Solo visita', rol: Roles.visit },
+  ];
+  /** @description El rol por defecto */
+  selectedRol: { name: string; rol: Roles } = {
+    name: 'Solo asesor',
+    rol: Roles.user,
+  };
 
-  selectedCity: any | undefined;
+  /** @description Al crearse el usuario, enviamos el resultado */
+  @Output() newAsesor = new EventEmitter<UsuarioI>();
 
-  ngOnInit() {
-    this.cities = [
-      { name: 'New York', code: 'NY' },
-      { name: 'Rome', code: 'RM' },
-      { name: 'London', code: 'LDN' },
-      { name: 'Istanbul', code: 'IST' },
-      { name: 'Paris', code: 'PRS' },
-    ];
+  constructor(
+    private readonly asesorService: AsesorService,
+    private readonly auth: AuthService
+  ) {}
+
+  /** @description Instancia del componente dialog */
+  @ViewChild('dialog') dialog!: DialogComponent;
+
+  /** @description En el inicio, traemos la información del usuario */
+  async ngOnInit() {
+    this.user = (await this.auth.returnUserInfo()) as UsuarioI;
+  }
+
+  /** @description Información del usuario */
+  user!: UsuarioI;
+
+  /** @description Nuevo usuario */
+  newUser: UsuarioI = {
+    nombre: '',
+    apellido: '',
+    username: '',
+    tel: '',
+    email: '',
+    rol: Roles.user,
+  };
+
+  /** @description Muestra el dialogo para el insert */
+  insertDialog() {
+    if (this.validation(this.newUser)) {
+      this.dialog.confirm(
+        'Carga de nuevo asesor.',
+        'Está a punto de dar de alta un nuevo asesor, también se creará un nuevo usuario para los seguimientos. ¿Desea continuar?',
+        () => {
+          this.insert();
+        }
+      );
+    } else {
+      this.error = true;
+      this.dialog.alertMessage(
+        'Error de carga',
+        '¡Falta completar algunos campos!',
+        () => {},
+        true
+      );
+    }
+  }
+
+  /** @description Insertamos el nuevo usuario */
+  insert() {
+    this.dialog.loading = true;
+    this.newUser.usuario_carga = this.user;
+    this.newUser.rol = this.selectedRol.rol;
+    this.asesorService.insert(this.newUser).subscribe({
+      next: (data) => {
+        this.dialog.alertMessage(
+          'Confirmación de carga',
+          'El asesor fue creado correctamente.',
+          () => {
+            //* Mandamos el nuevo usuario al componente suscrito
+            this.newAsesor.emit(data);
+            this.error = false;
+            this.visible = false;
+            //* Reiniciamos el valor de los usuarios
+            this.newUser = {
+              nombre: '',
+              apellido: '',
+              username: '',
+              tel: '',
+              email: '',
+              rol: Roles.user,
+            };
+          }
+        );
+      },
+      error: (e) => {
+        switch (e.status) {
+          case 409: {
+            this.dialog.alertMessage(
+              'Error de carga',
+              'No se pudo crear el asesor, ya que existe uno con el mismo nombre de usuario.',
+              () => {},
+              true
+            );
+          }
+        }
+      },
+    });
+  }
+
+  validation(usuario: UsuarioI): boolean {
+    // Verifica si alguna propiedad está vacía o es null/undefined
+    if (!usuario.nombre || !usuario.apellido || !usuario.username) {
+      return false; // Al menos una propiedad no está completa
+    }
+    return true; // Todas las propiedades están completadas
   }
 }

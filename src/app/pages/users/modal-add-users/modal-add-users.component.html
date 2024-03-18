@@ -1,4 +1,4 @@
-<p-dialog [(visible)]="visible" [modal]="true" [draggable]="false" [style]="{ width: '90vw' }">
+<p-dialog [(visible)]="visible" [modal]="true" [draggable]="false" [style]="{ width: '90vw' }" (onHide)="dismissModal()">
   <ng-template pTemplate="header">
     <div class="inline-flex align-items-center justify-content-center gap-2">
       <span class="font-bold white-space-nowrap text-2xl">Agregar asesor</span>
@@ -12,39 +12,68 @@
 
     <!-- Nombre asesor -->
     <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Nombre completo del asesor</label>
-      <input pInputText id="name" type="text" class="mt-1 p-3 w-full border border-gray-300
-        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese nombre completo">
+      <label class="text-sm font-medium text-gray-700 w-full"
+        [ngClass]="{ 'text-red-600': (error && !newUser.nombre), 'text-gray-700': !(error && !newUser.nombre) }">{{ (error && !newUser.nombre) ? '¡Campo obligatorio!' :'Nombre del asesor'  }}</label>
+      <input pInputText id="name" type="text" class="mt-1 p-3 w-full border
+        rounded-md focus:outline-none focus:border-indigo-500"
+        [ngClass]="{ 'border-red-600': (error && !newUser.nombre), 'border-gray-300': !(error && !newUser.nombre) }"
+        placeholder="Ingrese nombre completo" [(ngModel)]="newUser.nombre">
     </div>
 
     <!-- Apellido asesor -->
     <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Dirección del asesor</label>
-      <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
-        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese dirección">
+      <label class="text-sm font-medium text-gray-700 w-full"
+        [ngClass]="{ 'text-red-600': (error && !newUser.apellido), 'text-gray-700': !(error && !newUser.apellido) }">{{ (error && !newUser.apellido) ? '¡Campo obligatorio!' : 'Apellido del asesor' }}</label>
+      <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border
+        rounded-md focus:outline-none focus:border-indigo-500"
+        [ngClass]="{ 'border-red-600': (error && !newUser.apellido), 'border-gray-300': !(error && !newUser.apellido) }"
+        placeholder="Ingrese apellido" [(ngModel)]="newUser.apellido">
+    </div>
+
+    <!-- Nombre de usuario -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700 w-full"
+        [ngClass]="{ 'text-red-600': (error && !newUser.username), 'text-gray-700': !(error && !newUser.username) }">{{ (error && !newUser.username) ? '¡Campo obligatorio!' : 'Nombre de usuario' }}</label>
+      <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border
+        rounded-md focus:outline-none focus:border-indigo-500"
+        [ngClass]="{ 'border-red-600': (error && !newUser.username), 'border-gray-300': !(error && !newUser.username) }"
+        placeholder="Ingrese nombre de usuario" [(ngModel)]="newUser.username">
     </div>
 
     <!-- Teléfono asesor -->
     <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
       <label class="text-sm font-medium text-gray-700 w-full">Teléfono del asesor</label>
       <p-inputMask class="mt-1 p-1 w-full border border-gray-300 rounded-md focus:outline-none
-        focus:border-indigo-500" mask="+54 (299) 999-9999" placeholder="+54 (999) 999-9999"></p-inputMask>
+        focus:border-indigo-500" mask="+54 (299) 999-9999" placeholder="+54 (999) 999-9999"
+        [(ngModel)]="newUser.tel"></p-inputMask>
     </div>
 
     <!-- Correo asesor -->
     <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
       <label class="text-sm font-medium text-gray-700 w-full">Correo del asesor</label>
       <input pInputText id="direction" type="email" class="mt-1 p-3 w-full border border-gray-300
-        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese correo electrónico">
+        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese correo electrónico"
+        [(ngModel)]="newUser.email">
+    </div>
+
+    <!-- Rol -->
+    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+      <label class="text-sm font-medium text-gray-700 w-full">Rol del asesor</label>
+      <p-dropdown class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
+      focus:border-indigo-500" id="activo" appendTo="body" [options]="roles" placeholder="Seleccione..."
+        [showClear]="true" panelStyleClass="panel" optionLabel="name" [style]="{ width: '100%', height: '48px' }"
+        [(ngModel)]="selectedRol"></p-dropdown>
     </div>
 
   </div>
   <ng-template pTemplate="footer">
     <div class="w-full flex justify-end items-center mt-2">
       <div pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-gray-800 rounded-full flex
-        items-center justify-center p-5 cursor-pointer">
+        items-center justify-center p-5 cursor-pointer" (click)="insertDialog()">
         <p class="text-white">Agregar asesor</p>
       </div>
     </div>
   </ng-template>
 </p-dialog>
+
+<app-dialog #dialog />

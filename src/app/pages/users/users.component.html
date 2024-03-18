@@ -1,15 +1,17 @@
 <div class="relative">
-  <div class="grid grid-cols-12 gap-4">
-    <div class="lg:col-span-2 sm:col-span-6 md:col-span-3 col-span-6">
-      <app-card-users />
+  <!-- !NO ES CONVENIENTE MOSTRAR ESTA INFO ACÁ -->
+  <!-- <div class="grid grid-cols-12 gap-4">
+    <div class="lg:col-span-2 sm:col-span-6 md:col-span-3 col-span-6" *ngFor="let asesor of table.asesores">
+      <app-card-users [name]="asesor.nombre + ' ' + asesor.apellido"
+        [description]="'Cantidad de pericias: ' + asesor.pericia?.length" />
     </div>
-  </div>
+  </div> -->
 
   <div class="mt-4">
-    <app-table-users />
+    <app-table-users #table />
   </div>
 </div>
 
-<app-modal-add-users #modal />
+<app-modal-add-users #modal (newAsesor)="addAsesor($event)" />
 
 <app-button [text]="'Agregar asesor'" (click)="modal.showModal()" />

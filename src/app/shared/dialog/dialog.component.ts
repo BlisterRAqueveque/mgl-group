@@ -4,7 +4,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroExclamationTriangleSolid, heroQuestionMarkCircleSolid } from '@ng-icons/heroicons/solid';
+import {
+  heroExclamationTriangleSolid,
+  heroQuestionMarkCircleSolid,
+} from '@ng-icons/heroicons/solid';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CommonModule } from '@angular/common';
 
@@ -34,16 +37,17 @@ export class DialogComponent {
   ) {}
 
   /** @description Muestra el spinner */
-  loading = false
+  loading = false;
 
   /** @description Muestra los 2 botones, o uno solo en false */
-  showButtons = true
+  showButtons = true;
 
   /** @description Muestra cartel de error */
-  error = false
+  error = false;
 
   /** @description Muestra el dialogo de confirmación. */
   confirm(header: string, message: string, fx?: Function) {
+    this.showButtons = true;
     this.confirmationService.confirm({
       header: header,
       message: message,
@@ -68,16 +72,23 @@ export class DialogComponent {
   }
 
   /** @description Muestra un dialogo de confirmación después de una acción. Detiene también el spinner */
-  alertMessage(header: string, message: string, fx?: Function, error?: boolean) {
-    this.loading = false
-    if(error !== undefined) this.error = error
-    this.showButtons = false
-    this.confirmationService.confirm({
-      header: header,
-      message: message,
-      accept: () => {
-        fx!();
-      }
-    })
+  alertMessage(
+    header: string,
+    message: string,
+    fx?: Function,
+    error?: boolean
+  ) {
+    setTimeout(() => {
+      this.loading = false;
+      if (error !== undefined) this.error = error;
+      this.showButtons = false;
+      this.confirmationService.confirm({
+        header: header,
+        message: message,
+        accept: () => {
+          fx!();
+        },
+      });
+    }, 200);
   }
 }

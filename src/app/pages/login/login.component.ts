@@ -33,10 +33,10 @@ export class LoginComponent {
     this.dialog.loading = true;
     ev.preventDefault();
     try {
-      this.auth.login(username, password).subscribe((data) => {
-        this.dialog.loading = false;
-        console.log(data)
-      })
+      const response = await firstValueFrom(
+        this.auth.login(username, password)
+      );
+      this.dialog.loading = false;
     } catch (e: any) {
       console.log(e);
       switch (e.status) {
@@ -45,6 +45,16 @@ export class LoginComponent {
           this.dialog.alertMessage(
             'No autorizado',
             'Las credenciales provistas son incorrectas.',
+            () => {},
+            true
+          );
+          break;
+        }
+        case 404: {
+          //! Acceso no autorizado.
+          this.dialog.alertMessage(
+            'No autorizado',
+            'Usuario no encontrado.',
             () => {},
             true
           );

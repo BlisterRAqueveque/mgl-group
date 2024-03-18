@@ -8,21 +8,27 @@ export interface UserWithToken {
 }
 
 export interface UsuarioI {
-  id: number;
+  id?: number;
   nombre: string;
   apellido: string;
-  contrasenia: string;
+  contrasenia?: string;
   username: string;
   email: string;
-  superuser: boolean;
+  tel: string;
+  superuser?: boolean;
   rol: Roles;
 
-  carga_pericia: PericiaI[];
-  pericia: PericiaI[];
+  fecha_creado?: Date;
+  fecha_eliminado?: Date;
 
-  tipo_siniestro: TipoSiniestroI[];
+  usuario_carga?: UsuarioI;
+  usuarios_creados?: UsuarioI;
+  carga_pericia?: PericiaI[];
+  pericia?: PericiaI[];
 
-  aseguradora: AseguradoraI[];
+  tipo_siniestro?: TipoSiniestroI[];
+
+  aseguradora?: AseguradoraI[];
 }
 
 export enum Roles {
