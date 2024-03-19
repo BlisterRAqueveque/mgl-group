@@ -12,7 +12,7 @@ import { Table, TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { FilterUsersComponent } from './filter-users/filter-users.component';
 import { AsesorService } from '../../../services/asesores/asesores.service';
-import { UsuarioI } from '../../../interfaces/user-token.interface';
+import { Roles, UsuarioI } from '../../../interfaces/user-token.interface';
 
 @Component({
   selector: 'app-table-users',
@@ -54,21 +54,23 @@ export class TableUsersComponent {
   @ViewChild('table') table!: Table;
   @ViewChild('paginator') Paginator!: Paginator;
 
+  /** @description Obtenemos el histórico de los usuarios */
   async getHistoric() {
     this.table.loading = true;
     this.asesorService.getAllFilter(this.params).subscribe({
-      next: data => {
-        this.asesores = data.entities
-        this.totalRecords = data.count
-        this.table.loading = false
+      next: (data) => {
+        this.asesores = data.entities;
+        this.totalRecords = data.count;
+        this.table.loading = false;
       },
-      error: e => {
-        console.log(e)
-        this.table.loading = false
-      }
-    })
+      error: (e) => {
+        console.log(e);
+        this.table.loading = false;
+      },
+    });
   }
 
+  /** @description Obtiene los parámetros del filtro para mandar como param en las consultas */
   filter(ev: any) {
     this.params = this.params.set(ev.key, ev.value);
     this.getHistoric();
@@ -78,6 +80,7 @@ export class TableUsersComponent {
 
   rows: number = 10;
 
+  /** @description Setea los params para traer información */
   onPageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
@@ -86,11 +89,25 @@ export class TableUsersComponent {
     this.getHistoric();
   }
 
-  @Output() selectedRow = new EventEmitter<any>();
-  onRowSelect(selectedItem: any) {
-    this.selectedRow.emit(selectedItem);
+  onClickButton = false;
+
+  @Output() selectedRow = new EventEmitter<UsuarioI>();
+  @Output() setUserInactive = new EventEmitter<UsuarioI>();
+  onRowSelect(selectedItem: UsuarioI) {
+    if (this.onClickButton) {
+      this.onClickButton = false;
+      this.setUserInactive.emit(selectedItem);
+    } else this.selectedRow.emit(selectedItem);
   }
 
+  /** @description Roles con mas información para ayuda del usuario */
+  roles = [
+    { name: 'Administrador', rol: Roles.admin },
+    { name: 'Solo asesor', rol: Roles.user },
+    { name: 'Solo visita', rol: Roles.visit },
+  ];
+
+  /** @description Un selector de onSort para mandar como param */
   asc = true;
   onSort(ev: any) {
     this.asc = !this.asc;
@@ -110,5 +127,10 @@ export class TableUsersComponent {
         break;
       }
     }
+  }
+
+  /** @description Solo retorna el rol con mas descripción */
+  returnRol(userRol: string) {
+    return this.roles.find((rol) => rol.rol === userRol);
   }
 }

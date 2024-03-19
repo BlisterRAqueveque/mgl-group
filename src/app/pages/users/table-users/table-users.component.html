@@ -10,25 +10,27 @@
       <th pSortableColumn="id_visible">
         ID <ng-icon name="{{asc ? 'heroBarsArrowUpSolid' : 'heroBarsArrowDownSolid'}}" />
       </th>
-      <th>Nombre</th>
-      <th>Apellido</th>
+      <th>Nombre y apellido</th>
+      <th>Estado</th>
       <th>Teléfono</th>
       <th>Correo</th>
       <th>Pericias asignadas</th>
+      <th>Rol</th>
+      <th>Acciones</th>
       <th>Fecha / hora carga</th>
       <th>Cargado por</th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-asesor>
-    <tr class="item" (click)="onRowSelect(asesor)">
+    <tr class="item hover:bg-gray-200 transition-all duration-500 cursor-pointer" (click)="onRowSelect(asesor)">
       <td>
         <p pTooltip="{{ asesor.id }}">{{ asesor.id }}</p>
       </td>
       <td>
-        <p pTooltip="{{ asesor.nombre }}">{{ asesor.nombre }}</p>
+        <p pTooltip="{{ asesor.nombre }} {{ asesor.apellido }}">{{ asesor.nombre }} {{ asesor.apellido }}</p>
       </td>
       <td>
-        <p pTooltip="{{ asesor.apellido }}">{{ asesor.apellido }}</p>
+        <p pTooltip="{{asesor.activo ? 'Activo' : 'Inactivo'}}">{{asesor.activo ? 'Activo' : 'Inactivo'}}</p>
       </td>
       <td>
         <p pTooltip="{{ asesor.tel ? asesor.tel : 'No tiene' }}">{{ asesor.tel ? asesor.tel : 'No tiene' }}</p>
@@ -38,6 +40,16 @@
       </td>
       <td>
         <p pTooltip="{{ 'Cantidad de pericias asignadas: ' + asesor.pericia.length }}">{{ asesor.pericia.length }}</p>
+      </td>
+      <td>
+        <p pTooltip="{{ 'Rol: ' + returnRol(asesor.rol)?.name }}">{{ returnRol(asesor.rol)?.name }}</p>
+      </td>
+      <td class="flex justify-center items-center">
+        <div pTooltip="{{asesor.activo ? 'Desactivar' : 'Activar'}} asesor" tooltipPosition="bottom" pRipple class="shadow-lg shadow-gray-500/50 text-sm w-auto rounded-full flex
+          items-center justify-center p-2 cursor-pointer transition-all duration-500"
+          [ngClass]="{ 'bg-gray-800 hover:bg-gray-600': !asesor.activo, 'bg-purple-500 hover:bg-purple-300': asesor.activo }" (click)="onClickButton = true">
+          <p class="text-white">{{ asesor.activo ? 'Desactivar' : 'Activar' }}</p>
+        </div>
       </td>
       <td>
         <p pTooltip="{{ asesor.fecha_creado | date: 'dd/MM/yyyy' }}">{{ asesor.fecha_creado | date: 'dd/MM/yyyy' }}</p>

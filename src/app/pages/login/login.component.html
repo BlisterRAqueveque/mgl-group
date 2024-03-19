@@ -1,66 +1,66 @@
 <div
-    class="bg-gray-900 absolute top-0 left-0 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-700 bottom-0 leading-5 h-full w-full overflow-hidden">
+  class="bg-gray-900 absolute top-0 left-0 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-700 bottom-0 leading-5 h-full w-full overflow-hidden">
 
 </div>
 <div class="relative   min-h-screen  sm:flex sm:flex-row  justify-center bg-transparent rounded-3xl shadow-xl">
-    <div class="flex-col flex  self-center lg:px-14 sm:max-w-4xl xl:max-w-md  z-10">
-        <div class="self-start hidden lg:flex flex-col  text-gray-300">
+  <div class="flex-col flex  self-center lg:px-14 sm:max-w-4xl xl:max-w-md  z-10">
+    <div class="self-start hidden lg:flex flex-col  text-gray-300">
 
-            <h1 class="my-3 font-semibold text-4xl">¡Bienvenido!</h1>
-            <p class="pr-3 text-sm opacity-75">Con su cuenta, ingrese a nuestro sistema de gestión.</p>
-        </div>
+      <h1 class="my-3 font-semibold text-4xl">¡Bienvenido!</h1>
+      <p class="pr-3 text-sm opacity-75">Con su cuenta, ingrese a nuestro sistema de gestión.</p>
     </div>
+  </div>
 
-    <!-- CONTAINER -->
-    <div class="flex justify-center self-center  z-10">
-        <div class="p-12 bg-white mx-auto rounded-3xl w-96 sm:mt-0 md:mt-0 lg:mt-0 mt-10 z-50">
-            <div class="mb-7">
-                <h3 class="font-semibold text-2xl text-gray-800">Ingresar </h3>
-                <!-- <p class="text-gray-400">¿Olvido su contraseña? <a href="#"
+  <!-- CONTAINER -->
+  <div class="flex justify-center self-center  z-10">
+    <div class="p-12 bg-white mx-auto rounded-3xl w-96 sm:mt-0 md:mt-0 lg:mt-0 mt-10 z-50">
+      <div class="mb-7">
+        <h3 class="font-semibold text-2xl text-gray-800">Ingresar </h3>
+        <!-- <p class="text-gray-400">¿Olvido su contraseña? <a href="#"
                         class="text-sm text-gray-700 hover:text-gray-700">Ingresar</a></p> -->
-            </div>
-            <form action="post">
-                <div class="space-y-6">
-                    <div class="">
-                        <input #username class="w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border
+      </div>
+      <form action="post">
+        <div class="space-y-6">
+          <div class="">
+            <input #username class="w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border
                         border-gray-200 rounded-lg focus:outline-none focus:border-gray-400" type="text"
-                            placeholder="Usuario">
-                    </div>
+              placeholder="Usuario">
+          </div>
 
-                    <div class="relative" x-data="{ show: true }">
-                        <input #password placeholder="Password" type="{{!show ? 'password' : 'text'}}" class="w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border
+          <div class="relative" x-data="{ show: true }">
+            <input #password placeholder="Password" type="{{!show ? 'password' : 'text'}}" class="w-full text-sm  px-4 py-3 bg-gray-200 focus:bg-gray-100 border
                       border-gray-200 rounded-lg focus:outline-none focus:border-gray-400">
-                        <ng-icon name="{{!show ? 'heroEyeSolid' : 'heroEyeSlashSolid'}}" size="1.5rem"
-                            class="text-gray-700 transition-all duration-200 absolute top-3 right-2" [ngClass]="{ 'rotate-180': show }"
-                            (click)="show = !show" />
-                    </div>
+            <ng-icon name="{{!show ? 'heroEyeSolid' : 'heroEyeSlashSolid'}}" size="1.5rem"
+              class="text-gray-700 transition-all duration-200 absolute top-3 right-2"
+              [ngClass]="{ 'rotate-180': show }" (click)="show = !show" />
+          </div>
 
-                    <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between">
 
-                        <div class="text-sm ml-auto">
-                            <a href="#" class="text-gray-700 hover:text-gray-600">
-                                ¿Olvido su contraseña?
-                            </a>
-                        </div>
-                    </div>
-                    <div>
-                        <button type="submit" (click)="login($event, username.value, password.value)" class="w-full flex justify-center bg-gray-800  hover:bg-gray-700 text-gray-100 p-3
+            <div class="text-sm ml-auto">
+              <a href="#" class="text-gray-700 hover:text-gray-600">
+                ¿Olvido su contraseña?
+              </a>
+            </div>
+          </div>
+          <div>
+            <button type="submit" (click)="login($event, username.value, password.value)" class="w-full flex justify-center bg-gray-800  hover:bg-gray-700 text-gray-100 p-3
                       rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500">
-                            Ingresar
-                        </button>
-                    </div>
-                    <!-- <div class="flex items-center justify-center space-x-2 my-5">
+              Ingresar
+            </button>
+          </div>
+          <!-- <div class="flex items-center justify-center space-x-2 my-5">
                         <span class="h-px w-16 bg-gray-100"></span>
                         <span class="text-gray-300 font-normal">or</span>
                         <span class="h-px w-16 bg-gray-100"></span>
                     </div> -->
-                    <div class="flex justify-center gap-5 w-full ">
+          <div class="flex justify-center gap-5 w-full ">
 
-                        <!-- <button type="submit"
+            <!-- <button type="submit"
                             class="w-full flex items-center justify-center mb-6 md:mb-0 border border-gray-300 hover:border-gray-900 hover:bg-gray-900 text-sm text-gray-500 p-3  rounded-lg tracking-wide font-medium  cursor-pointer transition ease-in duration-500">-->
 
-                            <!-- Google logo -->
-                            <!--<svg class="w-4 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <!-- Google logo -->
+            <!--<svg class="w-4 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path fill="#EA4335"
                                     d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115Z" />
                                 <path fill="#34A853"
@@ -73,10 +73,10 @@
                             <span>Google</span>
                         </button> -->
 
-                        <!-- <button type="submit"
+            <!-- <button type="submit"
                             class="w-full flex items-center justify-center mb-6 md:mb-0 border border-gray-300 hover:border-gray-900 hover:bg-gray-900 text-sm text-gray-500 p-3  rounded-lg tracking-wide font-medium  cursor-pointer transition ease-in duration-500 px-"> -->
-                            <!-- Facebook logo -->
-                            <!-- <svg class="w-4 mr-2" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100"
+            <!-- Facebook logo -->
+            <!-- <svg class="w-4 mr-2" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100"
                                 xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
                                 <g id="Layer_1" />
                                 <g id="Layer_2">
@@ -91,36 +91,69 @@
                             <span>Facebook</span>
                         </button> -->
 
-                    </div>
-                </div>
-
-            </form>
-            <div class="mt-7 text-center text-gray-300 text-xs">
-                <span>
-                    Copyright © 2024
-                    <a href="" rel="" target="_blank" title="HvDevs"
-                        class="text-gray-500 hover:text-gray-600 ">HvDevs</a></span>
-            </div>
+          </div>
         </div>
+
+      </form>
+      <div class="mt-7 text-center text-gray-300 text-xs">
+        <span>
+          Copyright © 2024
+          <a href="" rel="" target="_blank" title="HvDevs" class="text-gray-500 hover:text-gray-600 ">HvDevs</a></span>
+      </div>
     </div>
+  </div>
 </div>
 <footer class="bg-transparent absolute w-full bottom-0 left-0 z-30">
-    <div class="container p-5 mx-auto  flex items-center justify-between ">
-        <div class="flex mr-auto">
-            <a href="" target="_blank" title="HvDevs"
-                class="text-center text-gray-700 focus:outline-none">
-                <img src="assets/img/logo-hvdevs.svg" class="object-cover bg-gray-700 p-1 mx-auto rounded-full w-12 h-12">
-                <p class="text-xl">Hv<strong>Devs</strong></p>
-            </a>
-        </div>
-
+  <div class="container p-5 mx-auto  flex items-center justify-between ">
+    <div class="flex mr-auto">
+      <a href="" target="_blank" title="HvDevs" class="text-center text-gray-700 focus:outline-none">
+        <img src="assets/img/logo-hvdevs.svg" class="object-cover bg-gray-700 p-1 mx-auto rounded-full w-12 h-12">
+        <p class="text-xl">Hv<strong>Devs</strong></p>
+      </a>
     </div>
+
+  </div>
 </footer>
 
 <svg class="absolute bottom-0 left-0 " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-    <path fill="#fff" fill-opacity="1"
-        d="M0,0L40,42.7C80,85,160,171,240,197.3C320,224,400,192,480,154.7C560,117,640,75,720,74.7C800,75,880,117,960,154.7C1040,192,1120,224,1200,213.3C1280,203,1360,149,1400,122.7L1440,96L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z">
-    </path>
+  <path fill="#fff" fill-opacity="1"
+    d="M0,0L40,42.7C80,85,160,171,240,197.3C320,224,400,192,480,154.7C560,117,640,75,720,74.7C800,75,880,117,960,154.7C1040,192,1120,224,1200,213.3C1280,203,1360,149,1400,122.7L1440,96L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z">
+  </path>
 </svg>
 
 <app-dialog #dialog />
+
+<p-dialog header="Header" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false"
+  [resizable]="false">
+  <ng-template pTemplate="header">
+    <div class="inline-flex align-items-center justify-content-center gap-2">
+      <span class="font-bold white-space-nowrap">Blanqueo de contraseña</span>
+    </div>
+  </ng-template>
+  <h4>Es su primera sesión, o, se solicitó el blanqueo de contraseña</h4>
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col mt-4 relative">
+    <input pInputText id="direction" type="{{!showNPass ? 'password' : 'text'}}" class="mt-1 p-3 w-full border border-gray-300
+      rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese contraseña" [(ngModel)]="newPassword"
+      (ngModelChange)="comparePassword()">
+    <ng-icon name="{{!show ? 'heroEyeSolid' : 'heroEyeSlashSolid'}}" size="1.5rem"
+      class="text-gray-700 transition-all duration-200 absolute top-4 right-4" [ngClass]="{ 'rotate-180': showNPass }"
+      (click)="showNPass = !showNPass" />
+  </div>
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col mt-4 relative">
+    <input pInputText id="direction" type="{{!showRNPass ? 'password' : 'text'}}" class="mt-1 p-3 w-full border border-gray-300
+      rounded-md focus:outline-none focus:border-indigo-500" placeholder="Repita contraseña"
+      [ngClass]="{ 'border-red-500' : error }" [(ngModel)]="confirmPassword" (ngModelChange)="comparePassword()">
+    <ng-icon name="{{!show ? 'heroEyeSolid' : 'heroEyeSlashSolid'}}" size="1.5rem"
+      class="text-gray-700 transition-all duration-200 absolute top-4 right-4" [ngClass]="{ 'rotate-180': showRNPass }"
+      (click)="showRNPass = !showRNPass" />
+    <p class="text-red-500 opacity-0 duration-300 transition-all" [ngClass]="{ 'opacity-100': error }">Las contraseñas no coinciden.</p>
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="w-full flex justify-end items-center mt-2">
+      <div pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-gray-800 rounded-full flex
+        items-center justify-center p-5 cursor-pointer hover:bg-gray-600 transition-all duration-500" (click)="changePassword()">
+        <p class="text-white">Cambiar contraseña</p>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>

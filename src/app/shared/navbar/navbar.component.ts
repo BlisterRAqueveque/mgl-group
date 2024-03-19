@@ -43,8 +43,6 @@ export class NavbarComponent {
   onResize(event: any) {
     const item = document.getElementsByClassName('active')
     this.onRouterLinkActive(item[0] as HTMLAnchorElement)
-    console.log(item[0])
-    console.log('La ventana ha cambiado de tamaño');
   }
 
 }

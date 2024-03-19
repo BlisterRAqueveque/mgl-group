@@ -8,7 +8,7 @@
   </div> -->
 
   <div class="mt-4">
-    <app-table-users #table />
+    <app-table-users #table (selectedRow)="modal.showModal($event)" (setUserInactive)="modal.changeState($event)" />
   </div>
 </div>
 

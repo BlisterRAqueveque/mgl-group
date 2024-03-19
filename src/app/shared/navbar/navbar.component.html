@@ -14,7 +14,7 @@
       (click)="show = !show" [routerLinkActive]="['active']" #aseguradoras (isActiveChange)="onRouterLinkActive(aseguradoras)">Aseguradoras</a>
     <a class="md:block relative hidden rounded-xl" [routerLink]="['siniestros']"
       (click)="show = !show" [routerLinkActive]="['active']" #siniestros (isActiveChange)="onRouterLinkActive(siniestros)">Siniestros</a>
-    <a class="md:block relative hidden rounded-xl">Usuarios</a>
+    <!-- <a class="md:block relative hidden rounded-xl">Usuarios</a> -->
 
     <div class="md:block hidden absolute bg-gray-600/75 opacity-0 rounded-xl" #active></div>
 
@@ -78,10 +78,10 @@
       text-ellipsis overflow-hidden">
     <a>Siniestros</a>
   </div>
-  <div class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
+  <!-- <div class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
       text-ellipsis overflow-hidden">
     <a class="" href="">Usuarios</a>
-  </div>
+  </div> -->
   <div class="w-full p-2 text-end sm:text-lg text-base text-white bg-gray-700 rounded-xl mt-3
       text-ellipsis overflow-hidden" (click)="logout()">
     <a class="">Salir</a>

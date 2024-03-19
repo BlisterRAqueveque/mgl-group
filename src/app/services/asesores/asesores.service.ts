@@ -1,8 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { catchError, map } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { ResponseI } from '../../interfaces/response.interface';
-import { catchError, map } from 'rxjs';
 import { UsuarioI } from '../../interfaces/user-token.interface';
 import { handleError } from '../../tools/tools';
 
@@ -35,5 +35,13 @@ export class AsesorService {
       map((data) => data.result as UsuarioI),
       catchError((e) => handleError(e))
     );
+  }
+
+  update(id: number, user: Partial<UsuarioI>, headers?: HttpHeaders) {
+    const direction = `${this.url}/${id}`
+    return this.http.put<ResponseI>(direction, user, { headers }).pipe(
+      map(data => data.result as UsuarioI),
+      catchError((e) => handleError(e))
+    )
   }
 }

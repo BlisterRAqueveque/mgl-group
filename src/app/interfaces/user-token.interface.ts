@@ -15,6 +15,7 @@ export interface UsuarioI {
   username: string;
   email: string;
   tel: string;
+  activo?: boolean
   superuser?: boolean;
   rol: Roles;
 
