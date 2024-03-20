@@ -28,7 +28,7 @@ export class DashboardComponent {
 
   getFormatDate(): string {
     const date = new Date();
-    const formatDate = format(date, 'EEEE dd/MM/yyyy, hh:mm a', { locale: es });
+    const formatDate = format(date, 'EEEE dd/MM/yyyy, HH:mm', { locale: es });
     const words = formatDate.split(' ');
     words[0] = this.capitalize(words[0]);
     return words.join(' ');
