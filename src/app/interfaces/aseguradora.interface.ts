@@ -2,14 +2,14 @@ import { PericiaI } from './pericia.interface';
 import { UsuarioI } from './user-token.interface';
 
 export interface AseguradoraI {
-  id: number;
+  id?: number;
   nombre: string;
   CUIT: string;
-  activo: boolean;
+  activo?: boolean;
 
-  fecha_creado: Date;
-  fecha_eliminado: Date;
+  fecha_creado?: Date;
+  fecha_eliminado?: Date;
 
-  usuario_carga: UsuarioI;
-  pericia: PericiaI[];
+  usuario_carga?: UsuarioI;
+  pericia?: PericiaI[];
 }

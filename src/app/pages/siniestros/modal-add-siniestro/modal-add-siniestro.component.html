@@ -6,20 +6,48 @@
   </ng-template>
   <div class="grid grid-cols-12 gap-4">
 
-    <!-- Nombre siniestro -->
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Nombre del tipo de siniestro</label>
-      <input pInputText id="name" type="text" class="mt-1 p-3 w-full border border-gray-300
-        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese nombre del tipo de siniestro">
-    </div>
+    <ng-container *ngIf="!siniestro; else readOnlyView">
+
+      <!-- Nombre siniestro -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full"
+          [ngClass]="{ 'text-red-600': (error && !newSiniestro.nombre), 'text-gray-700': !(error && !newSiniestro.nombre) }">{{ (error && !newSiniestro.nombre) ? '¡Campo obligatorio!' : 'Nombre del tipo de siniestro' }}</label>
+        <input pInputText id="name" type="text" class="mt-1 p-3 w-full border border-gray-300
+          rounded-md focus:outline-none focus:border-indigo-500" [(ngModel)]="newSiniestro.nombre"
+          [ngClass]="{ 'border-red-600': (error && !newSiniestro.nombre), 'border-gray-300': !(error && !newSiniestro.nombre) }"
+          placeholder="Ingrese nombre del tipo de siniestro">
+      </div>
+
+    </ng-container>
+
+    <ng-template #readOnlyView>
+      <!-- Nombre siniestro -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full"
+          [ngClass]="{ 'text-red-600': (error && !siniestro!.nombre), 'text-gray-700': !(error && !siniestro!.nombre) }">{{ (error && !siniestro!.nombre) ? '¡Campo obligatorio!' : 'Nombre del tipo de siniestro' }}</label>
+        <input pInputText id="name" type="text" class="mt-1 p-3 w-full border border-gray-300
+          rounded-md focus:outline-none focus:border-indigo-500" [(ngModel)]="siniestro!.nombre"
+          [ngClass]="{ 'border-red-600': (error && !siniestro!.nombre), 'border-gray-300': !(error && !siniestro!.nombre) }"
+          placeholder="Ingrese nombre del tipo de siniestro">
+      </div>
+
+    </ng-template>
 
   </div>
   <ng-template pTemplate="footer">
     <div class="w-full flex justify-end items-center mt-2">
+      <div *ngIf="siniestro" pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-purple-900 rounded-full flex
+        items-center justify-center p-5 cursor-pointer mr-4 transition-all duration-500 hover:animate-pulse"
+        (click)="delete()">
+        <p class="text-white">Eliminar</p>
+      </div>
       <div pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-gray-800 rounded-full flex
-        items-center justify-center p-5 cursor-pointer">
-        <p class="text-white">Agregar tipo siniestro</p>
+        items-center justify-center p-5 cursor-pointer hover:bg-gray-600 transition-all duration-500"
+        (click)="!siniestro ? insertDialog() : updateDialog()">
+        <p class="text-white">{{!siniestro ? 'Agregar tipo siniestro': 'Modificar tipo siniestro'}}</p>
       </div>
     </div>
   </ng-template>
 </p-dialog>
+
+<app-dialog #dialog />

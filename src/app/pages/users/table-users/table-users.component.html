@@ -22,7 +22,7 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-asesor>
-    <tr class="item hover:bg-gray-200 transition-all duration-500 cursor-pointer" (click)="onRowSelect(asesor)">
+    <tr class="hover:bg-gray-200 transition-all duration-500 cursor-pointer" (click)="onRowSelect(asesor)">
       <td>
         <p pTooltip="{{ asesor.id }}">{{ asesor.id }}</p>
       </td>

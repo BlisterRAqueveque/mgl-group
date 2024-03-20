@@ -9,6 +9,9 @@ import { Paginator, PaginatorModule } from 'primeng/paginator';
 import { Table, TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { FilterAseguradorasComponent } from './filter-aseguradoras/filter-aseguradoras.component';
+import { AseguradoraService } from '../../../services/aseguradoras/aseguradoras.service';
+import { AseguradoraI } from '../../../interfaces/aseguradora.interface';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-table-aseguradoras',
@@ -19,6 +22,7 @@ import { FilterAseguradorasComponent } from './filter-aseguradoras/filter-asegur
     TooltipModule,
     NgIconComponent,
     FilterAseguradorasComponent,
+    CommonModule,
   ],
   providers: [
     provideIcons({
@@ -30,7 +34,7 @@ import { FilterAseguradorasComponent } from './filter-aseguradoras/filter-asegur
   styleUrl: './table-aseguradoras.component.css',
 })
 export class TableAseguradorasComponent {
-  lob: string | undefined;
+  constructor(private readonly aseguradoraService: AseguradoraService) {}
 
   params = new HttpParams();
 
@@ -41,7 +45,7 @@ export class TableAseguradorasComponent {
     this.getHistoric();
   }
 
-  forms: any[] = [];
+  aseguradoras: AseguradoraI[] = [];
 
   totalRecords = 0;
 
@@ -49,18 +53,18 @@ export class TableAseguradorasComponent {
   @ViewChild('paginator') Paginator!: Paginator;
 
   async getHistoric() {
-    //this.table.loading = true;
-    // this.trainingService.getForms(this.params).subscribe({
-    //   next: (data: any) => {
-    //     this.forms = data.entities
-    //     this.totalRecords = data.count
-    //     this.table.loading = false
-    //   },
-    //   error: e => {
-    //     this.table.loading = false
-    //     console.log(e)
-    //   }
-    // })
+    this.table.loading = true;
+    this.aseguradoraService.getAllFilter(this.params).subscribe({
+      next: (data) => {
+        this.aseguradoras = data.entities;
+        this.totalRecords = data.count;
+        this.table.loading = false;
+      },
+      error: (e) => {
+        this.table.loading = false;
+        console.log(e);
+      },
+    });
   }
 
   filter(ev: any) {
@@ -80,9 +84,15 @@ export class TableAseguradorasComponent {
     this.getHistoric();
   }
 
-  @Output() selectedRow = new EventEmitter<any>();
-  onRowSelect(selectedItem: any) {
-    this.selectedRow.emit(selectedItem);
+  onClickButton = false;
+
+  @Output() selectedRow = new EventEmitter<AseguradoraI>();
+  @Output() setAseguradoraInactive = new EventEmitter<AseguradoraI>();
+  onRowSelect(selectedItem: AseguradoraI) {
+    if (this.onClickButton) {
+      this.onClickButton = false;
+      this.setAseguradoraInactive.emit(selectedItem);
+    } else this.selectedRow.emit(selectedItem);
   }
 
   asc = true;

@@ -26,8 +26,8 @@ export class FilterSiniestrosComponent {
 
   option: any;
   open_list = [
-    { label: 'Abierto', value: true },
-    { label: 'Cerrado', value: false },
+    { label: 'Activo', value: 1 },
+    { label: 'Inactivo', value: 0 },
   ];
 
   changeInput(key: string, value: string) {

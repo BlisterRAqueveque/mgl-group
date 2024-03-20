@@ -1,15 +1,15 @@
 <div class="relative">
-  <div class="grid grid-cols-12 gap-4">
+  <!-- <div class="grid grid-cols-12 gap-4">
     <div class="lg:col-span-2 sm:col-span-6 md:col-span-3 col-span-6">
       <app-card-users />
     </div>
-  </div>
+  </div> -->
 
   <div class="mt-4">
-    <app-table-siniestros />
+    <app-table-siniestros #table (selectedRow)="modal.showModal($event)" (setSiniestroInactive)="modal.changeState($event)"  />
   </div>
 </div>
 
-<app-modal-add-siniestro #modal />
+<app-modal-add-siniestro #modal (emitNewSiniestro)="addSiniestro($event)" (emitDelete)="deleteSiniestro($event)" />
 
 <app-button [text]="'Agregar tipo siniestro'" [moreWidth]="true" (click)="modal.showModal()" />

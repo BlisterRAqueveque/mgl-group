@@ -20,8 +20,8 @@ export class FilterAseguradorasComponent {
   date: Date[] | undefined;
 
   open_list = [
-    { label: 'Abierto', value: '1' },
-    { label: 'Cerrado', value: '0' },
+    { label: 'Abierto', value: 1 },
+    { label: 'Cerrado', value: 0 },
   ];
 
   changeInput(key: string, value: string) {

@@ -2,44 +2,66 @@
 <app-filter-aseguradoras (changeInput)="filter($event)" />
 
 <p-paginator #paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
-    [totalRecords]="totalRecords" [style]="{ 'width': '100%' }" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
+  [totalRecords]="totalRecords" [style]="{ 'width': '100%' }" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
 
-  <p-table #table [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
-    [styleClass]="'p-datatable-sm mt-3'" [value]="forms" dataKey="id" (onSort)="onSort($event)">
-    <ng-template pTemplate="header">
-      <tr class="dark-tr">
-        <th pSortableColumn="id_visible">
-          ID <ng-icon name="{{asc ? 'heroBarsArrowUpSolid' : 'heroBarsArrowDownSolid'}}" />
-        </th>
-        <th>Nombre</th>
-        <th>CUIT</th>
-        <th>Fecha creación</th>
-        <th>Cargado por:</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-form>
-      <tr class="item" (click)="onRowSelect(form)">
-        <td>
-          <p pTooltip="form.id_visible">form.id_visible</p>
-        </td>
-        <td>
-          <p pTooltip="form.name">form.name</p>
-        </td>
-        <td>
-          <p pTooltip="form.type ? form.type.name : '-NO APLICA-'">form.type ?
-            form.type.name : '-NO APLICA-'</p>
-        </td>
-        <td>
-          <p pTooltip="form.category ? form.category.name : '-NO APLICA-'">form.category ? form.category.name : '-NO
-            APLICA-'
-          </p>
-        </td>
-        <td>
-          <p pTooltip="form.start_date_time | date : 'dd/MM/yyyy'">form.start_date_time | date : "dd/MM/yyyy"</p>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+<p-table #table [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
+  [styleClass]="'p-datatable-sm mt-3'" [value]="aseguradoras" dataKey="id" (onSort)="onSort($event)">
+  <ng-template pTemplate="header">
+    <tr class="dark-tr">
+      <th pSortableColumn="id_visible">
+        ID <ng-icon name="{{asc ? 'heroBarsArrowUpSolid' : 'heroBarsArrowDownSolid'}}" />
+      </th>
+      <th>Nombre</th>
+      <th>CUIT</th>
+      <th>Estado</th>
+      <th class="text-center">Acciones</th>
+      <th>Pericias</th>
+      <th>Fecha creación</th>
+      <th>Cargado por:</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-aseguradora>
+    <tr class="hover:bg-gray-200 transition-all duration-500 cursor-pointer" (click)="onRowSelect(aseguradora)">
+      <td>
+        <p pTooltip="{{aseguradora.id}}">{{aseguradora.id}}</p>
+      </td>
+      <td>
+        <p pTooltip="{{aseguradora.nombre}}">{{aseguradora.nombre}}</p>
+      </td>
+      <td>
+        <p pTooltip="{{aseguradora.CUIT}}">{{aseguradora.CUIT}}</p>
+      </td>
+      <td>
+        <p pTooltip="{{aseguradora.activo ? 'Activo' : 'Inactivo'}}">{{aseguradora.activo ? 'Activo' : 'Inactivo'}}</p>
+      </td>
+      <td class="flex justify-center items-center">
+        <div pTooltip="{{aseguradora.activo ? 'Desactivar' : 'Activar'}} aseguradora" tooltipPosition="bottom" pRipple
+          class="shadow-lg shadow-gray-500/50 text-sm w-auto rounded-full flex
+              items-center justify-center p-2 cursor-pointer transition-all duration-500"
+          [ngClass]="{ 'bg-gray-800 hover:bg-gray-600': !aseguradora.activo, 'bg-purple-500 hover:bg-purple-300': aseguradora.activo }"
+          (click)="onClickButton = true">
+          <p class="text-white">{{ aseguradora.activo ? 'Desactivar' : 'Activar' }}</p>
+        </div>
+      </td>
+      <td>
+        <p pTooltip="Cantidad de pericias: {{aseguradora.pericia.length}}">
+          {{aseguradora.pericia.length}}
+        </p>
+      </td>
+      <td>
+        <p pTooltip="{{aseguradora.fecha_creado | date: 'dd/MM/yyyy'}}">
+          {{aseguradora.fecha_creado | date: 'dd/MM/yyyy'}}
+        </p>
+      </td>
+      <td>
+        <p
+          pTooltip="{{aseguradora.usuario_carga ? aseguradora.usuario_carga.nombre + ' ' + aseguradora.usuario_carga.apellido : 'Sin definir' }}">
+          {{aseguradora.usuario_carga ? aseguradora.usuario_carga.nombre + ' ' + aseguradora.usuario_carga.apellido : 'Sin definir' }}
+        </p>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
 
-  <p-paginator #paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
-    [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
+<p-paginator #paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
+  [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>

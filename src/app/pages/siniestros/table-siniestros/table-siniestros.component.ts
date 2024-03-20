@@ -9,6 +9,9 @@ import {
   heroBarsArrowDownSolid,
 } from '@ng-icons/heroicons/solid';
 import { HttpParams } from '@angular/common/http';
+import { SiniestroService } from '../../../services/siniestros/siniestros.service';
+import { CommonModule } from '@angular/common';
+import { TipoSiniestroI } from '../../../interfaces/tipo-siniestro.interface';
 
 @Component({
   selector: 'app-table-siniestros',
@@ -19,6 +22,7 @@ import { HttpParams } from '@angular/common/http';
     TooltipModule,
     NgIconComponent,
     FilterSiniestrosComponent,
+    CommonModule,
   ],
   providers: [
     provideIcons({
@@ -30,7 +34,7 @@ import { HttpParams } from '@angular/common/http';
   styleUrl: './table-siniestros.component.css',
 })
 export class TableSiniestrosComponent {
-  lob: string | undefined;
+  constructor(private readonly siniestroService: SiniestroService) {}
 
   params = new HttpParams();
 
@@ -41,7 +45,7 @@ export class TableSiniestrosComponent {
     this.getHistoric();
   }
 
-  forms: any[] = [];
+  siniestros: TipoSiniestroI[] = [];
 
   totalRecords = 0;
 
@@ -49,18 +53,18 @@ export class TableSiniestrosComponent {
   @ViewChild('paginator') Paginator!: Paginator;
 
   async getHistoric() {
-    //this.table.loading = true;
-    // this.trainingService.getForms(this.params).subscribe({
-    //   next: (data: any) => {
-    //     this.forms = data.entities
-    //     this.totalRecords = data.count
-    //     this.table.loading = false
-    //   },
-    //   error: e => {
-    //     this.table.loading = false
-    //     console.log(e)
-    //   }
-    // })
+    this.table.loading = true;
+    this.siniestroService.getAllFilter(this.params).subscribe({
+      next: (data) => {
+        this.siniestros = data.entities;
+        this.totalRecords = data.count;
+        this.table.loading = false;
+      },
+      error: (e) => {
+        this.table.loading = false;
+        console.log(e);
+      },
+    });
   }
 
   filter(ev: any) {
@@ -80,9 +84,15 @@ export class TableSiniestrosComponent {
     this.getHistoric();
   }
 
-  @Output() selectedRow = new EventEmitter<any>();
-  onRowSelect(selectedItem: any) {
-    this.selectedRow.emit(selectedItem);
+  onClickButton = false;
+
+  @Output() selectedRow = new EventEmitter<TipoSiniestroI>();
+  @Output() setSiniestroInactive = new EventEmitter<TipoSiniestroI>();
+  onRowSelect(selectedItem: TipoSiniestroI) {
+    if (this.onClickButton) {
+      this.onClickButton = false;
+      this.setSiniestroInactive.emit(selectedItem);
+    } else this.selectedRow.emit(selectedItem);
   }
 
   asc = true;

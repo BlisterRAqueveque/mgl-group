@@ -3,12 +3,15 @@
   <div class="left-0 absolute top-0 md:h-20 h-32 w-full">
     <div class="w-full bg-gray-800 md:h-20 h-32 rounded-xl flex md:flex-row flex-col
       md:justify-between md:text-2xl text-white p-3">
-      <h1>Hola Usuario!</h1>
-      <h1 class="text-end">Martes 27/11/2024, 08:00 AM</h1>
+      <div class="flex justify-start items-center">
+        <ng-lottie class="w-10 md:w-20" [options]="options" (animationCreated)="animationCreated($event)" />
+        <h1 class="pl-2">{{obtenerSaludo().saludo}} {{user.nombre}} {{user.apellido}}!</h1>
+      </div>
+      <h1 class="text-end">{{getFormatDate()}}</h1>
     </div>
   </div>
   <!-- ! SISTEMA RESPONSIVO ESTILO BOOTSTRAP C/TAILWIND CSS -->
-  <div class="grid grid-cols-12 gap-4 pt-16 px-4">
+  <div class="grid grid-cols-12 gap-4 pt-24 md:pt-20 lg:pt-16 px-4">
     <app-card class="lg:col-span-3 sm:col-span-12 md:col-span-6 col-span-12"
       [color]="'gray-900'" [icon]="'heroClipboardDocumentListSolid'" [text]="'Pericias'" [quantity]="218"
     ></app-card>
