@@ -57,6 +57,7 @@ export class TableSiniestrosComponent {
     this.siniestroService.getAllFilter(this.params).subscribe({
       next: (data) => {
         this.siniestros = data.entities;
+        console.log(this.siniestros)
         this.totalRecords = data.count;
         this.table.loading = false;
       },

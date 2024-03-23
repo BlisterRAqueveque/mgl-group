@@ -24,38 +24,47 @@
   <ng-template pTemplate="body" let-asesor>
     <tr class="hover:bg-gray-200 transition-all duration-500 cursor-pointer" (click)="onRowSelect(asesor)">
       <td>
-        <p pTooltip="{{ asesor.id }}">{{ asesor.id }}</p>
+        <p tooltipPosition="bottom" pTooltip="{{ asesor.id }}">{{ asesor.id }}</p>
       </td>
       <td>
-        <p pTooltip="{{ asesor.nombre }} {{ asesor.apellido }}">{{ asesor.nombre }} {{ asesor.apellido }}</p>
+        <p tooltipPosition="bottom" pTooltip="{{ asesor.nombre }} {{ asesor.apellido }}">{{ asesor.nombre }}
+          {{ asesor.apellido }}</p>
       </td>
       <td>
-        <p pTooltip="{{asesor.activo ? 'Activo' : 'Inactivo'}}">{{asesor.activo ? 'Activo' : 'Inactivo'}}</p>
+        <p tooltipPosition="bottom" pTooltip="{{asesor.activo ? 'Activo' : 'Inactivo'}}">
+          {{asesor.activo ? 'Activo' : 'Inactivo'}}</p>
       </td>
       <td>
-        <p pTooltip="{{ asesor.tel ? asesor.tel : 'No tiene' }}">{{ asesor.tel ? asesor.tel : 'No tiene' }}</p>
+        <p tooltipPosition="bottom" pTooltip="{{ asesor.tel ? asesor.tel : 'No tiene' }}">
+          {{ asesor.tel ? asesor.tel : 'No tiene' }}</p>
       </td>
       <td>
-        <p pTooltip="{{ asesor.email }}">{{ asesor.email }}</p>
+        <p tooltipPosition="bottom" pTooltip="{{ asesor.email ? asesor.email : 'No tiene' }}">
+          {{ asesor.email ? asesor.email : 'No tiene' }}</p>
       </td>
       <td>
-        <p pTooltip="{{ 'Cantidad de pericias asignadas: ' + asesor.pericia.length }}">{{ asesor.pericia.length }}</p>
+        <p tooltipPosition="bottom" pTooltip="{{ 'Cantidad de pericias asignadas: ' + asesor.pericia.length }}">
+          {{ asesor.pericia.length }}</p>
       </td>
       <td>
-        <p pTooltip="{{ 'Rol: ' + returnRol(asesor.rol)?.name }}">{{ returnRol(asesor.rol)?.name }}</p>
+        <p tooltipPosition="bottom" pTooltip="{{ 'Rol: ' + returnRol(asesor.rol)?.name }}">
+          {{ returnRol(asesor.rol)?.name }}</p>
       </td>
-      <td class="flex justify-center items-center">
-        <div pTooltip="{{asesor.activo ? 'Desactivar' : 'Activar'}} asesor" tooltipPosition="bottom" pRipple class="shadow-lg shadow-gray-500/50 text-sm w-auto rounded-full flex
+      <td class="justify-center items-center p-5">
+        <div tooltipPosition="bottom" pTooltip="{{asesor.activo ? 'Desactivar' : 'Activar'}} asesor"
+          tooltipPosition="bottom" pRipple class="shadow-lg shadow-gray-500/50 text-sm w-auto rounded-full flex
           items-center justify-center p-2 cursor-pointer transition-all duration-500"
-          [ngClass]="{ 'bg-gray-800 hover:bg-gray-600': !asesor.activo, 'bg-purple-500 hover:bg-purple-300': asesor.activo }" (click)="onClickButton = true">
+          [ngClass]="{ 'bg-gray-800 hover:bg-gray-600': !asesor.activo, 'bg-purple-500 hover:bg-purple-300': asesor.activo }"
+          (click)="onClickButton = true">
           <p class="text-white">{{ asesor.activo ? 'Desactivar' : 'Activar' }}</p>
         </div>
       </td>
       <td>
-        <p pTooltip="{{ asesor.fecha_creado | date: 'dd/MM/yyyy' }}">{{ asesor.fecha_creado | date: 'dd/MM/yyyy' }}</p>
+        <p tooltipPosition="bottom" pTooltip="{{ asesor.fecha_creado | date: 'dd/MM/yyyy' }}">
+          {{ asesor.fecha_creado | date: 'dd/MM/yyyy' }}</p>
       </td>
       <td>
-        <p
+        <p tooltipPosition="bottom"
           pTooltip="{{ asesor.usuario_carga ? asesor.usuario_carga.nombre + ' ' + asesor.usuario_carga.apellido : '-No tiene-' }}">
           {{ asesor.usuario_carga ? asesor.usuario_carga.nombre + ' ' + asesor.usuario_carga.apellido : '-No tiene-' }}
         </p>

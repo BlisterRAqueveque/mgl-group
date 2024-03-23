@@ -53,7 +53,7 @@ export class LoginComponent {
       );
       this.dialog.loading = false;
     } catch (e: any) {
-      console.log(e)
+      console.log(e);
       switch (e.status) {
         case 401: {
           //! Acceso no autorizado.
@@ -119,38 +119,48 @@ export class LoginComponent {
   }
 
   changePassword() {
-    this.dialog.confirm(
-      'Ingreso de nueva contraseña.',
-      '¿Confirma la nueva contraseña?',
-      () => {
-        this.dialog.loading = true
-        const headers = new HttpHeaders({
-          Authorization: 'Bearer ' + this.token,
-        });
-        this.asesorService
-          .update(0, { contrasenia: this.newPassword }, headers)
-          .subscribe({
-            next: (data) => {
-              this.newPassword = ''
-              this.confirmPassword = ''
-              this.dialog.alertMessage(
-                'Confirmación de carga',
-                'Se dio de alta la nueva contraseña.',
-                () => {
-                  this.visible = false
-                }
-              )
-            },
-            error: (e) => {
-              console.log(e)
-              this.dialog.alertMessage(
-                'Error de carga',
-                'Ocurrió un error al dar de alta la nueva contraseña. Intente mas tarde.',
-                () => {}
-              )
-            },
+    if(!this.error) {
+      this.dialog.confirm(
+        'Ingreso de nueva contraseña.',
+        '¿Confirma la nueva contraseña?',
+        () => {
+          this.dialog.loading = true;
+          const headers = new HttpHeaders({
+            Authorization: 'Bearer ' + this.token,
           });
-      }
-    );
+          this.asesorService
+            .update(0, { contrasenia: this.newPassword }, headers)
+            .subscribe({
+              next: (data) => {
+                this.newPassword = '';
+                this.confirmPassword = '';
+                this.dialog.alertMessage(
+                  'Confirmación de carga',
+                  'Se dio de alta la nueva contraseña.',
+                  () => {
+                    this.visible = false;
+                  }
+                );
+              },
+              error: (e) => {
+                console.log(e);
+                this.dialog.alertMessage(
+                  'Error de carga',
+                  'Ocurrió un error al dar de alta la nueva contraseña. Intente mas tarde.',
+                  () => {}
+                );
+              },
+            });
+        }
+      );
+    }
+    else {
+      this.dialog.alertMessage(
+        'Error de comprobación',
+        'Las contraseñas no son idénticas, favor de revisar las mismas.',
+        () => {},
+        true
+      )
+    }
   }
 }

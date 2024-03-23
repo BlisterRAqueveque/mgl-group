@@ -1,16 +1,23 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroBarsArrowUpSolid, heroBarsArrowDownSolid } from '@ng-icons/heroicons/solid';
+import {
+  heroBarsArrowUpSolid,
+  heroBarsArrowDownSolid,
+} from '@ng-icons/heroicons/solid';
 import { Paginator, PaginatorModule } from 'primeng/paginator';
 import { Table, TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { FilterPericiasComponent } from './filter-pericias/filter-pericias.component';
+import { PericiaService } from '../../../services/pericias/pericias.service';
+import { CommonModule, formatDate } from '@angular/common';
+import { PericiaI } from '../../../interfaces/pericia.interface';
 
 @Component({
   selector: 'app-table-pericias',
   standalone: true,
   imports: [
+    CommonModule,
     TableModule,
     PaginatorModule,
     TooltipModule,
@@ -24,10 +31,10 @@ import { FilterPericiasComponent } from './filter-pericias/filter-pericias.compo
     }),
   ],
   templateUrl: './table-pericias.component.html',
-  styleUrl: './table-pericias.component.css'
+  styleUrl: './table-pericias.component.css',
 })
 export class TablePericiasComponent {
-  lob: string | undefined;
+  constructor(private readonly periciaService: PericiaService) {}
 
   params = new HttpParams();
 
@@ -38,7 +45,7 @@ export class TablePericiasComponent {
     this.getHistoric();
   }
 
-  forms: any[] = [];
+  pericias: PericiaI[] = [];
 
   totalRecords = 0;
 
@@ -46,18 +53,18 @@ export class TablePericiasComponent {
   @ViewChild('paginator') Paginator!: Paginator;
 
   async getHistoric() {
-    //this.table.loading = true;
-    // this.trainingService.getForms(this.params).subscribe({
-    //   next: (data: any) => {
-    //     this.forms = data.entities
-    //     this.totalRecords = data.count
-    //     this.table.loading = false
-    //   },
-    //   error: e => {
-    //     this.table.loading = false
-    //     console.log(e)
-    //   }
-    // })
+    this.table.loading = true;
+    this.periciaService.getAllFilter(this.params).subscribe({
+      next: (data) => {
+        this.pericias = data.entities;
+        this.totalRecords = data.count;
+        this.table.loading = false;
+      },
+      error: (e) => {
+        this.table.loading = false;
+        console.log(e);
+      },
+    });
   }
 
   filter(ev: any) {
@@ -77,14 +84,20 @@ export class TablePericiasComponent {
     this.getHistoric();
   }
 
-  @Output() selectedRow = new EventEmitter<any>();
-  onRowSelect(selectedItem: any) {
-    this.selectedRow.emit(selectedItem);
+  onClickButton = false;
+
+  @Output() selectedRow = new EventEmitter<PericiaI>();
+  @Output() setAseguradoraInactive = new EventEmitter<PericiaI>();
+  onRowSelect(selectedItem: PericiaI) {
+    if (this.onClickButton) {
+      this.onClickButton = false;
+      this.setAseguradoraInactive.emit(selectedItem);
+    } else this.selectedRow.emit(selectedItem);
   }
 
-  asc = true
+  asc = true;
   onSort(ev: any) {
-    this.asc = !this.asc
+    this.asc = !this.asc;
     switch (ev.order) {
       case 1: {
         if (this.params.get('sortBy') !== 'ASC') {

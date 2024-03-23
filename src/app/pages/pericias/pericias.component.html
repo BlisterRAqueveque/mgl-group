@@ -1,7 +1,8 @@
 <div class="relative">
-
-  <app-table-pericias />
-
+  <div class="mt-4">
+    <app-table-pericias #table (selectedRow)="modal.showModal($event)"
+      (setAseguradoraInactive)="modal.changeState($event)" />
+  </div>
 </div>
 
 <app-modal-add #modal />

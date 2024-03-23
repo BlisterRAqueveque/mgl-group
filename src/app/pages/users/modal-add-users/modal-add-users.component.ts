@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
@@ -45,12 +45,24 @@ export class ModalAddUsersComponent {
   /** @description Con esta variable controlamos la carga de los campos */
   error = false;
 
+  /** @description Variables de los modelos */
+  nombre!: string;
+  apellido!: string;
+  username!: string;
+  tel!: string;
+  email!: string;
+
   /** @description Muestra el modal */
   showModal(asesor?: UsuarioI) {
     //* Podemos mandar al asesor como parámetro
     if (asesor) {
       this.asesor = asesor;
       this.selectedRol = this.roles.find((item) => item.rol === asesor.rol)!;
+      this.nombre = asesor.nombre;
+      this.apellido = asesor.apellido;
+      this.username = asesor.username;
+      this.tel = asesor.tel;
+      this.email = asesor.email;
     }
     this.visible = true;
   }
@@ -60,14 +72,11 @@ export class ModalAddUsersComponent {
     this.error = false;
     this.visible = false;
     //* Reiniciamos el valor de los usuarios.
-    this.newUser = {
-      nombre: '',
-      apellido: '',
-      username: '',
-      tel: '',
-      email: '',
-      rol: Roles.user,
-    };
+    this.nombre = '';
+    this.apellido = '';
+    this.username = '';
+    this.tel = '';
+    this.email = '';
     //* Reiniciamos el valor del asesor en caso de ser cargado.
     this.asesor = undefined;
   }
@@ -98,24 +107,23 @@ export class ModalAddUsersComponent {
   /** @description Información del usuario */
   user!: UsuarioI;
 
-  /** @description Nuevo usuario */
-  newUser: UsuarioI = {
-    nombre: '',
-    apellido: '',
-    username: '',
-    tel: '',
-    email: '',
-    rol: Roles.user,
-  };
-
   /** @description Muestra el dialogo para el insert */
   insertDialog() {
-    if (this.validation(this.newUser)) {
+    const newUser: UsuarioI = {
+      nombre: this.nombre,
+      apellido: this.apellido,
+      username: this.username,
+      tel: this.tel,
+      email: this.email,
+      rol: this.selectedRol.rol,
+      usuario_carga: this.user,
+    };
+    if (this.validation(newUser)) {
       this.dialog.confirm(
         'Carga de nuevo asesor.',
         'Está a punto de dar de alta un nuevo asesor, también se creará un nuevo usuario para los seguimientos. ¿Desea continuar?',
         () => {
-          this.insert();
+          this.insert(newUser);
         }
       );
     } else {
@@ -130,29 +138,26 @@ export class ModalAddUsersComponent {
   }
 
   /** @description Insertamos el nuevo usuario */
-  insert() {
+  insert(newUser: UsuarioI) {
     this.dialog.loading = true;
-    this.newUser.usuario_carga = this.user;
-    this.newUser.rol = this.selectedRol.rol;
-    this.asesorService.insert(this.newUser).subscribe({
+    this.asesorService.insert(newUser).subscribe({
       next: (data) => {
         this.dialog.alertMessage(
           'Confirmación de carga',
           'El asesor fue creado correctamente.',
           () => {
             //* Mandamos el nuevo usuario al componente suscrito
+            data.pericia = []
             this.newAsesor.emit(data);
             this.error = false;
             this.visible = false;
             //* Reiniciamos el valor de los usuarios
-            this.newUser = {
-              nombre: '',
-              apellido: '',
-              username: '',
-              tel: '',
-              email: '',
-              rol: Roles.user,
-            };
+            this.nombre = '';
+            this.apellido = '';
+            this.username = '';
+            this.tel = '';
+            this.email = '';
+            //rol: Roles.use
           }
         );
       },
@@ -204,7 +209,12 @@ export class ModalAddUsersComponent {
   }
 
   update() {
-    this.asesor!!.rol = this.selectedRol.rol;
+    this.asesor!.nombre = this.nombre
+    this.asesor!.apellido = this.apellido
+    this.asesor!.username = this.username
+    this.asesor!.tel = this.tel
+    this.asesor!.email = this.email
+    this.asesor!.rol = this.selectedRol.rol;
     this.asesorService
       .update(this.asesor?.id!, this.asesor as UsuarioI)
       .subscribe({
@@ -235,7 +245,7 @@ export class ModalAddUsersComponent {
 
   changeState(user: UsuarioI) {
     this.dialog.confirm(
-      'Edición de usuario.',
+      'Edición de asesor.',
       `¿Esta seguro de ${
         user.activo ? 'desactivar' : 'activar'
       } el siguiente asesor: ${user.nombre} ${user.apellido}?`,
@@ -268,27 +278,36 @@ export class ModalAddUsersComponent {
       'Blanqueo de contraseña.',
       '¿Está seguro de blanquear la contraseña del usuario?',
       () => {
-        this.dialog.loading = true
-        this.asesorService.update(this.asesor?.id!, { contrasenia: '' }).subscribe({
-          next: data => {
-            this.dialog.alertMessage(
-              'Confirmación de carga.',
-              'La contraseña se blanqueó con éxito.',
-              () => {
-                this.visible = false
-              }
-            )
-          },
-          error: e => {
-            console.log(e)
-            this.dialog.alertMessage(
-              'Error de carga.',
-              'Ocurrió un error en la carga. Intente nuevamente.'
-            )
-          }
-        })
+        this.dialog.loading = true;
+        this.asesorService
+          .update(this.asesor?.id!, { contrasenia: '' })
+          .subscribe({
+            next: (data) => {
+              this.dialog.alertMessage(
+                'Confirmación de carga.',
+                'La contraseña se blanqueó con éxito.',
+                () => {
+                  this.visible = false;
+                }
+              );
+            },
+            error: (e) => {
+              console.log(e);
+              this.dialog.alertMessage(
+                'Error de carga.',
+                'Ocurrió un error en la carga. Intente nuevamente.'
+              );
+            },
+          });
       }
-    )
+    );
   }
   //----------------------------------------------------------------------------------->
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    if (event.keyCode === 13) {
+      !this.asesor ? this.insertDialog() : this.updateDialog();
+    }
+  }
 }

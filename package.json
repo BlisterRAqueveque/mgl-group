@@ -20,6 +20,8 @@
     "@angular/router": "^17.2.0",
     "@ng-icons/core": "^27.2.0",
     "@ng-icons/heroicons": "^27.2.0",
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "^8.0.0",
     "date-fns": "^3.6.0",
     "lottie-web": "^5.12.2",
     "ngx-cookie-service": "^17.1.0",

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
@@ -51,6 +51,8 @@ export class ModalAddAseguradoraComponent {
     //* Podemos mandar la aseguradora como parámetro
     if (aseguradora) {
       this.aseguradora = aseguradora;
+      this.nombre = aseguradora.nombre;
+      this.CUIT = aseguradora.CUIT;
     }
     this.visible = true;
   }
@@ -59,19 +61,14 @@ export class ModalAddAseguradoraComponent {
     this.error = false;
     this.visible = false;
     //* Reiniciamos el valor de las aseguradoras.
-    this.newAseguradora = {
-      nombre: '',
-      CUIT: '',
-      usuario_carga: undefined,
-    };
+    this.nombre = '';
+    this.CUIT = '';
     //* Reiniciamos el valor de la aseguradora en caso de ser cargado.
     this.aseguradora = undefined;
   }
 
-  newAseguradora: AseguradoraI = {
-    nombre: '',
-    CUIT: '',
-  };
+  nombre!: string;
+  CUIT!: string;
 
   error = false;
 
@@ -83,12 +80,17 @@ export class ModalAddAseguradoraComponent {
 
   /** @description Muestra el dialogo para el insert */
   insertDialog() {
-    if (this.validation(this.newAseguradora)) {
+    const newAseguradora: AseguradoraI = {
+      nombre: this.nombre,
+      CUIT: this.CUIT,
+      usuario_carga: this.user,
+    };
+    if (this.validation(newAseguradora)) {
       this.dialog.confirm(
         'Carga de nueva aseguradora.',
         'Está a punto de dar de alta una nueva aseguradora, ¿Desea continuar?',
         () => {
-          this.insert();
+          this.insert(newAseguradora);
         }
       );
     } else {
@@ -103,25 +105,21 @@ export class ModalAddAseguradoraComponent {
   }
 
   /** @description Insertamos la nueva aseguradora */
-  insert() {
+  insert(newAseguradora: AseguradoraI) {
     this.dialog.loading = true;
-    this.newAseguradora.usuario_carga = this.user;
-    this.aseguradoraService.insert(this.newAseguradora).subscribe({
+    this.aseguradoraService.insert(newAseguradora).subscribe({
       next: (data) => {
         this.dialog.alertMessage(
           'Confirmación de carga',
-          'El siniestro fue creado correctamente.',
+          'La aseguradora fue creada correctamente.',
           () => {
             //* Mandamos el nuevo usuario al componente suscrito
             this.emitNewAseguradora.emit(data);
             this.error = false;
             this.visible = false;
             //* Reiniciamos el valor de los usuarios
-            this.newAseguradora = {
-              nombre: '',
-              CUIT: '',
-              usuario_carga: undefined,
-            };
+            this.nombre = '';
+            this.CUIT = '';
           }
         );
       },
@@ -182,6 +180,8 @@ export class ModalAddAseguradoraComponent {
   }
 
   update() {
+    this.aseguradora!.nombre = this.nombre
+    this.aseguradora!.CUIT = this.CUIT
     this.aseguradoraService
       .update(this.aseguradora?.id!, this.aseguradora as AseguradoraI)
       .subscribe({
@@ -274,4 +274,11 @@ export class ModalAddAseguradoraComponent {
     );
   }
   //----------------------------------------------------------------------------------->
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    if (event.keyCode === 13) {
+      !this.aseguradora ? this.insertDialog() : this.updateDialog();
+    }
+  }
 }

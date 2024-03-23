@@ -48,6 +48,7 @@ export class AuthService {
         tap((userToken) => this.saveTokenToCookie(userToken.token)),
         tap((userToken) => this.pushNewUser(userToken)),
         tap(() => this.redirect(param)),
+        catchError(e => handleError(e)),
         //ignoreElements()
       );
   }

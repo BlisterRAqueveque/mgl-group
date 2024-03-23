@@ -12,6 +12,7 @@
         ID <ng-icon name="{{asc ? 'heroBarsArrowUpSolid' : 'heroBarsArrowDownSolid'}}" />
       </th>
       <th>Nombre</th>
+      <th>Pericias</th>
       <th>Estado</th>
       <th class="text-center">Acciones</th>
       <th>Fecha creación</th>
@@ -21,16 +22,19 @@
   <ng-template pTemplate="body" let-siniestro>
     <tr class="hover:bg-gray-200 transition-all duration-500 cursor-pointer" (click)="onRowSelect(siniestro)">
       <td>
-        <p pTooltip="{{siniestro.id}}">{{siniestro.id}}</p>
+        <p tooltipPosition="bottom" pTooltip="{{siniestro.id}}">{{siniestro.id}}</p>
       </td>
       <td>
-        <p pTooltip="{{siniestro.nombre}}">{{siniestro.nombre}}</p>
+        <p tooltipPosition="bottom" pTooltip="{{siniestro.nombre}}">{{siniestro.nombre}}</p>
       </td>
       <td>
-        <p pTooltip="{{siniestro.activo ? 'Activo' : 'Inactivo'}}">{{siniestro.activo ? 'Activo' : 'Inactivo'}}</p>
+        <p tooltipPosition="bottom" pTooltip="Cantidad de pericias: {{siniestro.pericia.length}}">{{siniestro.pericia.length}}</p>
+      </td>
+      <td>
+        <p tooltipPosition="bottom" pTooltip="{{siniestro.activo ? 'Activo' : 'Inactivo'}}">{{siniestro.activo ? 'Activo' : 'Inactivo'}}</p>
       </td>
       <td class="flex justify-center items-center">
-        <div pTooltip="{{siniestro.activo ? 'Desactivar' : 'Activar'}} siniestro" tooltipPosition="bottom" pRipple
+        <div tooltipPosition="bottom" pTooltip="{{siniestro.activo ? 'Desactivar' : 'Activar'}} siniestro" tooltipPosition="bottom" pRipple
           class="shadow-lg shadow-gray-500/50 text-sm w-auto rounded-full flex
             items-center justify-center p-2 cursor-pointer transition-all duration-500"
           [ngClass]="{ 'bg-gray-800 hover:bg-gray-600': !siniestro.activo, 'bg-purple-500 hover:bg-purple-300': siniestro.activo }"
@@ -39,12 +43,12 @@
         </div>
       </td>
       <td>
-        <p pTooltip="{{siniestro.fecha_creado | date: 'dd/MM/yyyy'}}">{{siniestro.fecha_creado | date: 'dd/MM/yyyy'}}
+        <p tooltipPosition="bottom" pTooltip="{{siniestro.fecha_creado | date: 'dd/MM/yyyy'}}">{{siniestro.fecha_creado | date: 'dd/MM/yyyy'}}
         </p>
       </td>
       <td>
         <p
-          pTooltip="{{siniestro.usuario_carga ? siniestro.usuario_carga.nombre + ' ' + siniestro.usuario_carga.apellido : 'Sin definir'}}">
+          tooltipPosition="bottom" pTooltip="{{siniestro.usuario_carga ? siniestro.usuario_carga.nombre + ' ' + siniestro.usuario_carga.apellido : 'Sin definir'}}">
           {{siniestro.usuario_carga ? siniestro.usuario_carga.nombre + ' ' + siniestro.usuario_carga.apellido : 'Sin definir'}}
         </p>
       </td>

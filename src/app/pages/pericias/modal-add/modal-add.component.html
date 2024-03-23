@@ -1,106 +1,137 @@
-<p-dialog [(visible)]="visible" [modal]="true" [draggable]="false" [style]="{ width: '90vw', height: '70vh' }">
+<p-dialog [(visible)]="visible" [modal]="true" [draggable]="false" [style]="{ width: '90vw', height: '70vh' }"
+  (onHide)="dismissModal()">
   <ng-template pTemplate="header">
     <div class="inline-flex align-items-center justify-content-center gap-2">
       <span class="font-bold white-space-nowrap text-2xl">Agregar pericia</span>
     </div>
   </ng-template>
   <div class="grid grid-cols-12 gap-4">
-    <!-- Fecha de asignación -->
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Fecha de asignación</label>
-      <p-calendar class="mt-1 p-1 w-full border border-gray-300 rounded-md focus:outline-none p-inputtext-sm
-        focus:border-indigo-500" dateFormat="dd/mm/yy" panelStyleClass="panel" [style]="{ 'width': '100%' }" appendTo="body"
-        placeholder="Ingrese fecha" [showIcon]="true" />
-    </div>
 
-    <!-- Aseguradora -->
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Aseguradora</label>
-      <p-dropdown id="drop" class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
-        focus:border-indigo-500" appendTo="body" [options]="cities" [(ngModel)]="selectedCity" optionLabel="name"
-        [showClear]="true" placeholder="Seleccione una aseguradora" panelStyleClass="panel"
-        [style]="{ 'width': '100%' }" />
-    </div>
+    <ng-container>
+      <!-- Fecha de asignación -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full"
+          [ngClass]="{ 'text-red-600': (error && !fecha_asignado), 'text-gray-700': !(error && !fecha_asignado) }">{{ (error && !fecha_asignado) ? '¡Campo obligatorio!' : 'Fecha de asignación' }}</label>
+        <p-calendar class="mt-1 p-1 w-full border border-gray-300 rounded-md focus:outline-none p-inputtext-sm
+          focus:border-indigo-500" dateFormat="dd/mm/yy" panelStyleClass="panel" [style]="{ 'width': '100%' }"
+          [ngClass]="{ 'border-red-600': (error && !fecha_asignado), 'border-gray-300': !(error && !fecha_asignado) }"
+          appendTo="body" (ngModelChange)="asd()" placeholder="Ingrese fecha" [showIcon]="true" [(ngModel)]="fecha_asignado"></p-calendar>
+      </div>
 
-    <!-- Número de siniestro -->
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700">N° siniestro</label>
-      <input pInputText id="siniestro" type="number" class="mt-1 p-3 w-full border border-gray-300
-        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese siniestro">
-    </div>
+      <!-- Aseguradora -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full"
+          [ngClass]="{ 'text-red-600': (error && !selectedAseguradora), 'text-gray-700': !(error && !selectedAseguradora) }">{{ (error && !selectedAseguradora) ? '¡Campo obligatorio!' : 'Aseguradora' }}</label>
+        <p-dropdown id="drop" class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
+          focus:border-indigo-500" appendTo="body" [options]="aseguradoras" [(ngModel)]="selectedAseguradora"
+          optionLabel="nombre" [showClear]="true" placeholder="Seleccione una aseguradora" panelStyleClass="panel"
+          [ngClass]="{ 'border-red-600': (error && !selectedAseguradora), 'border-gray-300': !(error && !selectedAseguradora) }"
+          [style]="{ 'width': '100%' }"></p-dropdown>
+      </div>
 
-    <!-- Número de denuncia -->
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700">N° denuncia</label>
-      <input pInputText id="denuncia" type="number" class="mt-1 p-3 w-full border border-gray-300
-        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese denuncia">
-    </div>
+      <!-- Número de siniestro -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700"
+          [ngClass]="{ 'text-red-600': (error && !n_siniestro), 'text-gray-700': !(error && !n_siniestro) }">{{ (error && !n_siniestro) ? '¡Campo obligatorio!' : 'N° siniestro' }}</label>
+        <input pInputText id="siniestro" type="number" class="mt-1 p-3 w-full border border-gray-300
+          rounded-md focus:outline-none focus:border-indigo-500"
+          [ngClass]="{ 'border-red-600': (error && !n_siniestro), 'border-gray-300': !(error && !n_siniestro) }"
+          placeholder="Ingrese siniestro" [(ngModel)]="n_siniestro">
+      </div>
 
-    <!-- Nombre asegurado -->
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Nombre completo del asegurado</label>
-      <input pInputText id="name" type="text" class="mt-1 p-3 w-full border border-gray-300
-        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese nombre completo">
-    </div>
+      <!-- Número de denuncia -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700"
+          [ngClass]="{ 'text-red-600': (error && !n_denuncia), 'text-gray-700': !(error && !n_denuncia) }">{{ (error && !n_denuncia) ? '¡Campo obligatorio!' : 'N° denuncia' }}</label>
+        <input pInputText id="denuncia" type="number" class="mt-1 p-3 w-full border border-gray-300
+          rounded-md focus:outline-none focus:border-indigo-500"
+          [ngClass]="{ 'border-red-600': (error && !n_denuncia), 'border-gray-300': !(error && !n_denuncia) }"
+          placeholder="Ingrese denuncia" [(ngModel)]="n_denuncia">
+      </div>
 
-    <!-- Dirección asegurado -->
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Dirección del asegurado</label>
-      <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
-        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese dirección">
-    </div>
+      <!-- Nombre asegurado -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full"
+          [ngClass]="{ 'text-red-600': (error && !nombre_asegurado), 'text-gray-700': !(error && !nombre_asegurado) }">{{ (error && !nombre_asegurado) ? '¡Campo obligatorio!' : 'Nombre completo del asegurado' }}</label>
+        <input pInputText id="name" type="text" class="mt-1 p-3 w-full border border-gray-300
+          rounded-md focus:outline-none focus:border-indigo-500"
+          [ngClass]="{ 'border-red-600': (error && !nombre_asegurado), 'border-gray-300': !(error && !nombre_asegurado) }"
+          placeholder="Ingrese nombre completo" [(ngModel)]="nombre_asegurado">
+      </div>
 
-    <!-- Teléfono del asegurado -->
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Teléfono del asegurado</label>
-      <p-inputMask class="mt-1 p-1 w-full border border-gray-300 rounded-md focus:outline-none
-        focus:border-indigo-500" mask="+54 (299) 999-9999" placeholder="+54 (999) 999-9999"></p-inputMask>
-    </div>
+      <!-- Dirección asegurado -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full">Dirección del asegurado</label>
+        <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
+          rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese dirección"
+          [(ngModel)]="dir_asegurado">
+      </div>
 
-    <!-- Correo asegurado -->
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Correo del asegurado</label>
-      <input pInputText id="direction" type="email" class="mt-1 p-3 w-full border border-gray-300
-        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese correo electrónico">
-    </div>
+      <!-- Teléfono del asegurado -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full">Teléfono del asegurado</label>
+        <p-inputMask class="mt-1 p-1 w-full border border-gray-300 rounded-md focus:outline-none
+          focus:border-indigo-500" mask="+54 (299) 999-9999" placeholder="+54 (999) 999-9999"
+          [(ngModel)]="tel_asegurado"></p-inputMask>
+      </div>
 
-    <!-- Tipo siniestro -->
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Tipo de siniestro</label>
-      <p-dropdown id="drop" class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
-        focus:border-indigo-500" appendTo="body" [options]="cities" [(ngModel)]="selectedCity" optionLabel="name"
-        [showClear]="true" placeholder="Seleccione un tipo" panelStyleClass="panel" [style]="{ 'width': '100%' }" />
-    </div>
+      <!-- Correo asegurado -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full">Correo del asegurado</label>
+        <input pInputText id="direction" type="email" class="mt-1 p-3 w-full border border-gray-300
+          rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese correo electrónico"
+          [(ngModel)]="mail_asegurado">
+      </div>
 
-    <!-- Vehículo asegurado -->
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Vehículo del asegurado</label>
-      <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
-        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese el vehículo">
-    </div>
+      <!-- Tipo siniestro -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full"
+          [ngClass]="{ 'text-red-600': (error && !selectedTipo), 'text-gray-700': !(error && !selectedTipo) }">{{ (error && !selectedTipo) ? '¡Campo obligatorio!' : 'Tipo de siniestro' }}</label>
+        <p-dropdown id="drop" class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
+          focus:border-indigo-500" appendTo="body" [options]="tipos" [(ngModel)]="selectedTipo" optionLabel="nombre"
+          [showClear]="true" placeholder="Seleccione un tipo" panelStyleClass="panel" [style]="{ 'width': '100%' }"
+          [ngClass]="{ 'border-red-600': (error && !selectedTipo), 'border-gray-300': !(error && !selectedTipo) }"></p-dropdown>
+      </div>
 
-    <!-- Patente asegurado -->
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Patente del asegurado</label>
-      <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
-        rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese patente">
-    </div>
+      <!-- Vehículo asegurado -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full">Vehículo del asegurado</label>
+        <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
+          rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese el vehículo"
+          [(ngModel)]="veh_asegurado">
+      </div>
 
-    <!-- Usuario verificador -->
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Verificador</label>
-      <p-dropdown id="drop" class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
-        focus:border-indigo-500" appendTo="body" [options]="cities" [(ngModel)]="selectedCity" optionLabel="name"
-        [showClear]="true" placeholder="Seleccione verificador" panelStyleClass="panel" [style]="{ 'width': '100%' }" />
-    </div>
+      <!-- Patente asegurado -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full"
+          [ngClass]="{ 'text-red-600': (error && !patente_asegurado), 'text-gray-700': !(error && !patente_asegurado) }">{{ (error && !patente_asegurado) ? '¡Campo obligatorio!' : 'Patente del asegurado' }}</label>
+        <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
+          rounded-md focus:outline-none focus:border-indigo-500"
+          [ngClass]="{ 'border-red-600': (error && !patente_asegurado), 'border-gray-300': !(error && !patente_asegurado) }"
+          placeholder="Ingrese patente" [(ngModel)]="patente_asegurado">
+      </div>
+
+      <!-- Usuario verificador -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full"
+          [ngClass]="{ 'text-red-600': (error && !selectedVerificador), 'text-gray-700': !(error && !selectedVerificador) }">{{ (error && !selectedVerificador) ? '¡Campo obligatorio!' : 'Verificador' }}</label>
+        <p-dropdown id="drop" class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
+          focus:border-indigo-500" appendTo="body" [options]="verificadores" [(ngModel)]="selectedVerificador"
+          optionLabel="nombre" [showClear]="true" placeholder="Seleccione verificador" panelStyleClass="panel"
+          [style]="{ 'width': '100%' }" [(ngModel)]="selectedVerificador"
+          [ngClass]="{ 'border-red-600': (error && !selectedVerificador), 'border-gray-300': !(error && !selectedVerificador) }"></p-dropdown>
+      </div>
+    </ng-container>
 
   </div>
   <ng-template pTemplate="footer">
     <div class="w-full flex justify-end items-center mt-2">
       <div pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-gray-800 rounded-full flex
-        items-center justify-center p-5 cursor-pointer">
+        items-center justify-center p-5 cursor-pointer" (click)="insertDialog()">
         <p class="text-white">Agregar pericia</p>
       </div>
     </div>
   </ng-template>
 </p-dialog>
+
+<app-dialog #dialog />

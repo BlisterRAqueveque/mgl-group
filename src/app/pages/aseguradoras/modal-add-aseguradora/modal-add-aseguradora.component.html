@@ -1,53 +1,31 @@
-<p-dialog [(visible)]="visible" [modal]="true" [draggable]="false" [style]="{ width: '90vw' }">
+<p-dialog [(visible)]="visible" [modal]="true" [draggable]="false" [style]="{ width: '90vw' }"
+  (onHide)="dismissModal()">
   <ng-template pTemplate="header">
     <div class="inline-flex align-items-center justify-content-center gap-2">
-      <span class="font-bold white-space-nowrap text-2xl">Agregar aseguradora</span>
+      <span
+        class="font-bold white-space-nowrap text-2xl">{{ !aseguradora ? 'Agregar aseguradora' : 'Modificar aseguradora' }}</span>
     </div>
   </ng-template>
   <div class="grid grid-cols-12 gap-4">
 
-    <ng-container *ngIf="!aseguradora; else readOnlyView">
+    <ng-container>
       <!-- Nombre aseguradora -->
       <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
         <label class="text-sm font-medium text-gray-700 w-full"
-          [ngClass]="{ 'text-red-600': (error && !newAseguradora.nombre), 'text-gray-700': !(error && !newAseguradora.nombre) }">{{ (error && !newAseguradora.nombre) ? '¡Campo obligatorio!' : 'Nombre de la aseguradora'}}</label>
+          [ngClass]="{ 'text-red-600': (error && !nombre), 'text-gray-700': !(error && nombre) }">{{ (error && !nombre) ? '¡Campo obligatorio!' : 'Nombre de la aseguradora'}}</label>
         <input pInputText id="name" type="text" class="mt-1 p-3 w-full border border-gray-300
         rounded-md focus:outline-none focus:border-indigo-500"
-          [ngClass]="{ 'border-red-600': (error && !newAseguradora.nombre), 'border-gray-300': !(error && !newAseguradora.nombre) }"
-          placeholder="Ingrese nombre de la aseguradora" [(ngModel)]="newAseguradora.nombre">
+          [ngClass]="{ 'border-red-600': (error && !nombre), 'border-gray-300': !(error && nombre) }"
+          placeholder="Ingrese nombre de la aseguradora" [(ngModel)]="nombre">
       </div>
 
       <!-- CUIT -->
       <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
         <label class="text-sm font-medium text-gray-700 w-full">CUIT</label>
         <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
-        rounded-md focus:outline-none focus:border-indigo-500" [(ngModel)]="newAseguradora.CUIT"
-          placeholder="Ingrese CUIT *opcional">
+        rounded-md focus:outline-none focus:border-indigo-500" [(ngModel)]="CUIT" placeholder="Ingrese CUIT *opcional">
       </div>
     </ng-container>
-
-    <ng-template #readOnlyView>
-      <!-- Nombre aseguradora -->
-      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-        <label class="text-sm font-medium text-gray-700 w-full"
-          [ngClass]="{ 'text-red-600': (error && !aseguradora!.nombre), 'text-gray-700': !(error && !aseguradora!.nombre) }">{{ (error && !aseguradora!.nombre) ? '¡Campo obligatorio!' : 'Nombre de la aseguradora'}}</label>
-        <input pInputText id="name" type="text" class="mt-1 p-3 w-full border border-gray-300
-        rounded-md focus:outline-none focus:border-indigo-500"
-          [ngClass]="{ 'border-red-600': (error && !aseguradora!.nombre), 'border-gray-300': !(error && !aseguradora!.nombre) }"
-          placeholder="Ingrese nombre de la aseguradora" [(ngModel)]="aseguradora!.nombre">
-      </div>
-
-      <!-- CUIT -->
-      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-        <label class="text-sm font-medium text-gray-700 w-full">CUIT</label>
-        <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
-        rounded-md focus:outline-none focus:border-indigo-500" [(ngModel)]="aseguradora!.CUIT"
-          placeholder="Ingrese CUIT *opcional">
-      </div>
-
-    </ng-template>
-
-
 
   </div>
   <ng-template pTemplate="footer">
@@ -57,7 +35,7 @@
         (click)="delete()">
         <p class="text-white">Eliminar</p>
       </div>
-      <div pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-gray-800 rounded-full flex
+      <div (keydown)="handleKeyboardEvent($event)" pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-gray-800 rounded-full flex
         items-center justify-center p-5 cursor-pointer hover:bg-gray-600 transition-all duration-500"
         (click)="!aseguradora ? insertDialog() : updateDialog()">
         <p class="text-white">{{!aseguradora ? 'Agregar aseguradora': 'Modificar aseguradora'}}</p>

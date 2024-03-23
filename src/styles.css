@@ -30,3 +30,7 @@ input {
 .p-confirm-dialog {
   max-width: 90vw !important;
 }
+
+.p-datepicker-month {
+  padding-right: 6px !important;
+}

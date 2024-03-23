@@ -1,7 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, CanDeactivateFn, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../services/auth/auth.service';
 
 export const authGuard: CanActivateFn = async (route, state) => {

@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
@@ -51,6 +57,7 @@ export class ModalAddSiniestroComponent {
     //* Podemos mandar al siniestro como parámetro
     if (siniestro) {
       this.siniestro = siniestro;
+      this.nombre = siniestro.nombre;
     }
     this.visible = true;
   }
@@ -59,17 +66,12 @@ export class ModalAddSiniestroComponent {
     this.error = false;
     this.visible = false;
     //* Reiniciamos el valor de los siniestros.
-    this.newSiniestro = {
-      nombre: '',
-      usuario_carga: undefined,
-    };
+    this.nombre = '';
     //* Reiniciamos el valor del siniestro en caso de ser cargado.
     this.siniestro = undefined;
   }
 
-  newSiniestro: TipoSiniestroI = {
-    nombre: '',
-  };
+  nombre!: string;
 
   error = false;
 
@@ -81,12 +83,16 @@ export class ModalAddSiniestroComponent {
 
   /** @description Muestra el dialogo para el insert */
   insertDialog() {
-    if (this.validation(this.newSiniestro)) {
+    const newSiniestro: TipoSiniestroI = {
+      nombre: this.nombre,
+      usuario_carga: this.user,
+    };
+    if (this.validation(newSiniestro)) {
       this.dialog.confirm(
         'Carga de nuevo siniestro.',
         'Está a punto de dar de alta un nuevo tipo de siniestro, ¿Desea continuar?',
         () => {
-          this.insert();
+          this.insert(newSiniestro);
         }
       );
     } else {
@@ -101,10 +107,9 @@ export class ModalAddSiniestroComponent {
   }
 
   /** @description Insertamos el nuevo siniestro */
-  insert() {
+  insert(newSiniestro: TipoSiniestroI) {
     this.dialog.loading = true;
-    this.newSiniestro.usuario_carga = this.user;
-    this.siniestroService.insert(this.newSiniestro).subscribe({
+    this.siniestroService.insert(newSiniestro).subscribe({
       next: (data) => {
         this.dialog.alertMessage(
           'Confirmación de carga',
@@ -115,10 +120,7 @@ export class ModalAddSiniestroComponent {
             this.error = false;
             this.visible = false;
             //* Reiniciamos el valor de los usuarios
-            this.newSiniestro = {
-              nombre: '',
-              usuario_carga: undefined,
-            };
+            this.nombre = '';
           }
         );
       },
@@ -161,7 +163,7 @@ export class ModalAddSiniestroComponent {
   updateDialog() {
     if (this.validation(this.siniestro as TipoSiniestroI)) {
       this.dialog.confirm(
-        'Edición de asesor.',
+        'Edición de siniestro.',
         'Está a punto de editar la información del siniestro. ¿Desea continuar?',
         () => {
           this.update();
@@ -179,6 +181,7 @@ export class ModalAddSiniestroComponent {
   }
 
   update() {
+    this.siniestro!.nombre = this.nombre;
     this.siniestroService
       .update(this.siniestro?.id!, this.siniestro as TipoSiniestroI)
       .subscribe({
@@ -269,4 +272,11 @@ export class ModalAddSiniestroComponent {
     );
   }
   //----------------------------------------------------------------------------------->
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    if (event.keyCode === 13) {
+      !this.siniestro ? this.insertDialog() : this.updateDialog();
+    }
+  }
 }
