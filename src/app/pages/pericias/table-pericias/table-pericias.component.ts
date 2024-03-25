@@ -105,16 +105,6 @@ export class TablePericiasComponent {
   onRowSelect(selectedItem: PericiaI) {
     if (this.onClickButton) {
       this.onClickButton = false;
-      switch (this.type) {
-        case 'wp': {
-          this.sendMessage();
-          break;
-        }
-        case 'edit': {
-          this.setAseguradoraInactive.emit(selectedItem);
-          break;
-        }
-      }
     } else this.selectedRow.emit(selectedItem);
   }
 
@@ -147,15 +137,13 @@ export class TablePericiasComponent {
   visible = false;
   isDeviceConnected = false;
 
-  /** @description Se conecta al servidor con socket.io */
-  private initializeSocketConnection() {
-    this.websocketService.connectSocket('message');
-  }
   /** @description Recibe el mensaje de respuesta del servidor socket.io */
   private receiveSocketResponse() {
     this.websocketService.receiveStatus().subscribe((receivedMessage) => {
       if (receivedMessage === 'connected') {
         this.isDeviceConnected = true;
+        //* Una vez conectado, nos desconectamos del servidor
+        this.disconnectSocket();
         this.dialog.confirm(
           'Confirmación',
           '¡Dispositivo conectado con éxito!',
@@ -176,33 +164,43 @@ export class TablePericiasComponent {
 
   async checkDeviceStatus() {
     try {
-      const data = await firstValueFrom(this.whatsappService.getDeviceStatus())
+      const data = await firstValueFrom(this.whatsappService.getDeviceStatus());
       if (data.connected) {
-        //TODO el dispositivo ya está conectado
         this.isDeviceConnected = true;
-        //this.disconnectSocket()
+        //* Una vez conectado, nos desconectamos del servidor
+        this.disconnectSocket();
       } else {
         this.mediaUrl = data.mediaUrl;
         this.isDeviceConnected = false;
-        this.receiveSocketResponse();
       }
     } catch (error) {
       //TODO Manejo de errores en la conexión
     }
-
   }
 
-  async sendMessage() {
+  async sendMessage(pericia: PericiaI) {
     //* Revisamos el estado del dispositivo conectado
     await this.checkDeviceStatus();
     if (this.isDeviceConnected) {
-      console.log('dispositivo conectado!')
-      //TODO Se envía el mensaje
+      this.confirmMessage(pericia);
     } else {
       //Se comienza el proceso de emparejamiento
-      this.initializeSocketConnection();
+      this.websocketService.initSocket(); //* Conexión al servidor
+      this.receiveSocketResponse();
       this.visible = true;
     }
+  }
+
+  confirmMessage(pericia: PericiaI) {
+    this.dialog.confirm(
+      'Confirmación',
+      '¿Enviar mensaje con los datos al verificador?',
+      () => {
+        this.whatsappService
+          .sendMessage('549' + pericia.verificador?.tel!, 'Test')
+          .subscribe((data) => console.log(data));
+      }
+    );
   }
   // --------------------------------------------------------------------------------------------->
 }

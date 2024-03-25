@@ -7,7 +7,9 @@ import { Socket } from 'ngx-socket-io';
 export class SocketIoService {
   private webSocket!: Socket;
 
-  constructor() {
+  constructor() {}
+
+  initSocket() {
     this.webSocket = new Socket({
       url: 'http://localhost:3002',
       options: {},

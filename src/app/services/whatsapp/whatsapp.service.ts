@@ -17,4 +17,11 @@ export class WhatsAppService {
       .get<{ connected: boolean; mediaUrl: string }>(direction)
       .pipe(catchError((e) => handleError(e)));
   }
+
+  sendMessage(phone: string, message: string) {
+    const direction = `${this.url}send-message/`;
+    return this.http
+      .post(direction, { phone, message })
+      .pipe(catchError((e) => handleError(e)));
+  }
 }

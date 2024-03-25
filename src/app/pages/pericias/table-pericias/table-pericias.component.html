@@ -46,7 +46,7 @@
         <p pTooltip="{{pericia.nombre_asegurado}}">{{pericia.nombre_asegurado}}</p>
       </td>
       <td class="flex">
-        <app-wp-button #wp (click)="onClickButton = true; type = 'wp'" />
+        <app-wp-button pTooltip="Enviar mensaje" tooltipPosition="bottom" #wp (click)="onClickButton = true; sendMessage(pericia)" />
       </td>
     </tr>
   </ng-template>
