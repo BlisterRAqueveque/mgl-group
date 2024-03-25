@@ -1,10 +1,12 @@
 <div class="relative">
 
   <div class="mt-4">
-    <app-table-siniestros #table (selectedRow)="modal.showModal($event)" (setSiniestroInactive)="modal.changeState($event)"  />
+    <app-table-siniestros #table (selectedRow)="modal.showModal($event)"
+      (setSiniestroInactive)="modal.changeState($event)" />
   </div>
 </div>
 
-<app-modal-add-siniestro #modal (emitNewSiniestro)="addSiniestro($event)" (emitDelete)="deleteSiniestro($event)" />
+<app-modal-add-siniestro #modal (emitNewSiniestro)="updateTable($event)" (emitDelete)="updateTable($event)"
+  (emitUpdateSiniestro)="updateTable($event)" />
 
 <app-button [text]="'Agregar tipo siniestro'" [moreWidth]="true" (click)="modal.showModal()" />

@@ -161,12 +161,15 @@ export class ModalAddSiniestroComponent {
   siniestro!: TipoSiniestroI | undefined;
 
   updateDialog() {
-    if (this.validation(this.siniestro as TipoSiniestroI)) {
+    const siniestro: TipoSiniestroI = {
+      nombre: this.nombre
+    }
+    if (this.validation(siniestro)) {
       this.dialog.confirm(
         'Edición de siniestro.',
         'Está a punto de editar la información del siniestro. ¿Desea continuar?',
         () => {
-          this.update();
+          this.update(siniestro);
         }
       );
     } else {
@@ -180,17 +183,18 @@ export class ModalAddSiniestroComponent {
     }
   }
 
-  update() {
-    this.siniestro!.nombre = this.nombre;
+  @Output() emitUpdateSiniestro = new EventEmitter<TipoSiniestroI>()
+  update(siniestro: TipoSiniestroI) {
     this.siniestroService
-      .update(this.siniestro?.id!, this.siniestro as TipoSiniestroI)
+      .update(this.siniestro?.id!, siniestro)
       .subscribe({
         next: (data) => {
           this.dialog.alertMessage(
             'Confirmación de carga',
             'El siniestro fue editado correctamente.',
             () => {
-              //* Mandamos el nuevo siniestro al componente suscrito
+              //* Mandamos la entidad al componente suscrito
+              this.emitUpdateSiniestro.emit(data)
               this.error = false;
               this.visible = false;
               //* Reiniciamos el valor de los siniestros
@@ -240,7 +244,7 @@ export class ModalAddSiniestroComponent {
     );
   }
 
-  @Output() emitDelete = new EventEmitter<number>();
+  @Output() emitDelete = new EventEmitter<TipoSiniestroI>();
   delete() {
     this.dialog.confirm(
       'Eliminar tipo de siniestro',
@@ -248,11 +252,11 @@ export class ModalAddSiniestroComponent {
       () => {
         this.siniestroService.delete(this.siniestro?.id!).subscribe({
           next: (data) => {
+            this.emitDelete.emit(data);
             this.dialog.alertMessage(
               'Confirmación de carga',
               'El siniestro fue eliminado correctamente.',
               () => {
-                this.emitDelete.emit(this.siniestro?.id);
                 this.siniestro = undefined;
                 this.visible = false;
               }

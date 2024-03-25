@@ -2,7 +2,7 @@
   (onHide)="dismissModal()">
   <ng-template pTemplate="header">
     <div class="inline-flex align-items-center justify-content-center gap-2">
-      <span class="font-bold white-space-nowrap text-2xl">Agregar pericia</span>
+      <span class="font-bold white-space-nowrap text-2xl">{{ pericia ? 'Modificar pericia' : 'Agregar pericia' }}</span>
     </div>
   </ng-template>
   <div class="grid grid-cols-12 gap-4">
@@ -15,7 +15,8 @@
         <p-calendar class="mt-1 p-1 w-full border border-gray-300 rounded-md focus:outline-none p-inputtext-sm
           focus:border-indigo-500" dateFormat="dd/mm/yy" panelStyleClass="panel" [style]="{ 'width': '100%' }"
           [ngClass]="{ 'border-red-600': (error && !fecha_asignado), 'border-gray-300': !(error && !fecha_asignado) }"
-          appendTo="body" (ngModelChange)="asd()" placeholder="Ingrese fecha" [showIcon]="true" [(ngModel)]="fecha_asignado"></p-calendar>
+          appendTo="body" placeholder="Ingrese fecha" [showIcon]="true"
+          [(ngModel)]="fecha_asignado"></p-calendar>
       </div>
 
       <!-- Aseguradora -->
@@ -70,9 +71,9 @@
       <!-- Teléfono del asegurado -->
       <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
         <label class="text-sm font-medium text-gray-700 w-full">Teléfono del asegurado</label>
-        <p-inputMask class="mt-1 p-1 w-full border border-gray-300 rounded-md focus:outline-none
-          focus:border-indigo-500" mask="+54 (299) 999-9999" placeholder="+54 (999) 999-9999"
-          [(ngModel)]="tel_asegurado"></p-inputMask>
+        <input pInputText class="mt-1 p-3 w-full border border-gray-300
+        rounded-md focus:outline-none focus:border-indigo-500" type="text" placeholder="Ingrese teléfono del asegurado"
+          [(ngModel)]="tel_asegurado" />
       </div>
 
       <!-- Correo asegurado -->
@@ -127,8 +128,8 @@
   <ng-template pTemplate="footer">
     <div class="w-full flex justify-end items-center mt-2">
       <div pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-gray-800 rounded-full flex
-        items-center justify-center p-5 cursor-pointer" (click)="insertDialog()">
-        <p class="text-white">Agregar pericia</p>
+        items-center justify-center p-5 cursor-pointer" (click)="pericia ? updateDialog() : insertDialog()">
+        <p class="text-white">{{ pericia ? 'Modificar pericia' : 'Agregar pericia' }}</p>
       </div>
     </div>
   </ng-template>

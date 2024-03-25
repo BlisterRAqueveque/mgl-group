@@ -5,6 +5,6 @@
   </div>
 </div>
 
-<app-modal-add #modal />
+<app-modal-add #modal (emitNewPericia)="updateTable($event)" (emitUpdatePericia)="updateTable($event)" />
 
 <app-button [text]="'Agregar pericia'" (click)="modal.showModal()" />

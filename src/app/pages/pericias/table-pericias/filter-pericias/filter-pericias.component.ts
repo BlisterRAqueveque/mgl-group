@@ -13,8 +13,8 @@ import { DropdownModule } from 'primeng/dropdown';
 export class FilterPericiasComponent {
   option: any;
   open_list = [
-    { label: 'Abierto', value: true },
-    { label: 'Cerrado', value: false },
+    { label: 'Abierto', value: 1 },
+    { label: 'Cerrado', value: 0 },
   ];
 
   @Output('changeInput') private event = new EventEmitter<{

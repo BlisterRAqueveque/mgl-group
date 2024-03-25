@@ -83,12 +83,8 @@ export class ModalAddComponent {
   showModal(pericia?: PericiaI) {
     //* Podemos mandar la pericia como parámetro
     if (pericia) {
-      this.pericia = pericia
-      this.fecha_asignado = formatDate(
-        new Date(pericia.fecha_asignado!),
-        'dd/MM/yyyy',
-        'en-US'
-      );
+      this.pericia = pericia;
+      this.fecha_asignado = new Date(pericia.fecha_asignado);
       this.selectedAseguradora = this.aseguradoras.find(
         (i) => i.id === pericia?.aseguradora?.id
       )!;
@@ -234,6 +230,68 @@ export class ModalAddComponent {
   pericia!: PericiaI | undefined;
 
   //TODO Cuando se cargue el edit, poner la variable date
+  updateDialog() {
+    const pericia: PericiaI = {
+      fecha_asignado: this.fecha_asignado,
+      aseguradora: this.selectedAseguradora,
+      n_siniestro: this.n_siniestro!,
+      n_denuncia: this.n_denuncia!,
+      nombre_asegurado: this.nombre_asegurado,
+      dir_asegurado: this.dir_asegurado,
+      tel_asegurado: this.tel_asegurado,
+      mail_asegurado: this.mail_asegurado,
+      tipo_siniestro: this.selectedTipo,
+      veh_asegurado: this.veh_asegurado,
+      patente_asegurado: this.patente_asegurado,
+      verificador: this.selectedVerificador,
+    };
+    if (this.validation(pericia)) {
+      this.dialog.confirm(
+        'Edición de pericia.',
+        'Está a punto de editar la información de la pericia. ¿Desea continuar?',
+        () => {
+          this.update(pericia);
+        }
+      );
+    } else {
+      this.error = true;
+      this.dialog.alertMessage(
+        'Error de carga',
+        '¡Falta completar algunos campos!',
+        () => {},
+        true
+      );
+    }
+  }
+
+  @Output() emitUpdatePericia = new EventEmitter<PericiaI>()
+  update(pericia: PericiaI) {
+    this.periciaService.update(this.pericia?.id!, pericia).subscribe({
+      next: (data) => {
+        this.dialog.alertMessage(
+          'Confirmación de carga',
+          'La pericia fue editada correctamente.',
+          () => {
+            //* Mandamos la entidad al componente suscrito
+            this.emitUpdatePericia.emit(data)
+            this.error = false;
+            this.visible = false;
+            //* Reiniciamos el valor
+            this.pericia = undefined;
+          }
+        );
+      },
+      error: (e) => {
+        console.log(e);
+        this.dialog.alertMessage(
+          'Error de carga',
+          'No se pudo editar la pericia, hubo un error de servidor.',
+          () => {},
+          true
+        );
+      },
+    });
+  }
 
   changeState(pericia: PericiaI) {
     this.dialog.confirm(
@@ -265,8 +323,4 @@ export class ModalAddComponent {
     );
   }
   //----------------------------------------------------------------------------------->
-
-  asd() {
-    console.log(typeof this.fecha_asignado, this.fecha_asignado)
-  }
 }

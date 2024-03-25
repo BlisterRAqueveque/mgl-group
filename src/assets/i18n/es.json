@@ -27,6 +27,9 @@
     "dayNamesShort": ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
     "monthNamesShort": ["Ene", "Feb", "Mar", "Abr", "May", "Jun","Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
     "today": "Hoy",
-    "weekHeader": "Fs"
+    "weekHeader": "Fs",
+    "emptyFilterMessage": "No se encontraron resultados",
+    "emptySearchMessage": "No se encontraron resultados",
+    "emptyMessage": "No hay opciones disponibles"
   }
 }

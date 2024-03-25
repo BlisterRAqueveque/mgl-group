@@ -18,11 +18,7 @@ import { PericiaI } from '../../interfaces/pericia.interface';
 export class PericiasComponent {
   @ViewChild('table') table!: TablePericiasComponent;
 
-  addPericia(user: PericiaI) {
-    this.table.pericias.unshift(user)
-  }
-
-  deletePericia(id: number) {
-    this.table.pericias = this.table.pericias.filter(item => item.id !== id )
+  updateTable(pericia: PericiaI) {
+    this.table.getHistoric()
   }
 }

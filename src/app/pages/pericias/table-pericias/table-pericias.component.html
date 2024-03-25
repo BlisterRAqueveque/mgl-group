@@ -1,53 +1,69 @@
 <app-filter-pericias (changeInput)="filter($event)" />
 
 <p-paginator #paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
-    [totalRecords]="totalRecords" [style]="{ 'width': '100%' }" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
+  [totalRecords]="totalRecords" [style]="{ 'width': '100%' }" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
 
-  <p-table #table [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
-    [styleClass]="'p-datatable-sm mt-3'" [value]="pericias" dataKey="id" (onSort)="onSort($event)">
-    <ng-template pTemplate="header">
-      <tr class="dark-tr">
-        <th pSortableColumn="id_visible">
-          ID <ng-icon name="{{asc ? 'heroBarsArrowUpSolid' : 'heroBarsArrowDownSolid'}}" />
-        </th>
-        <th>Estado</th>
-        <th>Fecha</th>
-        <th>Asignado</th>
-        <th>Siniestro n°</th>
-        <th>Denuncia n°</th>
-        <th>Nombre</th>
-        <th>Acciones</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-pericia>
-      <tr class="hover:bg-gray-200 transition-all duration-500 cursor-pointer" (click)="onRowSelect(pericia)">
-        <td>
-          <p pTooltip="{{pericia.id}}">{{pericia.id}}</p>
-        </td>
-        <td>
-          <p pTooltip="{{pericia.abierta ? 'Abierta' : 'Cerrada'}}">{{pericia.abierta ? 'Abierta' : 'Cerrada'}}</p>
-        </td>
-        <td>
-          <p pTooltip="{{pericia.fecha_asignado | date: 'dd/MM/yyyy'}}">{{pericia.fecha_asignado | date: 'dd/MM/yyyy'}}</p>
-        </td>
-        <td>
-          <p pTooltip="{{pericia.verificador ? pericia.verificador.nombre + ' ' + pericia.verificador.apellido : 'Sin asignar' }}">{{pericia.verificador ? pericia.verificador.nombre + ' ' + pericia.verificador.apellido : 'Sin asignar' }}</p>
-        </td>
-        <td>
-          <p pTooltip="{{pericia.n_siniestro}}">{{pericia.n_siniestro}}</p>
-        </td>
-        <td>
-          <p pTooltip="{{pericia.n_denuncia}}">{{pericia.n_denuncia}}</p>
-        </td>
-        <td>
-          <p pTooltip="{{pericia.nombre_asegurado}}">{{pericia.nombre_asegurado}}</p>
-        </td>
-        <td>
-          <p pTooltip="pericia.upload_user ? pericia.upload_user.name + ' ' + pericia.upload_user.last_name : '-NO APLICA-'"></p>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+<p-table #table [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
+  [styleClass]="'p-datatable-sm mt-3'" [value]="pericias" dataKey="id" (onSort)="onSort($event)">
+  <ng-template pTemplate="header">
+    <tr class="dark-tr">
+      <th pSortableColumn="id_visible">
+        ID <ng-icon name="{{asc ? 'heroBarsArrowUpSolid' : 'heroBarsArrowDownSolid'}}" />
+      </th>
+      <th>Estado</th>
+      <th>Fecha</th>
+      <th>Asignado</th>
+      <th>Siniestro n°</th>
+      <th>Denuncia n°</th>
+      <th>Nombre asegurado</th>
+      <th>Acciones</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-pericia>
+    <tr class="hover:bg-gray-200 transition-all duration-500 cursor-pointer" (click)="onRowSelect(pericia)">
+      <td>
+        <p pTooltip="{{pericia.id}}">{{pericia.id}}</p>
+      </td>
+      <td>
+        <p pTooltip="{{pericia.abierta ? 'Abierta' : 'Cerrada'}}">{{pericia.abierta ? 'Abierta' : 'Cerrada'}}</p>
+      </td>
+      <td>
+        <p pTooltip="{{pericia.fecha_asignado | date: 'dd/MM/yyyy'}}">{{pericia.fecha_asignado | date: 'dd/MM/yyyy'}}
+        </p>
+      </td>
+      <td>
+        <p
+          pTooltip="{{pericia.verificador ? pericia.verificador.nombre + ' ' + pericia.verificador.apellido : 'Sin asignar' }}">
+          {{pericia.verificador ? pericia.verificador.nombre + ' ' + pericia.verificador.apellido : 'Sin asignar' }}</p>
+      </td>
+      <td>
+        <p pTooltip="{{pericia.n_siniestro}}">{{pericia.n_siniestro}}</p>
+      </td>
+      <td>
+        <p pTooltip="{{pericia.n_denuncia}}">{{pericia.n_denuncia}}</p>
+      </td>
+      <td>
+        <p pTooltip="{{pericia.nombre_asegurado}}">{{pericia.nombre_asegurado}}</p>
+      </td>
+      <td class="flex">
+        <app-wp-button #wp (click)="onClickButton = true; type = 'wp'" />
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
 
-  <p-paginator #paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
-    [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
+<p-paginator #paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
+  [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
+
+
+<p-dialog header="Conexión del dispositivo" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false"
+  [resizable]="false">
+  <div class="flex justify-center items-center">
+    <img *ngIf="mediaUrl" [src]="mediaUrl" width="400" alt="">
+  </div>
+  <hr>
+  <h5 class="text-center text-lg">Para continuar, debe emparejar un dispositivo de WhatsApp, y así, poder enviar mensajes</h5>
+  <p class="text-gray-400 text-center"><cite>El QR se actualiza cada 1 minuto</cite></p>
+</p-dialog>
+
+<app-dialog #dialog />

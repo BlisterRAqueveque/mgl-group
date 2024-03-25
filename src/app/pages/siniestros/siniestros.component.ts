@@ -18,11 +18,7 @@ import { TipoSiniestroI } from '../../interfaces/tipo-siniestro.interface';
 export class SiniestrosComponent {
   @ViewChild('table') table!: TableSiniestrosComponent
 
-  addSiniestro(user: TipoSiniestroI) {
-    this.table.siniestros.unshift(user)
-  }
-
-  deleteSiniestro(id: number) {
-    this.table.siniestros = this.table.siniestros.filter(item => item.id !== id )
+  updateTable(siniestro: TipoSiniestroI) {
+    this.table.getHistoric()
   }
 }
