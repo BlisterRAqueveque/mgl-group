@@ -22,31 +22,34 @@
   <ng-template pTemplate="body" let-pericia>
     <tr class="hover:bg-gray-200 transition-all duration-500 cursor-pointer" (click)="onRowSelect(pericia)">
       <td>
-        <p pTooltip="{{pericia.id}}">{{pericia.id}}</p>
+        <p tooltipPosition="bottom" pTooltip="{{pericia.id}}">{{pericia.id}}</p>
       </td>
       <td>
-        <p pTooltip="{{pericia.abierta ? 'Abierta' : 'Cerrada'}}">{{pericia.abierta ? 'Abierta' : 'Cerrada'}}</p>
+        <p tooltipPosition="bottom" pTooltip="{{pericia.abierta ? 'Abierta' : 'Cerrada'}}"><app-state-button
+            [estado]="pericia.abierta" (click)="onClickButton = true; changeState(pericia)" /></p>
       </td>
       <td>
-        <p pTooltip="{{pericia.fecha_asignado | date: 'dd/MM/yyyy'}}">{{pericia.fecha_asignado | date: 'dd/MM/yyyy'}}
+        <p tooltipPosition="bottom" pTooltip="{{pericia.fecha_asignado | date: 'dd/MM/yyyy'}}">
+          {{pericia.fecha_asignado | date: 'dd/MM/yyyy'}}
         </p>
       </td>
       <td>
-        <p
+        <p tooltipPosition="bottom"
           pTooltip="{{pericia.verificador ? pericia.verificador.nombre + ' ' + pericia.verificador.apellido : 'Sin asignar' }}">
           {{pericia.verificador ? pericia.verificador.nombre + ' ' + pericia.verificador.apellido : 'Sin asignar' }}</p>
       </td>
       <td>
-        <p pTooltip="{{pericia.n_siniestro}}">{{pericia.n_siniestro}}</p>
+        <p tooltipPosition="bottom" pTooltip="{{pericia.n_siniestro}}">{{pericia.n_siniestro}}</p>
       </td>
       <td>
-        <p pTooltip="{{pericia.n_denuncia}}">{{pericia.n_denuncia}}</p>
+        <p tooltipPosition="bottom" pTooltip="{{pericia.n_denuncia}}">{{pericia.n_denuncia}}</p>
       </td>
       <td>
-        <p pTooltip="{{pericia.nombre_asegurado}}">{{pericia.nombre_asegurado}}</p>
+        <p tooltipPosition="bottom" pTooltip="{{pericia.nombre_asegurado}}">{{pericia.nombre_asegurado}}</p>
       </td>
       <td class="flex">
-        <app-wp-button pTooltip="Enviar mensaje" tooltipPosition="bottom" #wp (click)="onClickButton = true; sendMessage(pericia)" />
+        <app-wp-button tooltipPosition="bottom" pTooltip="Enviar mensaje" #wp
+          (click)="onClickButton = true; sendMessage(pericia)" />
       </td>
     </tr>
   </ng-template>
@@ -56,13 +59,14 @@
   [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
 
 
-<p-dialog header="Conexión del dispositivo" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false"
-  [resizable]="false">
+<p-dialog header="Conexión del dispositivo" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }"
+  [draggable]="false" [resizable]="false">
   <div class="flex justify-center items-center">
     <img *ngIf="mediaUrl" [src]="mediaUrl" width="400" alt="">
   </div>
   <hr>
-  <h5 class="text-center text-lg">Para continuar, debe emparejar un dispositivo de WhatsApp, y así, poder enviar mensajes</h5>
+  <h5 class="text-center text-lg">Para continuar, debe emparejar un dispositivo de WhatsApp, y así, poder enviar
+    mensajes</h5>
   <p class="text-gray-400 text-center"><cite>El QR se actualiza cada 1 minuto</cite></p>
 </p-dialog>
 

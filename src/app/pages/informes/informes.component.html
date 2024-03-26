@@ -1,0 +1,43 @@
+<input type="file" #input (change)="addImage($event, input)" />
+
+<div class="grid grid-cols-12 gap-4 pt-24 md:pt-20 lg:pt-16 px-4">
+  <ng-container *ngFor="let img of images; let i = index">
+    <div class="lg:col-span-3 sm:col-span-12 md:col-span-6 col-span-12 flex justify-center items-center flex-col
+      bg-gray-100 p-4 rounded-xl shadow-gray-500/50 shadow-lg">
+      <div class="relative">
+        <img [src]="img.img" alt="" class="max-w-full max-h-80 md:max-h-60 w-auto h-auto object-cover">
+        <div class="absolute top-0 left-0 w-full h-full bg-black/50 opacity-0 transition-all duration-500
+          hover:opacity-100 flex justify-center items-center cursor-pointer" (click)="editImage(i)"
+          pTooltip="Click en la imagen para editarla" tooltipPosition="bottom">
+          <ng-icon name="heroEyeSolid" size="1.5rem" class="text-white" />
+        </div>
+      </div>
+      <textarea placeholder="Agregue una cabecera." class="mt-4 w-full" rows="3"></textarea>
+    </div>
+  </ng-container>
+</div>
+
+<p-dialog header="Editar imagen" [(visible)]="visible" [modal]="true" [style]="{ width: '90vw', height: '90vh' }"
+  [draggable]="false" [resizable]="false">
+  <div class="w-full h-full relative flex justify-center items-center">
+    <image-cropper [imageBase64]="imageToEdit" [transform]="transform" (imageCropped)="imageCropped($event)"
+      [canvasRotation]="canvasRotation" [style]="{ width: 'auto' }" [maintainAspectRatio]="false"></image-cropper>
+
+
+    <div class="w-14 h-14 flex justify-center items-center absolute bottom-20 left-10
+      bg-purple-700 rounded-full shadow-gray-500/50 shadow-lg" pRipple (click)="rotateLeft()">
+      <ng-icon name="heroArrowUturnLeftSolid" size="2rem" class="text-white" />
+    </div>
+
+    <div class="w-14 h-14 flex justify-center items-center absolute bottom-20 right-10
+      bg-purple-700 rounded-full shadow-gray-500/50 shadow-lg" pRipple (click)="rotateRight()">
+      <ng-icon name="heroArrowUturnRightSolid" size="2rem" class="text-white" />
+    </div>
+
+    <div class="w-20 h-20 flex justify-center items-center absolute bottom-0 left-1/2 transform
+      -translate-x-1/2 -translate-y-1/2 bg-purple-700 rounded-full shadow-gray-500/50
+      shadow-lg" pRipple (click)="finishImgEdition()">
+      <ng-icon name="heroPencilSquareSolid" size="2rem" class="text-white" />
+    </div>
+  </div>
+</p-dialog>

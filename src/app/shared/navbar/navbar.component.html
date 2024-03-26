@@ -7,7 +7,8 @@
       (click)="show = !show" [routerLinkActive]="['active']" #inicio (isActiveChange)="onRouterLinkActive(inicio)">Inicio</a>
     <a class="md:block relative hidden rounded-xl" [routerLink]="['pericias']"
       (click)="show = !show" [routerLinkActive]="['active']" #pericia (isActiveChange)="onRouterLinkActive(pericia)">Pericias</a>
-    <a class="md:block relative hidden rounded-xl">Informes</a>
+    <a class="md:block relative hidden rounded-xl" [routerLink]="['informes']"
+      (click)="show = !show" [routerLinkActive]="['active']" #informe (isActiveChange)="onRouterLinkActive(informe)">Informes</a>
     <a class="md:block relative hidden rounded-xl" [routerLink]="['asesores']"
       (click)="show = !show" [routerLinkActive]="['active']" #asesores (isActiveChange)="onRouterLinkActive(asesores)">Asesores</a>
     <a class="md:block relative hidden rounded-xl" [routerLink]="['aseguradoras']"

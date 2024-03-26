@@ -34,3 +34,9 @@ input {
 .p-datepicker-month {
   padding-right: 6px !important;
 }
+
+/* Son del image cropper, cuando se inicia, se agrega automáticamente
+  un margin left que impide modificar la imagen */
+.ngx-ic-cropper, .ngx-ic-overlay {
+  margin-left: 0 !important;
+}

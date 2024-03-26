@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -18,6 +18,7 @@ import { DialogComponent } from '../../../shared/dialog/dialog.component';
 import { WpButtonComponent } from './../../../shared/wp-button/wp-button.component';
 import { FilterPericiasComponent } from './filter-pericias/filter-pericias.component';
 import { firstValueFrom } from 'rxjs';
+import { StateButtonComponent } from '../../../shared/state-button/state-button.component';
 
 @Component({
   selector: 'app-table-pericias',
@@ -32,6 +33,7 @@ import { firstValueFrom } from 'rxjs';
     WpButtonComponent,
     DialogModule,
     DialogComponent,
+    StateButtonComponent,
   ],
   providers: [
     provideIcons({
@@ -179,26 +181,83 @@ export class TablePericiasComponent {
   }
 
   async sendMessage(pericia: PericiaI) {
-    //* Revisamos el estado del dispositivo conectado
-    await this.checkDeviceStatus();
-    if (this.isDeviceConnected) {
-      this.confirmMessage(pericia);
+    if (pericia.abierta) {
+      //* Revisamos el estado del dispositivo conectado
+      await this.checkDeviceStatus();
+      if (this.isDeviceConnected) {
+        this.confirmMessage(pericia);
+      } else {
+        //Se comienza el proceso de emparejamiento
+        this.websocketService.initSocket(); //* Conexión al servidor
+        this.receiveSocketResponse();
+        this.visible = true;
+      }
     } else {
-      //Se comienza el proceso de emparejamiento
-      this.websocketService.initSocket(); //* Conexión al servidor
-      this.receiveSocketResponse();
-      this.visible = true;
+      this.dialog.alertMessage(
+        'Pericia cerrada',
+        'Esta pericia se encuentra cerrada, no puede dar aviso para su seguimiento',
+        () => {},
+        true
+      );
     }
   }
 
   confirmMessage(pericia: PericiaI) {
+    const message =
+    `Seguimiento de nueva pericia:
+Día: ${formatDate(pericia.fecha_asignado, 'dd/MM/yyyy', 'en-US')}.
+Aseguradora: ${pericia.aseguradora ? pericia.aseguradora?.nombre : 'no asignado'}.
+N° de siniestro: ${pericia.n_siniestro ? pericia.n_siniestro : 'no tiene'}.
+N° de denuncia: ${pericia.n_denuncia ? pericia.n_denuncia : 'no tiene'}.
+Nombre asegurado: ${pericia.nombre_asegurado}.
+Dirección: ${pericia.dir_asegurado ? pericia.dir_asegurado : 'sin datos'}.
+Teléfono: ${pericia.tel_asegurado ? pericia.tel_asegurado : 'sin datos'}.
+Email: ${pericia.mail_asegurado ? pericia.mail_asegurado : 'sin datos'}.
+Tipo de siniestro: ${pericia.tipo_siniestro ? pericia.tipo_siniestro?.nombre : 'no asignado'}.
+Vehículo: ${pericia.veh_asegurado ?? 'sin datos'}.
+Patente: ${pericia.patente_asegurado ?? 'sin datos'}.
+*¡Que tenga un excelente día!* 😁`
+
     this.dialog.confirm(
       'Confirmación',
       '¿Enviar mensaje con los datos al verificador?',
       () => {
         this.whatsappService
-          .sendMessage('549' + pericia.verificador?.tel!, 'Test')
+          .sendMessage('549' + pericia.verificador?.tel!, message)
           .subscribe((data) => console.log(data));
+      }
+    );
+  }
+
+  changeState(pericia: PericiaI) {
+    this.dialog.confirm(
+      'Confirmación de carga',
+      `¿Desea ${pericia.abierta ? 'cerrar' : 'abrir'} esta pericia?`,
+      () => {
+        this.dialog.loading = true;
+        this.periciaService
+          .update(pericia.id!, { abierta: !pericia.abierta })
+          .subscribe({
+            next: (data) => {
+              pericia.abierta = !pericia.abierta;
+              this.dialog.alertMessage(
+                `El estado se cambio a ${
+                  pericia.abierta ? 'abierta' : 'cerrada'
+                }`,
+                'Confirmación de carga',
+                () => {}
+              );
+            },
+            error: (e) => {
+              console.log(e);
+              this.dialog.alertMessage(
+                'Ocurrió un error al intentar cambiar el estado.',
+                'Error de carga',
+                () => {},
+                true
+              );
+            },
+          });
       }
     );
   }
