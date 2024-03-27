@@ -29,11 +29,19 @@
   <div class="w-full h-full absolute p-4">
     <div class="w-full h-full flex flex-col justify-between">
       <div class="flex justify-start align-sub">
-        <ng-icon size="2rem" [name]="icon" class="mr-2"></ng-icon>
+        <ng-icon size="2rem" [name]="icon" class="mr-2"
+          [ngClass]="{
+            'text-gray-900': icon === 'heroClipboardDocumentListSolid',
+            'text-orange-900': icon === 'heroUserGroupSolid',
+            'text-teal-900': icon === 'heroUserSolid',
+            'text-emerald-900': icon === 'heroBuildingOfficeSolid',
+            'text-red-900': icon === 'heroShieldCheckSolid'
+          }" />
         <h1 class="m-0 p-0">{{text}}</h1>
       </div>
       <hr>
-      <h1 class="text-end text-white">N° {{quantity}}</h1>
+      <h1 class="text-end text-white font-extralight">{{ text_one }}</h1>
+      <h1 class="text-end text-white font-extralight">{{ text_two }}</h1>
     </div>
   </div>
 </div>

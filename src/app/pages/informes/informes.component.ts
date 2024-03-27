@@ -15,6 +15,10 @@ import {
 import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { RippleModule } from 'primeng/ripple';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { CheckboxModule } from 'primeng/checkbox';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-informes',
@@ -26,6 +30,10 @@ import { RippleModule } from 'primeng/ripple';
     TooltipModule,
     DialogModule,
     RippleModule,
+    InputTextModule,
+    InputTextareaModule,
+    CheckboxModule,
+    FormsModule,
   ],
   templateUrl: './informes.component.html',
   styleUrl: './informes.component.css',
@@ -39,6 +47,10 @@ import { RippleModule } from 'primeng/ripple';
   ],
 })
 export class InformesComponent {
+  poliza!: boolean;
+  cobertura!: boolean;
+  anio!: boolean;
+  patente!: boolean;
 
   // ---------------------------------------------------------------------------->
   /**                            Sección de imágenes                            */

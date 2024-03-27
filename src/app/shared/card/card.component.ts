@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
@@ -18,7 +19,7 @@ export type Icons =
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [NgIconComponent],
+  imports: [NgIconComponent, CommonModule],
   providers: [
     provideIcons({
       heroClipboardDocumentListSolid,
@@ -34,6 +35,7 @@ export type Icons =
 export class CardComponent {
   @Input() icon!: Icons;
   @Input() text!: string;
-  @Input() quantity!: number;
+  @Input() text_one!: string;
+  @Input() text_two!: string;
   @Input() color!: string;
 }

@@ -35,6 +35,14 @@ input {
   padding-right: 6px !important;
 }
 
+.p-checkbox-box {
+  border: solid 1px #1F2937;
+}
+
+.p-checkbox .p-checkbox-box.p-highlight {
+  background: #1F2937;
+}
+
 /* Son del image cropper, cuando se inicia, se agrega automáticamente
   un margin left que impide modificar la imagen */
 .ngx-ic-cropper, .ngx-ic-overlay {

@@ -47,9 +47,9 @@ export class ModalAddComponent {
   verificadores!: UsuarioI[];
 
   /** @description Variables que van a contener el resultado seleccionado de cada lista. */
-  selectedAseguradora!: AseguradoraI;
-  selectedTipo!: TipoSiniestroI;
-  selectedVerificador!: UsuarioI;
+  selectedAseguradora!: AseguradoraI | null;
+  selectedTipo!: TipoSiniestroI | null;
+  selectedVerificador!: UsuarioI | null;
 
   fecha_asignado!: any;
   n_siniestro!: number | undefined;
@@ -119,6 +119,9 @@ export class ModalAddComponent {
     this.mail_asegurado = '';
     this.veh_asegurado = '';
     this.patente_asegurado = '';
+    this.selectedAseguradora = null;
+    this.selectedTipo = null;
+    this.selectedVerificador = null;
     //* Reiniciamos el valor de la pericia en caso de ser cargado.
     this.pericia = undefined;
   }
@@ -143,9 +146,9 @@ export class ModalAddComponent {
       mail_asegurado: this.mail_asegurado,
       veh_asegurado: this.veh_asegurado,
       patente_asegurado: this.patente_asegurado,
-      aseguradora: this.selectedAseguradora,
-      tipo_siniestro: this.selectedTipo,
-      verificador: this.selectedVerificador,
+      aseguradora: this.selectedAseguradora!,
+      tipo_siniestro: this.selectedTipo!,
+      verificador: this.selectedVerificador!,
       usuario_carga: this.user,
     };
     if (this.validation(newPericia)) {
@@ -233,17 +236,17 @@ export class ModalAddComponent {
   updateDialog() {
     const pericia: PericiaI = {
       fecha_asignado: this.fecha_asignado,
-      aseguradora: this.selectedAseguradora,
+      aseguradora: this.selectedAseguradora!,
       n_siniestro: this.n_siniestro!,
       n_denuncia: this.n_denuncia!,
       nombre_asegurado: this.nombre_asegurado,
       dir_asegurado: this.dir_asegurado,
       tel_asegurado: this.tel_asegurado,
       mail_asegurado: this.mail_asegurado,
-      tipo_siniestro: this.selectedTipo,
+      tipo_siniestro: this.selectedTipo!,
       veh_asegurado: this.veh_asegurado,
       patente_asegurado: this.patente_asegurado,
-      verificador: this.selectedVerificador,
+      verificador: this.selectedVerificador!,
     };
     if (this.validation(pericia)) {
       this.dialog.confirm(
@@ -264,7 +267,7 @@ export class ModalAddComponent {
     }
   }
 
-  @Output() emitUpdatePericia = new EventEmitter<PericiaI>()
+  @Output() emitUpdatePericia = new EventEmitter<PericiaI>();
   update(pericia: PericiaI) {
     this.periciaService.update(this.pericia?.id!, pericia).subscribe({
       next: (data) => {
@@ -273,7 +276,7 @@ export class ModalAddComponent {
           'La pericia fue editada correctamente.',
           () => {
             //* Mandamos la entidad al componente suscrito
-            this.emitUpdatePericia.emit(data)
+            this.emitUpdatePericia.emit(data);
             this.error = false;
             this.visible = false;
             //* Reiniciamos el valor

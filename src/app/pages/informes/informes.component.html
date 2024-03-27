@@ -1,3 +1,119 @@
+<!-- Cabecera principal -->
+<h1 class="text-center my-6 text-2xl md:text-4xl">Informe de investigación</h1>
+<div class="grid grid-cols-12 gap-4">
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+    <label class="text-sm font-medium text-gray-700 w-full">Tipo de siniestro</label>
+    <input pInputText class="mt-1 p-3 w-full border border-gray-300
+      rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese tipo de siniestro." />
+  </div>
+
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+    <label class="text-sm font-medium text-gray-700 w-full">Tipo hecho</label>
+    <input pInputText class="mt-1 p-3 w-full border border-gray-300
+      rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese tipo hecho." />
+  </div>
+</div>
+
+<!-- Datos del siniestro -->
+<h1 class="text-center my-6 text-2xl md:text-4xl">Datos del siniestro</h1>
+<div class="grid grid-cols-12 gap-4">
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+    <label class="text-sm font-medium text-gray-700 w-full">Número de siniestro</label>
+    <input pInputText class="mt-1 p-3 w-full border border-gray-300
+      rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese n° siniestro." />
+  </div>
+
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+    <label class="text-sm font-medium text-gray-700 w-full">Número de denuncia</label>
+    <input pInputText class="mt-1 p-3 w-full border border-gray-300
+      rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese n° denuncia." />
+  </div>
+</div>
+
+<!-- Datos del siniestro -->
+<h1 class="text-center my-6 text-2xl md:text-4xl">Datos del asegurado</h1>
+<div class="grid grid-cols-12 gap-4">
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+    <label class="text-sm font-medium text-gray-700 w-full">Nombre del asegurado</label>
+    <input pInputText class="mt-1 p-3 w-full border border-gray-300
+      rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese nombre del asegurado." />
+  </div>
+
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+    <label class="text-sm font-medium text-gray-700 w-full">Domicilio del asegurado</label>
+    <input pInputText class="mt-1 p-3 w-full border border-gray-300
+      rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese domicilio del asegurado." />
+  </div>
+
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+    <label class="text-sm font-medium text-gray-700 w-full">Teléfono del asegurado</label>
+    <input pInputText class="mt-1 p-3 w-full border border-gray-300
+      rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese teléfono del asegurado." />
+  </div>
+
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+    <label class="text-sm font-medium text-gray-700 w-full">Póliza</label>
+    <input pInputText class="mt-1 p-3 w-full border border-gray-300
+      rounded-md focus:outline-none focus:border-indigo-500" [disabled]="poliza" placeholder="Ingrese póliza." />
+
+    <div class="flex items-center mt-2 ml-2">
+      <p-checkbox [(ngModel)]="poliza" [binary]="true" ></p-checkbox>
+      <label class="ml-2">¿Tiene póliza?</label>
+    </div>
+  </div>
+
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+    <label class="text-sm font-medium text-gray-700 w-full">Tipo cobertura</label>
+    <input pInputText class="mt-1 p-3 w-full border border-gray-300
+      rounded-md focus:outline-none focus:border-indigo-500" [disabled]="cobertura" placeholder="Ingrese tipo cobertura." />
+
+    <div class="flex items-center mt-2 ml-2">
+      <p-checkbox [(ngModel)]="cobertura" [binary]="true" ></p-checkbox>
+      <label class="ml-2">¿Tiene un tipo de cobertura?</label>
+    </div>
+  </div>
+
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+    <label class="text-sm font-medium text-gray-700 w-full">Bien asegurado</label>
+    <input pInputText class="mt-1 p-3 w-full border border-gray-300
+      rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese bien asegurado." />
+  </div>
+
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+    <label class="text-sm font-medium text-gray-700 w-full">Año</label>
+    <input pInputText class="mt-1 p-3 w-full border border-gray-300
+      rounded-md focus:outline-none focus:border-indigo-500" [disabled]="anio" placeholder="Ingrese año." />
+
+    <div class="flex items-center mt-2 ml-2">
+      <p-checkbox [(ngModel)]="anio" [binary]="true" ></p-checkbox>
+      <label class="ml-2">¿Se conoce el año?</label>
+    </div>
+  </div>
+
+  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+    <label class="text-sm font-medium text-gray-700 w-full">Patente</label>
+    <input pInputText class="mt-1 p-3 w-full border border-gray-300
+      rounded-md focus:outline-none focus:border-indigo-500" [disabled]="patente" placeholder="Ingrese patente." />
+
+    <div class="flex items-center mt-2 ml-2">
+      <p-checkbox [(ngModel)]="patente" [binary]="true" ></p-checkbox>
+      <label class="ml-2">¿Tiene patente?</label>
+    </div>
+  </div>
+</div>
+
+<!-- Ampliación de denuncia -->
+<h1 class="text-center my-6 text-2xl md:text-4xl">Ampliación de denuncia</h1>
+<div class="grid grid-cols-12 gap-4">
+  <div class="col-span-12 px-2 flex flex-col">
+    <textarea pInputTextarea class="p-3 border border-gray-300 rounded-md focus:outline-none
+        focus:border-indigo-500 mt-4 w-full" placeholder="Agregue una cabecera." rows="6"></textarea>
+  </div>
+</div>
+
+<!-- !INPUT DE IMÁGENES -->
+<h1 class="text-center my-6 text-2xl md:text-4xl">Imágenes</h1>
+<h4 class="text-center mb-6 text-xl">Agregue las imágenes en orden cronológico, teniendo en cuenta que de la misma manera, serán agregadas en el informe final</h4>
 <input type="file" #input (change)="addImage($event, input)" />
 
 <div class="grid grid-cols-12 gap-4 pt-24 md:pt-20 lg:pt-16 px-4">
@@ -12,17 +128,18 @@
           <ng-icon name="heroEyeSolid" size="1.5rem" class="text-white" />
         </div>
       </div>
-      <textarea placeholder="Agregue una cabecera." class="mt-4 w-full" rows="3"></textarea>
+      <textarea pInputTextarea class="mt-4 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+        focus:border-indigo-500" placeholder="Agregue una cabecera." rows="3"></textarea>
     </div>
   </ng-container>
 </div>
 
+<!-- Dialogo de modificación para la imagen -->
 <p-dialog header="Editar imagen" [(visible)]="visible" [modal]="true" [style]="{ width: '90vw', height: '90vh' }"
   [draggable]="false" [resizable]="false">
   <div class="w-full h-full relative flex justify-center items-center">
     <image-cropper [imageBase64]="imageToEdit" [transform]="transform" (imageCropped)="imageCropped($event)"
       [canvasRotation]="canvasRotation" [style]="{ width: 'auto' }" [maintainAspectRatio]="false"></image-cropper>
-
 
     <div class="w-14 h-14 flex justify-center items-center absolute bottom-20 left-10
       bg-purple-700 rounded-full shadow-gray-500/50 shadow-lg" pRipple (click)="rotateLeft()">

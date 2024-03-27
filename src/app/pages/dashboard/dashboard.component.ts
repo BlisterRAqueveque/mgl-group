@@ -9,6 +9,8 @@ import { es } from 'date-fns/locale';
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
 import { AnimationItem } from 'lottie-web';
 import { CommonModule } from '@angular/common';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
+import { DashboardI } from '../../interfaces/dashboard.interface';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,17 +26,30 @@ import { CommonModule } from '@angular/common';
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent {
-  constructor(private readonly auth: AuthService) {}
+  constructor(
+    private readonly auth: AuthService,
+    private readonly dashboardService: DashboardService
+  ) {}
 
   user!: UsuarioI;
   date = new Date();
+  dashboard!: DashboardI;
 
   async ngOnInit() {
+    //* Modifica gradualmente el tiempo transcurrido
     setInterval(() => {
       this.getFormatDate();
       this.obtenerSaludo();
     }, 1000);
     this.user = (await this.auth.returnUserInfo()) as UsuarioI;
+    this.dashboardService.getDashboard().subscribe({
+      next: (data) => {
+        this.dashboard = data;
+      },
+      error: (e) => {
+        console.log(e);
+      },
+    });
   }
 
   getFormatDate(): string {
@@ -86,6 +101,6 @@ export class DashboardComponent {
   };
 
   animationCreated(animationItem: AnimationItem): void {
-    console.log(animationItem);
+    //console.log(animationItem);
   }
 }
