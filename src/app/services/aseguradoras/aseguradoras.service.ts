@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AseguradoraI } from '../../interfaces/aseguradora.interface';
 import { map, catchError } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { ResponseI } from '../../interfaces/response.interface';
 import { handleError } from '../../tools/tools';
 

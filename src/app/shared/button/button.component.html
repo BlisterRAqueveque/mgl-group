@@ -4,6 +4,6 @@
   <div class="bottom-28 right-6 w-16 h-16 rounded-full flex flex-row justify-center
     items-center pointer-events-none">
     <p class="text-white fixed right-20 opacity-0 group-hover:opacity-100">{{text}}</p>
-    <ng-icon name="heroPlusCircleSolid" color="white" size="2.5rem" />
+    <ng-icon name="{{!upload ? 'heroPlusCircleSolid' : 'heroArrowUpOnSquareStackSolid'}}" color="white" size="{{!upload ? '2.5rem' : '2rem'}}" />
   </div>
 </div>

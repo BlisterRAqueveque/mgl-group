@@ -13,7 +13,7 @@ import {
   tap,
 } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { handleError } from '../../tools/tools';
@@ -106,7 +106,7 @@ export class AuthService {
     this.removeUserFromCookie();
     this.user.next(null);
     this.router.navigate(['login'], { replaceUrl: true });
-    window.location.reload()
+    //window.location.reload()
   }
 
   private removeUserFromCookie() {

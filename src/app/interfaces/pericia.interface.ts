@@ -1,6 +1,7 @@
-import { AseguradoraI } from "./aseguradora.interface";
-import { TipoSiniestroI } from "./tipo-siniestro.interface";
-import { UsuarioI } from "./user-token.interface";
+import { AseguradoraI } from './aseguradora.interface';
+import { InformeI } from './informe.interface';
+import { TipoSiniestroI } from './tipo-siniestro.interface';
+import { UsuarioI } from './user-token.interface';
 
 export interface PericiaI {
   id?: number;
@@ -24,4 +25,6 @@ export interface PericiaI {
 
   tipo_siniestro?: TipoSiniestroI;
   verificador?: UsuarioI;
+
+  informe?: InformeI;
 }

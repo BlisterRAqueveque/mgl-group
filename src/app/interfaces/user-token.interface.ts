@@ -1,10 +1,11 @@
-import { AseguradoraI } from "./aseguradora.interface";
-import { PericiaI } from "./pericia.interface";
-import { TipoSiniestroI } from "./tipo-siniestro.interface";
+import { AseguradoraI } from './aseguradora.interface';
+import { InformeI } from './informe.interface';
+import { PericiaI } from './pericia.interface';
+import { TipoSiniestroI } from './tipo-siniestro.interface';
 
 export interface UserWithToken {
-  token: string
-  user: UsuarioI
+  token: string;
+  user: UsuarioI;
 }
 
 export interface UsuarioI {
@@ -15,7 +16,7 @@ export interface UsuarioI {
   username: string;
   email: string;
   tel: string;
-  activo?: boolean
+  activo?: boolean;
   superuser?: boolean;
   rol: Roles;
 
@@ -30,6 +31,8 @@ export interface UsuarioI {
   tipo_siniestro?: TipoSiniestroI[];
 
   aseguradora?: AseguradoraI[];
+
+  informes?: InformeI[];
 }
 
 export enum Roles {

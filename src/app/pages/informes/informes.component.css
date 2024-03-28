@@ -1,1 +1,17 @@
+.cdk-drag-preview {
+  background: #3cbeadd5;
+}
 
+.cdk-drag-placeholder {
+  opacity: 0.5;
+}
+
+.cdk-drop-list-dragging {
+  outline: 2px solid #3cbeadd5;
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+/* El componente que recibe el drop */
+.cdk-drop-list-receiving {
+}

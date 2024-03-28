@@ -19,6 +19,7 @@ import { WpButtonComponent } from './../../../shared/wp-button/wp-button.compone
 import { FilterPericiasComponent } from './filter-pericias/filter-pericias.component';
 import { firstValueFrom } from 'rxjs';
 import { StateButtonComponent } from '../../../shared/state-button/state-button.component';
+import { PdfButtonComponent } from '../../../shared/pdf-button/pdf-button.component';
 
 @Component({
   selector: 'app-table-pericias',
@@ -34,6 +35,7 @@ import { StateButtonComponent } from '../../../shared/state-button/state-button.
     DialogModule,
     DialogComponent,
     StateButtonComponent,
+    PdfButtonComponent,
   ],
   providers: [
     provideIcons({
@@ -164,7 +166,9 @@ export class TablePericiasComponent {
     this.websocketService.disconnectSocket();
   }
 
+  connectionError!: boolean;
   async checkDeviceStatus() {
+    this.connectionError = false;
     try {
       const data = await firstValueFrom(this.whatsappService.getDeviceStatus());
       if (data.connected) {
@@ -177,6 +181,7 @@ export class TablePericiasComponent {
       }
     } catch (error) {
       //TODO Manejo de errores en la conexión
+      this.connectionError = true;
     }
   }
 
@@ -184,13 +189,22 @@ export class TablePericiasComponent {
     if (pericia.abierta) {
       //* Revisamos el estado del dispositivo conectado
       await this.checkDeviceStatus();
-      if (this.isDeviceConnected) {
-        this.confirmMessage(pericia);
+      if (!this.connectionError) {
+        if (this.isDeviceConnected) {
+          this.confirmMessage(pericia);
+        } else {
+          //Se comienza el proceso de emparejamiento
+          this.websocketService.initSocket(); //* Conexión al servidor
+          this.receiveSocketResponse();
+          this.visible = true;
+        }
       } else {
-        //Se comienza el proceso de emparejamiento
-        this.websocketService.initSocket(); //* Conexión al servidor
-        this.receiveSocketResponse();
-        this.visible = true;
+        this.dialog.alertMessage(
+          'Error interno',
+          'Ocurrió un error al intentar conectarse al servidor.',
+          () => {},
+          true
+        );
       }
     } else {
       this.dialog.alertMessage(
@@ -203,20 +217,23 @@ export class TablePericiasComponent {
   }
 
   confirmMessage(pericia: PericiaI) {
-    const message =
-    `Seguimiento de nueva pericia:
+    const message = `Seguimiento de nueva pericia:
 Día: ${formatDate(pericia.fecha_asignado, 'dd/MM/yyyy', 'en-US')}.
-Aseguradora: ${pericia.aseguradora ? pericia.aseguradora?.nombre : 'no asignado'}.
+Aseguradora: ${
+      pericia.aseguradora ? pericia.aseguradora?.nombre : 'no asignado'
+    }.
 N° de siniestro: ${pericia.n_siniestro ? pericia.n_siniestro : 'no tiene'}.
 N° de denuncia: ${pericia.n_denuncia ? pericia.n_denuncia : 'no tiene'}.
 Nombre asegurado: ${pericia.nombre_asegurado}.
 Dirección: ${pericia.dir_asegurado ? pericia.dir_asegurado : 'sin datos'}.
 Teléfono: ${pericia.tel_asegurado ? pericia.tel_asegurado : 'sin datos'}.
 Email: ${pericia.mail_asegurado ? pericia.mail_asegurado : 'sin datos'}.
-Tipo de siniestro: ${pericia.tipo_siniestro ? pericia.tipo_siniestro?.nombre : 'no asignado'}.
+Tipo de siniestro: ${
+      pericia.tipo_siniestro ? pericia.tipo_siniestro?.nombre : 'no asignado'
+    }.
 Vehículo: ${pericia.veh_asegurado ?? 'sin datos'}.
 Patente: ${pericia.patente_asegurado ?? 'sin datos'}.
-*¡Que tenga un excelente día!* 😁`
+*¡Que tenga un excelente día!* 😁`;
 
     this.dialog.confirm(
       'Confirmación',

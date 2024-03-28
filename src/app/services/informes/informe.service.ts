@@ -3,20 +3,20 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { ResponseI } from '../../interfaces/response.interface';
 import { catchError, map } from 'rxjs';
-import { DashboardI } from '../../interfaces/dashboard.interface';
+import { InformeI } from '../../interfaces/informe.interface';
 import { handleError } from '../../tools/tools';
 
 @Injectable({
   providedIn: 'root',
 })
-export class DashboardService {
+export class InformeService {
   constructor(private readonly http: HttpClient) {}
+  
+  private url = `${environment.url}informes`;
 
-  private url = environment.url;
-
-  getDashboard() {
-    return this.http.get<ResponseI>(this.url).pipe(
-      map((data) => data.result as DashboardI),
+  insert(form: FormData) {
+    return this.http.post<ResponseI>(this.url, form).pipe(
+      map((data) => data.result as InformeI),
       catchError((e) => handleError(e))
     );
   }

@@ -10,7 +10,7 @@ import { authGuard } from './guards/login.guard';
 import { InformesComponent } from './pages/informes/informes.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' }, // redirect to `first-component`
+  { path: '', redirectTo: 'login', pathMatch: 'full' }, // redirect to `first-component`
   { path: 'login', component: LoginComponent },
   {
     path: '',
