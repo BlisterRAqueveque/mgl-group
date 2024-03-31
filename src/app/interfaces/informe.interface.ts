@@ -15,6 +15,7 @@ export interface InformeI {
   n_poliza: string;
   tipo_cobertura: string;
   amp_denuncia: string;
+  relevamiento: string;
   conclusion: string;
   text_anio: string;
   adjuntos: AdjuntoI[];

@@ -162,8 +162,8 @@ export class ModalAddSiniestroComponent {
 
   updateDialog() {
     const siniestro: TipoSiniestroI = {
-      nombre: this.nombre
-    }
+      nombre: this.nombre,
+    };
     if (this.validation(siniestro)) {
       this.dialog.confirm(
         'Edición de siniestro.',
@@ -183,35 +183,34 @@ export class ModalAddSiniestroComponent {
     }
   }
 
-  @Output() emitUpdateSiniestro = new EventEmitter<TipoSiniestroI>()
+  @Output() emitUpdateSiniestro = new EventEmitter<TipoSiniestroI>();
   update(siniestro: TipoSiniestroI) {
-    this.siniestroService
-      .update(this.siniestro?.id!, siniestro)
-      .subscribe({
-        next: (data) => {
-          this.dialog.alertMessage(
-            'Confirmación de carga',
-            'El siniestro fue editado correctamente.',
-            () => {
-              //* Mandamos la entidad al componente suscrito
-              this.emitUpdateSiniestro.emit(data)
-              this.error = false;
-              this.visible = false;
-              //* Reiniciamos el valor de los siniestros
-              this.siniestro = undefined;
-            }
-          );
-        },
-        error: (e) => {
-          console.log(e);
-          this.dialog.alertMessage(
-            'Error de carga',
-            'No se pudo editar el siniestro, hubo un error de servidor.',
-            () => {},
-            true
-          );
-        },
-      });
+    this.dialog.loading = true;
+    this.siniestroService.update(this.siniestro?.id!, siniestro).subscribe({
+      next: (data) => {
+        this.dialog.alertMessage(
+          'Confirmación de carga',
+          'El siniestro fue editado correctamente.',
+          () => {
+            //* Mandamos la entidad al componente suscrito
+            this.emitUpdateSiniestro.emit(data);
+            this.error = false;
+            this.visible = false;
+            //* Reiniciamos el valor de los siniestros
+            this.siniestro = undefined;
+          }
+        );
+      },
+      error: (e) => {
+        console.log(e);
+        this.dialog.alertMessage(
+          'Error de carga',
+          'No se pudo editar el siniestro, hubo un error de servidor.',
+          () => {},
+          true
+        );
+      },
+    });
   }
 
   changeState(siniestro: TipoSiniestroI) {
@@ -221,6 +220,7 @@ export class ModalAddSiniestroComponent {
         siniestro.activo ? 'desactivar' : 'activar'
       } el siguiente tipo de siniestro: ${siniestro.nombre}?`,
       () => {
+        this.dialog.loading = true;
         siniestro.activo = !siniestro.activo;
         this.siniestroService.update(siniestro?.id!, siniestro).subscribe({
           next: (data) => {
@@ -250,6 +250,7 @@ export class ModalAddSiniestroComponent {
       'Eliminar tipo de siniestro',
       '¿Está seguro de eliminar este registro? Puede que esta acción sea irreversible.',
       () => {
+        this.dialog.loading = true;
         this.siniestroService.delete(this.siniestro?.id!).subscribe({
           next: (data) => {
             this.emitDelete.emit(data);

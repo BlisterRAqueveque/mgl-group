@@ -39,7 +39,7 @@ export class AuthService {
     let url = this.url + 'users/auth/login';
 
     return this.http
-      .post<{ok: boolean, result: UserWithToken, msg: string}>(url, {
+      .post<{ ok: boolean; result: UserWithToken; msg: string }>(url, {
         username: user,
         password: pass,
       })
@@ -48,7 +48,7 @@ export class AuthService {
         tap((userToken) => this.saveTokenToCookie(userToken.token)),
         tap((userToken) => this.pushNewUser(userToken)),
         tap(() => this.redirect(param)),
-        catchError(e => handleError(e)),
+        catchError((e) => handleError(e))
         //ignoreElements()
       );
   }
@@ -91,7 +91,7 @@ export class AuthService {
       );
       if (userData) return userData.user;
       else {
-        console.log('logout')
+        console.log('logout');
         this.logout();
         return null;
       }
@@ -106,7 +106,7 @@ export class AuthService {
     this.removeUserFromCookie();
     this.user.next(null);
     this.router.navigate(['login'], { replaceUrl: true });
-    //window.location.reload()
+    window.location.reload();
   }
 
   private removeUserFromCookie() {

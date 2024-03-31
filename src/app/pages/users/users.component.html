@@ -5,6 +5,6 @@
   </div>
 </div>
 
-<app-modal-add-users #modal (newAsesor)="addAsesor($event)" />
+<app-modal-add-users #modal (newAsesor)="addAsesor($event)"  />
 
-<app-button [text]="'Agregar asesor'" (click)="modal.showModal()" />
+<app-button [text]="'Agregar asesor'" *render="['admin']" (click)="modal.showModal()" />

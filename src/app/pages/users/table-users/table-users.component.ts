@@ -13,6 +13,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { FilterUsersComponent } from './filter-users/filter-users.component';
 import { AsesorService } from '../../../services/asesores/asesores.service';
 import { Roles, UsuarioI } from '../../../interfaces/user-token.interface';
+import { RenderDirective } from '../../../directives/render.directive';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-table-users',
@@ -24,6 +26,7 @@ import { Roles, UsuarioI } from '../../../interfaces/user-token.interface';
     CommonModule,
     NgIconComponent,
     FilterUsersComponent,
+    RenderDirective,
   ],
   providers: [
     provideIcons({
@@ -36,11 +39,16 @@ import { Roles, UsuarioI } from '../../../interfaces/user-token.interface';
   styleUrl: './table-users.component.css',
 })
 export class TableUsersComponent {
-  constructor(private readonly asesorService: AsesorService) {}
+  constructor(
+    private readonly asesorService: AsesorService,
+    private readonly auth: AuthService
+  ) {}
 
   params = new HttpParams();
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
+    const user = await this.auth.returnUserInfo();
+    if (user?.rol !== 'admin') this.params = this.params.set('id', user?.id!);
     this.params = this.params.set('page', 1);
     this.params = this.params.set('perPage', 10);
     this.params = this.params.set('sortBy', 'DESC');

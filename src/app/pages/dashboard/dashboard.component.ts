@@ -11,6 +11,8 @@ import { AnimationItem } from 'lottie-web';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { DashboardI } from '../../interfaces/dashboard.interface';
+import { RenderDirective } from '../../directives/render.directive';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,6 +23,7 @@ import { DashboardI } from '../../interfaces/dashboard.interface';
     FooterComponent,
     LottieComponent,
     CommonModule,
+    RenderDirective,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -42,7 +45,10 @@ export class DashboardComponent {
       this.obtenerSaludo();
     }, 1000);
     this.user = (await this.auth.returnUserInfo()) as UsuarioI;
-    this.dashboardService.getDashboard().subscribe({
+    let params = new HttpParams();
+    if (this.user.rol !== 'admin')
+      params = params.set('verificador', this.user?.id!);
+    this.dashboardService.getDashboard(params).subscribe({
       next: (data) => {
         this.dashboard = data;
       },

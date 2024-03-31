@@ -25,9 +25,12 @@
       <td>
         <p tooltipPosition="bottom" pTooltip="{{pericia.id}}">{{pericia.id}}</p>
       </td>
-      <td>
+      <td *render="['admin']">
         <p tooltipPosition="bottom" pTooltip="{{pericia.abierta ? 'Abierta' : 'Cerrada'}}"><app-state-button
             [estado]="pericia.abierta" (click)="onClickButton = true; changeState(pericia)" /></p>
+      </td>
+      <td *render="['user']">
+        <p tooltipPosition="bottom" pTooltip="{{pericia.abierta ? 'Abierta' : 'Cerrada'}}">{{ pericia.abierta ? 'Abierta' : 'Cerrada' }}</p>
       </td>
       <td>
         <p tooltipPosition="bottom" pTooltip="{{pericia.fecha_asignado | date: 'dd/MM/yyyy'}}">
@@ -53,9 +56,10 @@
         <p tooltipPosition="bottom" pTooltip="{{pericia.nombre_asegurado}}">{{pericia.nombre_asegurado}}</p>
       </td>
       <td class="flex justify-around">
-        <app-wp-button tooltipPosition="bottom" pTooltip="Enviar mensaje" #wp
+        <app-wp-button *render="['admin']" tooltipPosition="bottom" pTooltip="Enviar mensaje" #wp
           (click)="onClickButton = true; sendMessage(pericia)" />
-        <app-pdf-button tooltipPosition="bottom" pTooltip="Ver informe" (click)="onClickButton = true;"/>
+        <app-pdf-button tooltipPosition="bottom" pTooltip="Ver informe"
+          (click)="onClickButton = true; openPericia(pericia.id)" />
       </td>
     </tr>
   </ng-template>
@@ -66,7 +70,7 @@
 
 
 <p-dialog header="Conexión del dispositivo" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }"
-  [draggable]="false" [resizable]="false">
+  [draggable]="false" [resizable]="false" (onHide)="disconnectSocket()">
   <div class="flex justify-center items-center">
     <img *ngIf="mediaUrl" [src]="mediaUrl" width="400" alt="">
   </div>

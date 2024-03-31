@@ -11,7 +11,7 @@ import { handleError } from '../../tools/tools';
 })
 export class InformeService {
   constructor(private readonly http: HttpClient) {}
-  
+
   private url = `${environment.url}informes`;
 
   insert(form: FormData) {
@@ -19,5 +19,11 @@ export class InformeService {
       map((data) => data.result as InformeI),
       catchError((e) => handleError(e))
     );
+  }
+
+  delete(id: number) {
+    return this.http
+      .delete<ResponseI>(`${this.url}/${id}`)
+      .pipe(catchError((e) => handleError(e)));
   }
 }

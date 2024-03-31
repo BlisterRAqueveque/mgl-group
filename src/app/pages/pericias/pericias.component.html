@@ -7,4 +7,4 @@
 
 <app-modal-add #modal (emitNewPericia)="updateTable($event)" (emitUpdatePericia)="updateTable($event)" />
 
-<app-button [text]="'Agregar pericia'" (click)="modal.showModal()" />
+<app-button *render="['admin']" [text]="'Agregar pericia'" (click)="modal.showModal()" />

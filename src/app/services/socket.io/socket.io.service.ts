@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +12,10 @@ export class SocketIoService {
 
   initSocket() {
     this.webSocket = new Socket({
-      url: 'http://localhost:3002',
-      options: {},
+      url: environment.baseUrl,
+      options: {
+        path: '/wp/socket.io'
+      },
     });
   }
 

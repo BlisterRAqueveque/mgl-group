@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
@@ -12,6 +18,7 @@ import { Roles, UsuarioI } from '../../../interfaces/user-token.interface';
 import { AsesorService } from '../../../services/asesores/asesores.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { DialogComponent } from '../../../shared/dialog/dialog.component';
+import { RenderDirective } from '../../../directives/render.directive';
 
 @Component({
   selector: 'app-modal-add-users',
@@ -27,6 +34,7 @@ import { DialogComponent } from '../../../shared/dialog/dialog.component';
     RippleModule,
     TooltipModule,
     DialogComponent,
+    RenderDirective,
   ],
   templateUrl: './modal-add-users.component.html',
   styleUrl: './modal-add-users.component.css',
@@ -147,7 +155,7 @@ export class ModalAddUsersComponent {
           'El asesor fue creado correctamente.',
           () => {
             //* Mandamos el nuevo usuario al componente suscrito
-            data.pericia = []
+            data.pericia = [];
             this.newAsesor.emit(data);
             this.error = false;
             this.visible = false;
@@ -209,11 +217,12 @@ export class ModalAddUsersComponent {
   }
 
   update() {
-    this.asesor!.nombre = this.nombre
-    this.asesor!.apellido = this.apellido
-    this.asesor!.username = this.username
-    this.asesor!.tel = this.tel
-    this.asesor!.email = this.email
+    this.dialog.loading = true;
+    this.asesor!.nombre = this.nombre;
+    this.asesor!.apellido = this.apellido;
+    this.asesor!.username = this.username;
+    this.asesor!.tel = this.tel;
+    this.asesor!.email = this.email;
     this.asesor!.rol = this.selectedRol.rol;
     this.asesorService
       .update(this.asesor?.id!, this.asesor as UsuarioI)
@@ -250,6 +259,7 @@ export class ModalAddUsersComponent {
         user.activo ? 'desactivar' : 'activar'
       } el siguiente asesor: ${user.nombre} ${user.apellido}?`,
       () => {
+        this.dialog.loading = true;
         user.activo = !user.activo;
         this.asesorService.update(user?.id!, user).subscribe({
           next: (data) => {

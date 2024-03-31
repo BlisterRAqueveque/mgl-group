@@ -14,6 +14,7 @@ import { UsuarioI } from '../../../interfaces/user-token.interface';
 import { AuthService } from '../../../services/auth/auth.service';
 import { PericiaI } from '../../../interfaces/pericia.interface';
 import { DialogComponent } from '../../../shared/dialog/dialog.component';
+import { RenderDirective } from '../../../directives/render.directive';
 
 @Component({
   selector: 'app-modal-add',
@@ -28,6 +29,7 @@ import { DialogComponent } from '../../../shared/dialog/dialog.component';
     InputMaskModule,
     RippleModule,
     DialogComponent,
+    RenderDirective,
   ],
   templateUrl: './modal-add.component.html',
   styleUrl: './modal-add.component.css',
@@ -215,10 +217,9 @@ export class ModalAddComponent {
     // Verifica si alguna propiedad está vacía o es null/undefined
     if (
       !pericia.fecha_asignado ||
-      !pericia.n_siniestro ||
-      !pericia.n_denuncia ||
+      !pericia.n_siniestro !== undefined ||
+      !pericia.n_denuncia !== undefined ||
       !pericia.nombre_asegurado ||
-      !pericia.patente_asegurado ||
       !pericia.aseguradora ||
       !pericia.tipo_siniestro ||
       !pericia.verificador
@@ -269,6 +270,7 @@ export class ModalAddComponent {
 
   @Output() emitUpdatePericia = new EventEmitter<PericiaI>();
   update(pericia: PericiaI) {
+    this.dialog.loading = true;
     this.periciaService.update(this.pericia?.id!, pericia).subscribe({
       next: (data) => {
         this.dialog.alertMessage(
@@ -297,6 +299,7 @@ export class ModalAddComponent {
   }
 
   changeState(pericia: PericiaI) {
+    this.dialog.loading = true;
     this.dialog.confirm(
       'Edición de pericia.',
       `¿Esta seguro de ${

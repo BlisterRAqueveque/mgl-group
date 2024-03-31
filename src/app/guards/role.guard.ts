@@ -22,7 +22,7 @@ export const permissions =
       const isAllowed =
         user?.superuser || allowedList.some((p) => user?.rol === p);
       if (!isAllowed) {
-        router.navigate(['/home/dashboard'])
+        router.navigate(['/home'])
         return false
       }
       else return isAllowed;

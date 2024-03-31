@@ -42,16 +42,24 @@ export class PericiaService {
 
   /** @description Actualiza la entidad en la base de datos. */
   update(id: number, siniestro: Partial<PericiaI>) {
-    const direction = `${this.url}${id}`
+    const direction = `${this.url}${id}`;
     return this.http.put<ResponseI>(direction, siniestro).pipe(
-      map(data => data.result as PericiaI),
+      map((data) => data.result as PericiaI),
       catchError((e) => handleError(e))
-    )
+    );
   }
 
   getAllFilter(params: HttpParams) {
     return this.http.get<ResponseI>(this.url, { params }).pipe(
       map((data) => data.result as { entities: PericiaI[]; count: number }),
+      catchError((e) => handleError(e))
+    );
+  }
+
+  getOne(id: number) {
+    const direction = `${this.url}${id}`;
+    return this.http.get<ResponseI>(direction).pipe(
+      map((data) => data.result as PericiaI),
       catchError((e) => handleError(e))
     );
   }

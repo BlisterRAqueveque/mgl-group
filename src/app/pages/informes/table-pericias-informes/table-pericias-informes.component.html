@@ -13,6 +13,7 @@
       <th>Siniestro n°</th>
       <th>Denuncia n°</th>
       <th>Nombre asegurado</th>
+      <th>¿Tiene informe?</th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-pericia>
@@ -38,6 +39,10 @@
       </td>
       <td>
         <p tooltipPosition="bottom" pTooltip="{{pericia.nombre_asegurado}}">{{pericia.nombre_asegurado}}</p>
+      </td>
+      <td>
+        <p tooltipPosition="bottom" pTooltip="{{pericia.informe ? 'Si tiene' : 'No tiene'}}">
+          {{pericia.informe ? 'Si' : 'No'}}</p>
       </td>
     </tr>
   </ng-template>

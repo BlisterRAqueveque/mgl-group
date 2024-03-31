@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { ResponseI } from '../../interfaces/response.interface';
@@ -14,8 +14,8 @@ export class DashboardService {
 
   private url = environment.url;
 
-  getDashboard() {
-    return this.http.get<ResponseI>(this.url).pipe(
+  getDashboard(params: HttpParams) {
+    return this.http.get<ResponseI>(this.url, { params }).pipe(
       map((data) => data.result as DashboardI),
       catchError((e) => handleError(e))
     );

@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
@@ -180,8 +186,9 @@ export class ModalAddAseguradoraComponent {
   }
 
   update() {
-    this.aseguradora!.nombre = this.nombre
-    this.aseguradora!.CUIT = this.CUIT
+    this.dialog.loading = true;
+    this.aseguradora!.nombre = this.nombre;
+    this.aseguradora!.CUIT = this.CUIT;
     this.aseguradoraService
       .update(this.aseguradora?.id!, this.aseguradora as AseguradoraI)
       .subscribe({
@@ -217,6 +224,7 @@ export class ModalAddAseguradoraComponent {
         aseguradora.activo ? 'desactivar' : 'activar'
       } la siguiente aseguradora: ${aseguradora.nombre}?`,
       () => {
+        this.dialog.loading = true;
         aseguradora.activo = !aseguradora.activo;
         this.aseguradoraService
           .update(aseguradora?.id!, aseguradora)
@@ -248,6 +256,7 @@ export class ModalAddAseguradoraComponent {
       'Eliminar aseguradora',
       '¿Está seguro de eliminar este registro? Puede que esta acción sea irreversible.',
       () => {
+        this.dialog.loading = true;
         this.aseguradoraService.delete(this.aseguradora?.id!).subscribe({
           next: (data) => {
             this.dialog.alertMessage(

@@ -1,6 +1,8 @@
-const url = 'http://localhost:3000/'
-// const url = 'https://mgl-group.hvdevs.com/'
+const url = 'https://mgl-group.hvdevs.com/'
+//const url = 'http://localhost:3003/'
 export const environment = {
+  webUrl: `http://localhost:4200/`,
   url: `${url}api/`,
-  imagesUrl: `${url}uploads/`
+  imagesUrl: `${url}uploads/adjuntos/`,
+  baseUrl: `${url}`
 };

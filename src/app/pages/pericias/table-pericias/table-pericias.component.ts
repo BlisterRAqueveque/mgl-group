@@ -20,6 +20,9 @@ import { FilterPericiasComponent } from './filter-pericias/filter-pericias.compo
 import { firstValueFrom } from 'rxjs';
 import { StateButtonComponent } from '../../../shared/state-button/state-button.component';
 import { PdfButtonComponent } from '../../../shared/pdf-button/pdf-button.component';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth/auth.service';
+import { RenderDirective } from '../../../directives/render.directive';
 
 @Component({
   selector: 'app-table-pericias',
@@ -36,6 +39,7 @@ import { PdfButtonComponent } from '../../../shared/pdf-button/pdf-button.compon
     DialogComponent,
     StateButtonComponent,
     PdfButtonComponent,
+    RenderDirective,
   ],
   providers: [
     provideIcons({
@@ -50,12 +54,16 @@ export class TablePericiasComponent {
   constructor(
     private readonly periciaService: PericiaService,
     private readonly whatsappService: WhatsAppService,
-    private websocketService: SocketIoService
+    private readonly websocketService: SocketIoService,
+    private readonly router: Router,
+    private readonly auth: AuthService
   ) {}
 
   params = new HttpParams();
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
+    const user = await this.auth.returnUserInfo()
+    if(user?.rol !== 'admin') this.params = this.params.set('verificador', user?.id!);
     this.params = this.params.set('page', 1);
     this.params = this.params.set('perPage', 10);
     this.params = this.params.set('sortBy', 'DESC');
@@ -148,7 +156,7 @@ export class TablePericiasComponent {
         this.isDeviceConnected = true;
         //* Una vez conectado, nos desconectamos del servidor
         this.disconnectSocket();
-        this.dialog.confirm(
+        this.dialog.alertMessage(
           'Confirmación',
           '¡Dispositivo conectado con éxito!',
           () => {
@@ -162,7 +170,7 @@ export class TablePericiasComponent {
     });
   }
   /** @description Se desconecta del servidor socket.io */
-  private disconnectSocket() {
+  disconnectSocket() {
     this.websocketService.disconnectSocket();
   }
 
@@ -182,6 +190,7 @@ export class TablePericiasComponent {
     } catch (error) {
       //TODO Manejo de errores en la conexión
       this.connectionError = true;
+      this.disconnectSocket();
     }
   }
 
@@ -279,4 +288,8 @@ Patente: ${pericia.patente_asegurado ?? 'sin datos'}.
     );
   }
   // --------------------------------------------------------------------------------------------->
+
+  openPericia(id: number) {
+    this.router.navigate(['informes'], { queryParams: { pericia: id } });
+  }
 }

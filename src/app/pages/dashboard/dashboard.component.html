@@ -16,13 +16,13 @@
       [color]="'gray-900'" [icon]="'heroClipboardDocumentListSolid'" [text]="'Pericias'"
       [text_one]="'Abiertas: ' + dashboard.pericias.abiertas" [text_two]="'Cerradas: ' + dashboard.pericias.cerradas" />
     <app-card class="lg:col-span-3 sm:col-span-12 md:col-span-6 col-span-12"
-      [color]="'teal-900'" [icon]="'heroUserSolid'" [text]="'Asesores'"
+      [color]="'teal-900'" [icon]="'heroUserSolid'" [text]="'Asesores'" *render="['admin']"
       [text_one]="'Activos: ' + dashboard.usuarios.activos" [text_two]="'Inactivos: ' + dashboard.usuarios.inactivos"/>
     <app-card class="lg:col-span-3 sm:col-span-12 md:col-span-6 col-span-12"
-      [color]="'emerald-900'" [icon]="'heroBuildingOfficeSolid'" [text]="'Aseguradoras'"
+      [color]="'emerald-900'" [icon]="'heroBuildingOfficeSolid'" [text]="'Aseguradoras'" *render="['admin']"
       [text_one]="'Activas: ' + dashboard.aseguradoras.activos" [text_two]="'Inactivas: ' + dashboard.aseguradoras.inactivos" />
     <app-card class="lg:col-span-3 sm:col-span-12 md:col-span-6 col-span-12"
-      [color]="'red-900'" [icon]="'heroShieldCheckSolid'" [text]="'Siniestros'"
+      [color]="'red-900'" [icon]="'heroShieldCheckSolid'" [text]="'Siniestros'" *render="['admin']"
       [text_one]="'Activos: ' + dashboard.tipoSiniestro.activos" [text_two]="'Inactivos: ' + dashboard.tipoSiniestro.inactivos" />
   </div>
 </div>

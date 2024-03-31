@@ -3,11 +3,18 @@ import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
+import { RenderDirective } from '../../../../directives/render.directive';
 
 @Component({
   selector: 'app-filter-pericias',
   standalone: true,
-  imports: [FormsModule, DropdownModule, CalendarModule, InputTextModule],
+  imports: [
+    FormsModule,
+    DropdownModule,
+    CalendarModule,
+    InputTextModule,
+    RenderDirective,
+  ],
   templateUrl: './filter-pericias.component.html',
   styleUrl: './filter-pericias.component.css',
 })

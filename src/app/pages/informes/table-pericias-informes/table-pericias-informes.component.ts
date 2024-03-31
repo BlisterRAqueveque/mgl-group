@@ -44,13 +44,13 @@ export class TablePericiasInformesComponent {
   params = new HttpParams();
 
   async ngAfterViewInit() {
-    this.user = await this.auth.returnUserInfo()
+    this.user = await this.auth.returnUserInfo();
     this.params = this.params.set('page', 1);
     this.params = this.params.set('perPage', 10);
     this.params = this.params.set('sortBy', 'DESC');
-    this.params = this.params.set('activo', 1)
-    console.log(this.user?.rol !== Roles.admin)
-    if(this.user?.rol !== Roles.admin) this.params = this.params.set('verificador', this.user?.id!)
+    this.params = this.params.set('activo', 1);
+    if (this.user?.rol !== Roles.admin)
+      this.params = this.params.set('verificador', this.user?.id!);
     this.getHistoric();
   }
 
