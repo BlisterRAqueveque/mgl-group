@@ -11,8 +11,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { PericiaService } from '../../../services/pericias/pericias.service';
 import { HttpParams } from '@angular/common/http';
 import { PericiaI } from '../../../interfaces/pericia.interface';
-import { AuthService } from '../../../services/auth/auth.service';
 import { Roles, UsuarioI } from '../../../interfaces/user-token.interface';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-table-pericias-informes',

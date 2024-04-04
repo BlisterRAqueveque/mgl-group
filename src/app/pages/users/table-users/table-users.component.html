@@ -52,7 +52,7 @@
       </td>
       <td class="justify-center items-center p-5" *render="['admin']">
         <div tooltipPosition="bottom" pTooltip="{{asesor.activo ? 'Desactivar' : 'Activar'}} asesor"
-          tooltipPosition="bottom" pRipple class="shadow-lg shadow-gray-500/50 text-sm w-auto rounded-full flex
+          tooltipPosition="bottom" pRipple class="shadow-gray-600/50 shadow-md text-sm w-auto rounded-full flex
           items-center justify-center p-2 cursor-pointer transition-all duration-500"
           [ngClass]="{ 'bg-gray-800 hover:bg-gray-600': !asesor.activo, 'bg-purple-500 hover:bg-purple-300': asesor.activo }"
           (click)="onClickButton = true">

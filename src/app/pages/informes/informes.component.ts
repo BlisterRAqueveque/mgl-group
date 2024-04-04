@@ -6,24 +6,31 @@ import {
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
+  heroArrowDownOnSquareSolid,
   heroArrowUturnLeftSolid,
   heroArrowUturnRightSolid,
+  heroArrowsPointingOutSolid,
+  heroDocumentSolid,
   heroEyeSolid,
   heroMagnifyingGlassSolid,
   heroPencilSquareSolid,
   heroPlusCircleSolid,
   heroTrashSolid,
-  heroDocumentSolid,
-  heroArrowsPointingOutSolid,
-  heroArrowDownOnSquareSolid,
 } from '@ng-icons/heroicons/solid';
 import {
   ImageCroppedEvent,
   ImageCropperModule,
   ImageTransform,
 } from 'ngx-image-cropper';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import {
+  Content,
+  ContentStack,
+  TDocumentDefinitions,
+} from 'pdfmake/interfaces';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -34,23 +41,16 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AdjuntoI, InformeI } from '../../interfaces/informe.interface';
 import { PericiaI } from '../../interfaces/pericia.interface';
-import { AuthService } from '../../services/auth/auth.service';
 import { InformeService } from '../../services/informes/informe.service';
+import { PericiaService } from '../../services/pericias/pericias.service';
 import { ButtonComponent } from '../../shared/button/button.component';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
+import { convertFileToBase64 } from '../../tools/file-to-base64';
+import { compareDimensions, getImageHeight } from '../../tools/image-height';
 import { imgToBase64 } from '../../tools/img-to-url';
 import { dataURLtoFile } from '../../tools/img-url-to-file';
 import { TablePericiasInformesComponent } from './table-pericias-informes/table-pericias-informes.component';
-import * as pdfMake from 'pdfmake/build/pdfmake';
-import {
-  Content,
-  ContentStack,
-  TDocumentDefinitions,
-} from 'pdfmake/interfaces';
-import { compareDimensions, getImageHeight } from '../../tools/image-height';
-import { ActivatedRoute } from '@angular/router';
-import { PericiaService } from '../../services/pericias/pericias.service';
-import { convertFileToBase64 } from '../../tools/file-to-base64';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-informes',
@@ -198,6 +198,7 @@ export class InformesComponent {
   close = false;
 
   async initModule(pericia: PericiaI) {
+    this.dialog.loading = true;
     this.close = false;
     //* Si la pericia no tiene un informe asignado, debe crear uno nuevo
     if (!pericia.informe) {
@@ -252,6 +253,8 @@ export class InformesComponent {
     if (pericia.abierta === true) this.pericia = pericia;
     else this.close = true;
     this.visibleInforme = false;
+
+    this.dialog.loading = false;
   }
   // ---------------------------------------------------------------------------->
 
@@ -268,18 +271,24 @@ export class InformesComponent {
 
   /** @description Toma la imagen desde el evento y la transforma en base64 */
   async addImage(event: any, input: HTMLInputElement) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const imageUrl = e.target!.result !== null ? e.target!.result : '';
-      //* Se almacenan en la lista
-      this.images.push({
-        img: imageUrl.toString(),
-        comment: '',
-        mimeType: 'image/jpeg',
-        originalImg: imageUrl.toString(),
-      });
-    };
-    reader.readAsDataURL(event.target.files[0]);
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageUrl = e.target!.result !== null ? e.target!.result : '';
+          //* Se almacenan en la lista
+          this.images.push({
+            img: imageUrl.toString(),
+            comment: '',
+            mimeType: 'image/jpeg',
+            originalImg: imageUrl.toString(),
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    }
     input.value = '';
   }
 
@@ -669,7 +678,7 @@ export class InformesComponent {
           },
         ],
       },
-      this.poliza || this.cobertura
+      !this.poliza || !this.cobertura
         ? {
             stack: [
               {
@@ -681,7 +690,7 @@ export class InformesComponent {
             ],
           }
         : '',
-      this.poliza
+      !this.poliza
         ? {
             stack: [
               {
@@ -693,7 +702,7 @@ export class InformesComponent {
             ],
           }
         : '',
-      this.cobertura
+      !this.cobertura
         ? {
             stack: [
               {
@@ -727,7 +736,7 @@ export class InformesComponent {
           },
         ],
       },
-      this.anio
+      !this.anio
         ? {
             stack: [
               {
@@ -739,7 +748,7 @@ export class InformesComponent {
             ],
           }
         : '',
-      this.patente
+      !this.patente
         ? {
             stack: [
               {

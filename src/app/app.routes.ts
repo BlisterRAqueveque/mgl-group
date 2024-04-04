@@ -9,6 +9,7 @@ import { SiniestrosComponent } from './pages/siniestros/siniestros.component';
 import { authGuard } from './guards/login.guard';
 import { InformesComponent } from './pages/informes/informes.component';
 import { permissions } from './guards/role.guard';
+import { ButtonMultipleComponent } from './shared/button-multiple/button-multiple.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' }, // redirect to `first-component`

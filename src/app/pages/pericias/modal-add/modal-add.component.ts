@@ -215,10 +215,9 @@ export class ModalAddComponent {
 
   validation(pericia: PericiaI): boolean {
     // Verifica si alguna propiedad está vacía o es null/undefined
+    /** pericia.n_siniestro && pericia.n_denuncia === undefined (estas no son obligatorias) */
     if (
       !pericia.fecha_asignado ||
-      !pericia.n_siniestro !== undefined ||
-      !pericia.n_denuncia !== undefined ||
       !pericia.nombre_asegurado ||
       !pericia.aseguradora ||
       !pericia.tipo_siniestro ||

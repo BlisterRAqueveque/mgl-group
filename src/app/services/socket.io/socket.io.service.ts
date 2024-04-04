@@ -14,7 +14,7 @@ export class SocketIoService {
     this.webSocket = new Socket({
       url: environment.baseUrl,
       options: {
-        path: '/wp/socket.io'
+        path: '/wp/socket.io',
       },
     });
   }
@@ -31,6 +31,6 @@ export class SocketIoService {
 
   /** @description Nos desconectamos del servidor */
   disconnectSocket() {
-    this.webSocket.disconnect();
+    if (this.webSocket) this.webSocket.disconnect();
   }
 }
