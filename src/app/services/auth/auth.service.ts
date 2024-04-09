@@ -91,7 +91,6 @@ export class AuthService {
       );
       if (userData) return userData.user;
       else {
-        console.log('logout');
         this.logout();
         return null;
       }

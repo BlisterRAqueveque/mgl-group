@@ -290,7 +290,6 @@ export class InformesComponent {
     this.visibleInforme = false;
 
     this.dialog.loading = false;
-    console.log(this.isRoboRueda);
   }
   // ---------------------------------------------------------------------------->
 
