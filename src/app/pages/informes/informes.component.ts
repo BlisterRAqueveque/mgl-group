@@ -183,6 +183,7 @@ export class InformesComponent {
     this.dni_conductor = '';
     this.tercerosContainer.clear();
     this.hasTerceros = false;
+    this.isRoboRueda = false;
   }
   // ---------------------------------------------------------------------------->
   /**                           Inicializar el modulo                           */
@@ -213,11 +214,16 @@ export class InformesComponent {
   conductor = '';
   dni_conductor = '';
 
+  isRoboRueda = false;
+
   async initModule(pericia: PericiaI) {
     this.dialog.loading = true;
     this.close = false;
     this.hasTerceros = pericia.tipo_siniestro
       ? pericia.tipo_siniestro.nombre!.includes('vial')!
+      : false;
+    this.isRoboRueda = pericia.tipo_siniestro
+      ? pericia.tipo_siniestro.nombre!.includes('rueda')!
       : false;
     //* Si la pericia no tiene un informe asignado, debe crear uno nuevo
     if (!pericia.informe) {
@@ -260,6 +266,9 @@ export class InformesComponent {
 
       this.relevamiento = pericia.informe.relevamiento;
 
+      this.conductor = pericia.informe.conductor!;
+      this.dni_conductor = pericia.informe.dni_conductor!;
+
       const url = environment.imagesUrl;
       this.initComponent(pericia.informe.terceros);
       for (const a of pericia.informe.adjuntos) {
@@ -281,7 +290,7 @@ export class InformesComponent {
     this.visibleInforme = false;
 
     this.dialog.loading = false;
-    console.log(pericia.terceros, pericia.conductor, pericia.dni_conductor);
+    console.log(this.isRoboRueda);
   }
   // ---------------------------------------------------------------------------->
 
@@ -527,6 +536,7 @@ export class InformesComponent {
   async updateInforme() {
     this.dialog.loading = true;
     const formData = new FormData();
+    const editedImages: AdjuntoI[] = [];
     this.images.forEach((img, index) => {
       //* Si la imagen fue editada
       if (img.id === 0) {
@@ -534,7 +544,7 @@ export class InformesComponent {
           'files',
           dataURLtoFile(img.img, 'newFile', img.mimeType)
         );
-        this.pericia?.informe?.adjuntos.push({
+        editedImages.push({
           adjunto: '',
           descripcion: img.comment,
           index,
@@ -546,28 +556,29 @@ export class InformesComponent {
           dataURLtoFile(img.img, 'newFile', img.mimeType)
         );
         //? Creamos un nuevo registro
-        this.pericia?.informe?.adjuntos.push({
+        editedImages.push({
           adjunto: '',
           descripcion: img.comment,
           index,
         });
         //! Quitamos el adjunto editado para que se elimine de la base de datos
-        if (
-          this.pericia &&
-          this.pericia.informe &&
-          this.pericia.informe.adjuntos
-        ) {
-          this.pericia.informe.adjuntos =
-            this.pericia?.informe?.adjuntos.filter((i) => {
-              return i.id !== img.id;
-            });
-        }
+        // if (
+        //   this.pericia &&
+        //   this.pericia.informe &&
+        //   this.pericia.informe.adjuntos
+        // ) {
+        //   this.pericia.informe.adjuntos =
+        //     this.pericia?.informe?.adjuntos.filter((i) => {
+        //       return i.id !== img.id;
+        //     });
+        // }
       } else {
         //* Caso contrario, solo modificamos estas propiedades
         const ad = this.pericia?.informe?.adjuntos.find((i) => i.id === img.id);
         if (ad) {
           ad.index = index;
           ad.descripcion = img.comment;
+          editedImages.push(ad);
         }
       }
     });
@@ -588,7 +599,7 @@ export class InformesComponent {
       amp_denuncia: this.amp_denuncia,
       conclusion: this.conclusion,
       text_anio: this.text_anio,
-      adjuntos: this.pericia?.informe?.adjuntos!,
+      adjuntos: editedImages,
       usuario_carga: user!,
       relevamiento: this.relevamiento,
       pericia: this.pericia!,
@@ -599,7 +610,6 @@ export class InformesComponent {
     formData.append('form', JSON.stringify(informe));
     this.informeService.update(this.pericia?.informe?.id!, formData).subscribe({
       next: (data) => {
-        console.log(data);
         this.table.getHistoric();
         this.dialog.alertMessage(
           'Confirmación de carga',
@@ -656,7 +666,8 @@ export class InformesComponent {
         };
       },
       //! Esto es el margin de la página, y el canvas de la línea que lo redea
-      pageMargins: [20, 70, 20, 35], // [left, top, right, bottom]
+      //pageMargins: [20, 70, 20, 35], // [left, top, right, bottom]
+      pageMargins: [20, 50, 20, 35], // [left, top, right, bottom]
       background: function (currentPage) {
         return {
           canvas: [
@@ -998,6 +1009,7 @@ export class InformesComponent {
         i = 0;
         /**
          * Ahora comparamos que no sea mayor que el alto de la hora
+         *   ! fit: [495, 742],
          *   !El restante de una hoja A4, con los margin, es de 736 de alto, y 368 de ancho aprox,
          */
         const imgHeight: number = await getImageHeight(image.img);
@@ -1008,14 +1020,15 @@ export class InformesComponent {
               {
                 text: image.comment,
                 alignment: 'center',
-                margin: [0, 0, 0, 20],
+                margin: [0, 0, 0, 10],
                 fontSize: 14,
               }, // [left, top, right, bottom]
               {
                 image: image.img,
-                height: 600,
+                fit: [495, 600],
+                //height: 600,
                 alignment: 'center',
-                margin: [0, 0, 0, 20],
+                margin: [0, 0, 0, 15],
                 pageBreak:
                   index !== this.images.length - 1 ? 'after' : undefined,
               },
@@ -1031,14 +1044,15 @@ export class InformesComponent {
               {
                 text: image.comment,
                 alignment: 'center',
-                margin: [0, 0, 0, 20],
+                margin: [0, 0, 0, 10],
                 fontSize: 14,
               }, // [left, top, right, bottom]
               {
                 image: image.img,
-                width: 420, //width: 380,
+                fit: [495, 700],
+                //width: 420, //width: 380,
                 alignment: 'center',
-                margin: [0, 0, 0, 20],
+                margin: [0, 0, 0, 15],
                 pageBreak:
                   index !== this.images.length - 1 ? 'after' : undefined,
               },
@@ -1058,14 +1072,16 @@ export class InformesComponent {
             {
               text: image.comment,
               alignment: 'center',
-              margin: [0, 0, 0, 20],
+              margin: [0, 0, 0, 10],
               fontSize: 14,
             }, // [left, top, right, bottom]
             {
               image: image.img,
-              width: 320, //width: 280,
+              //width: 368, //width: 280,
+              //fit: [380, 300],
+              fit: [480, 330],
               alignment: 'center',
-              margin: [0, 0, 0, 20],
+              margin: [0, 0, 0, 15],
               pageBreak:
                 index !== this.images.length - 1
                   ? i === 2
@@ -1161,18 +1177,27 @@ export class InformesComponent {
     event.preventDefault();
     event.stopPropagation();
     this.isDragging = false;
-    const files = event.dataTransfer?.files;
-    if (files && files.length > 0) {
-      for (let i = 0; i < files.length; i++) {
-        const adjunto = await convertFileToBase64(files[i]);
-        this.images.push({
-          id: 0,
-          img: adjunto,
-          comment: '',
-          mimeType: 'image/jpeg',
-          originalImg: adjunto,
-          edited: false,
-        });
+    if (!this.pericia) {
+      this.dialog.alertMessage(
+        'Error de carga',
+        'Para agregar imágenes, primero debe seleccionar una pericia.',
+        () => {},
+        true
+      );
+    } else {
+      const files = event.dataTransfer?.files;
+      if (files && files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+          const adjunto = await convertFileToBase64(files[i]);
+          this.images.push({
+            id: 0,
+            img: adjunto,
+            comment: '',
+            mimeType: 'image/jpeg',
+            originalImg: adjunto,
+            edited: false,
+          });
+        }
       }
     }
   }

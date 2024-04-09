@@ -1,18 +1,17 @@
 import { CommonModule } from '@angular/common';
+import { HttpParams } from '@angular/common/http';
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
-  heroBarsArrowUpSolid,
   heroBarsArrowDownSolid,
+  heroBarsArrowUpSolid,
 } from '@ng-icons/heroicons/solid';
 import { Paginator, PaginatorModule } from 'primeng/paginator';
 import { Table, TableModule } from 'primeng/table';
-import { TooltipModule } from 'primeng/tooltip';
-import { PericiaService } from '../../../services/pericias/pericias.service';
-import { HttpParams } from '@angular/common/http';
 import { PericiaI } from '../../../interfaces/pericia.interface';
 import { Roles, UsuarioI } from '../../../interfaces/user-token.interface';
 import { AuthService } from '../../../services/auth/auth.service';
+import { PericiaService } from '../../../services/pericias/pericias.service';
 
 @Component({
   selector: 'app-table-pericias-informes',
@@ -21,7 +20,6 @@ import { AuthService } from '../../../services/auth/auth.service';
     CommonModule,
     TableModule,
     PaginatorModule,
-    TooltipModule,
     NgIconComponent,
   ],
   providers: [

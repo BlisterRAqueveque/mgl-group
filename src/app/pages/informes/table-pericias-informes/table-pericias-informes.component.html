@@ -19,29 +19,28 @@
   <ng-template pTemplate="body" let-pericia>
     <tr class="hover:bg-gray-200 transition-all duration-500 cursor-pointer" (click)="onRowSelect(pericia)">
       <td>
-        <p tooltipPosition="bottom" pTooltip="{{pericia.id}}">{{pericia.id}}</p>
+        <p>{{pericia.id}}</p>
       </td>
       <td>
-        <p tooltipPosition="bottom" pTooltip="{{pericia.fecha_asignado | date: 'dd/MM/yyyy'}}">
+        <p>
           {{pericia.fecha_asignado | date: 'dd/MM/yyyy'}}
         </p>
       </td>
       <td>
-        <p tooltipPosition="bottom"
-          pTooltip="{{pericia.verificador ? pericia.verificador.nombre + ' ' + pericia.verificador.apellido : 'Sin asignar' }}">
+        <p>
           {{pericia.verificador ? pericia.verificador.nombre + ' ' + pericia.verificador.apellido : 'Sin asignar' }}</p>
       </td>
       <td>
-        <p tooltipPosition="bottom" pTooltip="{{pericia.n_siniestro}}">{{pericia.n_siniestro}}</p>
+        <p>{{pericia.n_siniestro}}</p>
       </td>
       <td>
-        <p tooltipPosition="bottom" pTooltip="{{pericia.n_denuncia}}">{{pericia.n_denuncia}}</p>
+        <p>{{pericia.n_denuncia}}</p>
       </td>
       <td>
-        <p tooltipPosition="bottom" pTooltip="{{pericia.nombre_asegurado}}">{{pericia.nombre_asegurado}}</p>
+        <p>{{pericia.nombre_asegurado}}</p>
       </td>
       <td>
-        <p tooltipPosition="bottom" pTooltip="{{pericia.informe ? 'Si tiene' : 'No tiene'}}">
+        <p>
           {{pericia.informe ? 'Si' : 'No'}}</p>
       </td>
     </tr>
