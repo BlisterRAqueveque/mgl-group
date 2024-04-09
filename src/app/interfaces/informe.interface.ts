@@ -1,4 +1,4 @@
-import { PericiaI } from './pericia.interface';
+import { PericiaI, TerceroI } from './pericia.interface';
 import { UsuarioI } from './user-token.interface';
 
 export interface InformeI {
@@ -22,6 +22,9 @@ export interface InformeI {
   usuario_carga: UsuarioI;
   pericia: PericiaI;
   fecha_carga?: Date;
+  terceros?: TerceroI[];
+  conductor?: string;
+  dni_conductor?: string;
 }
 
 export interface AdjuntoI {

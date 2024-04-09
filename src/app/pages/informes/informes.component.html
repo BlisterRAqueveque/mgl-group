@@ -130,6 +130,41 @@
     </div>
   </div>
 
+  <!-- Sección de terceros -->
+  <div class="hide" [ngClass]="{ 'show': hasTerceros }">
+    <div>
+      <h1 class="text-center my-6 text-2xl md:text-4xl">Datos del conductor</h1>
+  
+      <div class="grid grid-cols-12 gap-4">
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Nombre del conductor</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+            focus:border-indigo-500" placeholder="Ingrese nombre del asegurado." [(ngModel)]="conductor"
+            [disabled]="!pericia" />
+        </div>
+  
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">DNI del conductor</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+            focus:border-indigo-500" placeholder="Ingrese nombre del asegurado." [(ngModel)]="dni_conductor"
+            [disabled]="!pericia" />
+        </div>
+      </div>
+  
+      <h1 class="text-center my-6 text-2xl md:text-4xl">Datos de terceros</h1>
+      <ng-template #tercerosContainer></ng-template>
+      <div class="col-span-12 px-2 pb-2 flex flex-col justify-center items-center">
+        <p>Agregar datos de tercero</p>
+        <div
+          class="w-20 h-20 mt-3 bg-gray-900 rounded-lg shadow-md shadow-black/75 flex justify-center items-center"
+          pRipple (click)="generateComponent()">
+          <ng-icon name="heroPlusCircleSolid" color="white" size="2rem" />
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Ampliación de denuncia -->
   <h1 class="text-center my-6 text-2xl md:text-4xl">Ampliación de denuncia</h1>
   <div class="grid grid-cols-12 gap-4">
@@ -250,7 +285,7 @@
 
   <app-button [text]="!pericia?.informe ? 'Cargar informe' : 'Modificar informe'"
     [moreWidth]="!pericia?.informe ? false : true" [upload]="true"
-    (click)="!pericia?.informe ? onUploadInforme() : updateInforme()" />
+    (click)="!pericia?.informe ? onUploadInforme() : onUpdateInforme()" />
 
 
   <div class="fixed top-0 left-0 w-screen h-screen bg-sky-200/80 flex justify-center items-center

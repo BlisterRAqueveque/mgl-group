@@ -23,11 +23,13 @@
   </div>
   <ng-template pTemplate="footer">
     <div class="w-full flex justify-end items-center mt-2">
-      <div *ngIf="siniestro" pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-purple-900 rounded-full flex
-        items-center justify-center p-5 cursor-pointer mr-4 transition-all duration-500 hover:animate-pulse"
-        (click)="delete()">
-        <p class="text-white">Eliminar</p>
-      </div>
+      @if(siniestro) {
+        <div pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-purple-900 rounded-full flex
+          items-center justify-center p-5 cursor-pointer mr-4 transition-all duration-500 hover:animate-pulse"
+          (click)="delete()">
+          <p class="text-white">Eliminar</p>
+        </div>
+      }
       <div tabindex="0" (keyup)="!siniestro ? insertDialog() : updateDialog()" (keydown)="handleKeyboardEvent($event)" pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-gray-800 rounded-full flex
         items-center justify-center p-5 cursor-pointer hover:bg-gray-600 transition-all duration-500"
         (click)="!siniestro ? insertDialog() : updateDialog()">

@@ -4,10 +4,12 @@
     <div class="inline-flex align-items-center justify-content-center gap-2">
       <span class="font-bold white-space-nowrap text-2xl">{{!asesor ? 'Agregar asesor' : 'Modificar asesor'}}</span>
       <!-- ! Tips solo para nuevo asesor -->
-      <div *ngIf="!asesor" class="w-6 h-6 mt-1 rounded-full flex justify-center items-center bg-gray-500">
-        <p class="p-1 text-white" [pTooltip]="tooltipText" [tooltipStyleClass]="'tooltip-custom'"
-          tooltipPosition="bottom">?</p>
-      </div>
+      @if(!asesor) {
+        <div class="w-6 h-6 mt-1 rounded-full flex justify-center items-center bg-gray-500">
+          <p class="p-1 text-white" [pTooltip]="tooltipText" [tooltipStyleClass]="'tooltip-custom'"
+            tooltipPosition="bottom">?</p>
+        </div>
+      }
     </div>
   </ng-template>
   <div class="grid grid-cols-12 gap-4">
@@ -74,11 +76,13 @@
   <ng-template pTemplate="footer">
     <div class="w-full flex justify-end items-center mt-2">
       <ng-container *render="['admin']">
-        <div *ngIf="asesor" pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-purple-900 rounded-full flex
-          items-center justify-center p-5 cursor-pointer mr-4 transition-all duration-500 hover:animate-pulse"
-          (click)="setPasswordUndefined()">
-          <p class="text-white">Blanquear contraseña</p>
-        </div>
+        @if(asesor) {
+          <div pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-purple-900 rounded-full flex
+            items-center justify-center p-5 cursor-pointer mr-4 transition-all duration-500 hover:animate-pulse"
+            (click)="setPasswordUndefined()">
+            <p class="text-white">Blanquear contraseña</p>
+          </div>
+        }
       </ng-container>
       
       <div *render="['admin']" (keydown)="handleKeyboardEvent($event)" pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-gray-800 rounded-full flex

@@ -1,28 +1,32 @@
 <div class="relative">
 
   <div class="left-0 absolute top-0 md:h-20 h-32 w-full">
-    <div class="w-full bg-gray-800 md:h-20 h-32 rounded-xl flex md:flex-row flex-col
-      md:justify-between md:text-2xl text-white p-3" *ngIf="user">
-      <div class="flex justify-start items-center duration-700 transition-all" [ngClass]="{'opacity-0': change}">
-        <ng-lottie class="w-10 md:w-20" [options]="options" (animationCreated)="animationCreated($event)" />
-        <h1 class="pl-2">{{obtenerSaludo().saludo}} {{user.nombre}} {{user.apellido}}!</h1>
-      </div>
-      <h1 class="text-end duration-700 transition-all" [ngClass]="{'opacity-0': change}">{{getFormatDate()}}</h1>
-    </div>
+    @if(user) {
+      <div class="w-full bg-gray-800 md:h-20 h-32 rounded-xl flex md:flex-row flex-col
+        md:justify-between md:text-2xl text-white p-3">
+        <div class="flex justify-start items-center duration-700 transition-all" [ngClass]="{'opacity-0': change}">
+          <ng-lottie class="w-10 md:w-20" [options]="options" (animationCreated)="animationCreated($event)" />
+          <h1 class="pl-2">{{obtenerSaludo().saludo}} {{user.nombre}} {{user.apellido}}!</h1>
+        </div>
+        <h1 class="text-end duration-700 transition-all" [ngClass]="{'opacity-0': change}">{{getFormatDate()}}</h1>
+      </div>  
+    }
   </div>
   <!-- ! SISTEMA RESPONSIVO ESTILO BOOTSTRAP C/TAILWIND CSS -->
-  <div class="grid grid-cols-12 gap-4 pt-24 md:pt-20 lg:pt-16 px-4" *ngIf="dashboard">
-    <app-card class="lg:col-span-3 sm:col-span-12 md:col-span-6 col-span-12"
-      [color]="'gray-900'" [icon]="'heroClipboardDocumentListSolid'" [text]="'Pericias'"
-      [text_one]="'Abiertas: ' + dashboard.pericias.abiertas" [text_two]="'Cerradas: ' + dashboard.pericias.cerradas" />
-    <app-card class="lg:col-span-3 sm:col-span-12 md:col-span-6 col-span-12"
-      [color]="'teal-900'" [icon]="'heroUserSolid'" [text]="'Asesores'" *render="['admin']"
-      [text_one]="'Activos: ' + dashboard.usuarios.activos" [text_two]="'Inactivos: ' + dashboard.usuarios.inactivos"/>
-    <app-card class="lg:col-span-3 sm:col-span-12 md:col-span-6 col-span-12"
-      [color]="'emerald-900'" [icon]="'heroBuildingOfficeSolid'" [text]="'Aseguradoras'" *render="['admin']"
-      [text_one]="'Activas: ' + dashboard.aseguradoras.activos" [text_two]="'Inactivas: ' + dashboard.aseguradoras.inactivos" />
-    <app-card class="lg:col-span-3 sm:col-span-12 md:col-span-6 col-span-12"
-      [color]="'red-900'" [icon]="'heroShieldCheckSolid'" [text]="'Siniestros'" *render="['admin']"
-      [text_one]="'Activos: ' + dashboard.tipoSiniestro.activos" [text_two]="'Inactivos: ' + dashboard.tipoSiniestro.inactivos" />
-  </div>
+  @if(dashboard) {
+    <div class="grid grid-cols-12 gap-4 pt-24 md:pt-20 lg:pt-16 px-4">
+      <app-card class="lg:col-span-3 sm:col-span-12 md:col-span-6 col-span-12"
+        [color]="'gray-900'" [icon]="'heroClipboardDocumentListSolid'" [text]="'Pericias'"
+        [text_one]="'Abiertas: ' + dashboard.pericias.abiertas" [text_two]="'Cerradas: ' + dashboard.pericias.cerradas" />
+      <app-card class="lg:col-span-3 sm:col-span-12 md:col-span-6 col-span-12"
+        [color]="'teal-900'" [icon]="'heroUserSolid'" [text]="'Asesores'" *render="['admin']"
+        [text_one]="'Activos: ' + dashboard.usuarios.activos" [text_two]="'Inactivos: ' + dashboard.usuarios.inactivos"/>
+      <app-card class="lg:col-span-3 sm:col-span-12 md:col-span-6 col-span-12"
+        [color]="'emerald-900'" [icon]="'heroBuildingOfficeSolid'" [text]="'Aseguradoras'" *render="['admin']"
+        [text_one]="'Activas: ' + dashboard.aseguradoras.activos" [text_two]="'Inactivas: ' + dashboard.aseguradoras.inactivos" />
+      <app-card class="lg:col-span-3 sm:col-span-12 md:col-span-6 col-span-12"
+        [color]="'red-900'" [icon]="'heroShieldCheckSolid'" [text]="'Siniestros'" *render="['admin']"
+        [text_one]="'Activos: ' + dashboard.tipoSiniestro.activos" [text_two]="'Inactivos: ' + dashboard.tipoSiniestro.inactivos" />
+    </div>
+  }
 </div>

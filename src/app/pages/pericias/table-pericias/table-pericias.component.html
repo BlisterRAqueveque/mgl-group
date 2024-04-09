@@ -72,7 +72,7 @@
 <p-dialog header="Conexión del dispositivo" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }"
   [draggable]="false" [resizable]="false" (onHide)="disconnectSocket()">
   <div class="flex justify-center items-center">
-    <img *ngIf="mediaUrl" [src]="mediaUrl" width="400" alt="">
+    @if(mediaUrl) { <img [src]="mediaUrl" width="400" alt=""> }
   </div>
   <hr>
   <h5 class="text-center text-lg">Para continuar, debe emparejar un dispositivo de WhatsApp, y así, poder enviar

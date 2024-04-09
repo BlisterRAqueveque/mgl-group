@@ -8,15 +8,17 @@
       </div>
       <span class="font-bold text-2xl mb-2 mt-4 break-words w-full">{{ message.header }}</span>
       <p class="mb-0 w-full break-words">{{ message.message }}</p>
-      <div *ngIf="showButtons; else acceptOnly" class="flex items-center justify-between mt-4 w-full">
-        <button pButton label="Aceptar" (click)="cd.accept()" class="p-3 m-3"></button>
-        <button pButton label="Cancelar" (click)="cd.reject()" class="p-3 m-3 cancel"></button>
-      </div>
-      <ng-template #acceptOnly>
+      @if(showButtons) {
+        <div class="flex items-center justify-between mt-4 w-full">
+          <button pButton label="Aceptar" (click)="cd.accept()" class="p-3 m-3"></button>
+          <button pButton label="Cancelar" (click)="cd.reject()" class="p-3 m-3 cancel"></button>
+        </div>
+      }
+      @else {
         <div class="flex items-center justify-end mt-4 w-full">
           <button pButton label="Aceptar" (click)="cd.accept()" class="p-3 m-3"></button>
         </div>
-      </ng-template>
+      }
 
     </div>
   </ng-template>

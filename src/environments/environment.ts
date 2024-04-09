@@ -1,4 +1,4 @@
-const url = 'https://mgl-group.hvdevs.com/'
+const url = 'https://mgl-group.blistertechnologies.com.ar/'
 
 export const environment = {
   webUrl: `${url}`,

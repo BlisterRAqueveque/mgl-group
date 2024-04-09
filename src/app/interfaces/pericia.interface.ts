@@ -14,6 +14,8 @@ export interface PericiaI {
   mail_asegurado: string;
   veh_asegurado: string;
   patente_asegurado: string;
+  conductor?: string;
+  dni_conductor?: string;
   abierta?: boolean;
   activo?: boolean;
 
@@ -27,4 +29,16 @@ export interface PericiaI {
   verificador?: UsuarioI;
 
   informe?: InformeI;
+
+  terceros?: TerceroI[];
+}
+
+export interface TerceroI {
+  id?: number;
+  nombre: string;
+  dni: string;
+  aseguradora: string;
+
+  pericia?: PericiaI;
+  informe?: TerceroI;
 }

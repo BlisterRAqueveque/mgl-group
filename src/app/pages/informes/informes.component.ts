@@ -4,7 +4,12 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, ViewChild } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -40,7 +45,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AdjuntoI, InformeI } from '../../interfaces/informe.interface';
-import { PericiaI } from '../../interfaces/pericia.interface';
+import { PericiaI, TerceroI } from '../../interfaces/pericia.interface';
 import { InformeService } from '../../services/informes/informe.service';
 import { PericiaService } from '../../services/pericias/pericias.service';
 import { ButtonComponent } from '../../shared/button/button.component';
@@ -51,6 +56,7 @@ import { imgToBase64 } from '../../tools/img-to-url';
 import { dataURLtoFile } from '../../tools/img-url-to-file';
 import { TablePericiasInformesComponent } from './table-pericias-informes/table-pericias-informes.component';
 import { AuthService } from '../../services/auth/auth.service';
+import { TercerosComponent } from '../pericias/modal-add/terceros/terceros.component';
 
 @Component({
   selector: 'app-informes',
@@ -70,6 +76,7 @@ import { AuthService } from '../../services/auth/auth.service';
     DialogComponent,
     ButtonComponent,
     TablePericiasInformesComponent,
+    TercerosComponent,
   ],
   templateUrl: './informes.component.html',
   styleUrl: './informes.component.css',
@@ -97,7 +104,7 @@ export class InformesComponent {
   ) {}
 
   /** @description Revisamos los params para ver si no enviaron desde otro lugar el id de la pericia */
-  async ngOnInit() {
+  async ngAfterViewInit() {
     const id = await firstValueFrom(this.route.queryParams);
     if (id['pericia']) {
       this.dialog.loading = true;
@@ -107,7 +114,8 @@ export class InformesComponent {
           if (!data.informe) {
             this.dialog.alertMessage(
               'Aviso.',
-              'Esta pericia no tiene un informe cargado'
+              'Esta pericia no tiene un informe cargado',
+              () => {}
             );
           }
           if (data.abierta === true) this.pericia = data;
@@ -171,6 +179,10 @@ export class InformesComponent {
     this.patente_asegurado = '';
     this.text_anio = '';
     this.relevamiento = '';
+    this.conductor = '';
+    this.dni_conductor = '';
+    this.tercerosContainer.clear();
+    this.hasTerceros = false;
   }
   // ---------------------------------------------------------------------------->
   /**                           Inicializar el modulo                           */
@@ -197,9 +209,16 @@ export class InformesComponent {
   /** @description Si la pericia está cerrada, muestra el cartel */
   close = false;
 
+  hasTerceros = false;
+  conductor = '';
+  dni_conductor = '';
+
   async initModule(pericia: PericiaI) {
     this.dialog.loading = true;
     this.close = false;
+    this.hasTerceros = pericia.tipo_siniestro
+      ? pericia.tipo_siniestro.nombre!.includes('vial')!
+      : false;
     //* Si la pericia no tiene un informe asignado, debe crear uno nuevo
     if (!pericia.informe) {
       this.tipo_siniestro = pericia.tipo_siniestro?.nombre!;
@@ -210,6 +229,9 @@ export class InformesComponent {
       this.tel_asegurado = pericia.tel_asegurado;
       this.veh_asegurado = pericia.veh_asegurado;
       this.patente_asegurado = pericia.patente_asegurado;
+      this.conductor = pericia.conductor!;
+      this.dni_conductor = pericia.dni_conductor!;
+      this.initComponent(pericia.terceros);
     } else {
       this.tipo_siniestro = pericia.informe.tipo_siniestro;
       this.n_siniestro = pericia.informe.n_siniestro;
@@ -239,22 +261,27 @@ export class InformesComponent {
       this.relevamiento = pericia.informe.relevamiento;
 
       const url = environment.imagesUrl;
+      this.initComponent(pericia.informe.terceros);
       for (const a of pericia.informe.adjuntos) {
         const img = await imgToBase64(url + a.adjunto);
         this.images.push({
+          id: a?.id!,
           img: img as string,
           comment: a.descripcion,
           mimeType: 'image/jpeg',
           originalImg: img as string,
+          edited: false,
         });
       }
     }
+
     //? El objeto completo para tener referencia mas tarde
     if (pericia.abierta === true) this.pericia = pericia;
     else this.close = true;
     this.visibleInforme = false;
 
     this.dialog.loading = false;
+    console.log(pericia.terceros, pericia.conductor, pericia.dni_conductor);
   }
   // ---------------------------------------------------------------------------->
 
@@ -263,10 +290,12 @@ export class InformesComponent {
 
   /** @description Lista de imágenes, contiene la imagen que se muestra/guarda, y la original */
   images: {
+    id: number;
     img: string;
     comment: string;
     mimeType: string;
     originalImg: string;
+    edited: boolean;
   }[] = [];
 
   /** @description Toma la imagen desde el evento y la transforma en base64 */
@@ -280,10 +309,12 @@ export class InformesComponent {
           const imageUrl = e.target!.result !== null ? e.target!.result : '';
           //* Se almacenan en la lista
           this.images.push({
+            id: 0,
             img: imageUrl.toString(),
             comment: '',
             mimeType: 'image/jpeg',
             originalImg: imageUrl.toString(),
+            edited: false,
           });
         };
         reader.readAsDataURL(file);
@@ -351,6 +382,7 @@ export class InformesComponent {
    **/
   finishImgEdition() {
     this.images[this.imgIndex].img = this.imgResult;
+    this.images[this.imgIndex].edited = true;
     this.visible = false;
   }
 
@@ -369,10 +401,12 @@ export class InformesComponent {
   moveImg(
     dropEvent: CdkDragDrop<
       {
+        id: number;
         img: string;
         comment: string;
         mimeType: string;
         originalImg: string;
+        edited: boolean;
       }[]
     >
   ) {
@@ -420,7 +454,6 @@ export class InformesComponent {
       );
     }
   }
-
   /** @description Carga el informe finalizado */
   async uploadInforme() {
     this.dialog.loading = true;
@@ -454,6 +487,9 @@ export class InformesComponent {
       usuario_carga: user!,
       relevamiento: this.relevamiento,
       pericia: this.pericia!,
+      terceros: this.tercerosList(),
+      conductor: this.hasTerceros ? this.conductor : '',
+      dni_conductor: this.hasTerceros ? this.dni_conductor : '',
     };
     formData.append('form', JSON.stringify(informe));
     this.informeService.insert(formData).subscribe({
@@ -479,33 +515,110 @@ export class InformesComponent {
     });
   }
 
-  async updateInforme() {
+  async onUpdateInforme() {
     this.dialog.confirm(
       'Confirmación de carga',
       '¿Está seguro de querer modificar el siguiente informe?',
       async () => {
-        this.dialog.loading = true;
-        try {
-          const result = await firstValueFrom(
-            this.informeService.delete(this.pericia?.informe?.id!)
-          );
-          const nInforme = await this.uploadInforme();
-          this.table.getHistoric();
-          this.dialog.alertMessage(
-            'Confirmación de carga',
-            'El informe se modificó con éxito.',
-            () => {}
-          );
-        } catch (error) {
-          console.log(error);
-          this.dialog.alertMessage(
-            'Error de carga',
-            'El informe no se pudo modificar.',
-            () => {}
-          );
-        }
+        await this.updateInforme();
       }
     );
+  }
+  async updateInforme() {
+    this.dialog.loading = true;
+    const formData = new FormData();
+    this.images.forEach((img, index) => {
+      //* Si la imagen fue editada
+      if (img.id === 0) {
+        formData.append(
+          'files',
+          dataURLtoFile(img.img, 'newFile', img.mimeType)
+        );
+        this.pericia?.informe?.adjuntos.push({
+          adjunto: '',
+          descripcion: img.comment,
+          index,
+        });
+      }
+      if (img.edited && img.id !== 0) {
+        formData.append(
+          'files',
+          dataURLtoFile(img.img, 'newFile', img.mimeType)
+        );
+        //? Creamos un nuevo registro
+        this.pericia?.informe?.adjuntos.push({
+          adjunto: '',
+          descripcion: img.comment,
+          index,
+        });
+        //! Quitamos el adjunto editado para que se elimine de la base de datos
+        if (
+          this.pericia &&
+          this.pericia.informe &&
+          this.pericia.informe.adjuntos
+        ) {
+          this.pericia.informe.adjuntos =
+            this.pericia?.informe?.adjuntos.filter((i) => {
+              return i.id !== img.id;
+            });
+        }
+      } else {
+        //* Caso contrario, solo modificamos estas propiedades
+        const ad = this.pericia?.informe?.adjuntos.find((i) => i.id === img.id);
+        if (ad) {
+          ad.index = index;
+          ad.descripcion = img.comment;
+        }
+      }
+    });
+    const user = await this.auth.returnUserInfo();
+    const informe: InformeI = {
+      id: this.pericia?.informe?.id,
+      tipo_siniestro: this.tipo_siniestro,
+      n_siniestro: this.n_siniestro,
+      n_denuncia: this.n_denuncia,
+      nombre_asegurado: this.nombre_asegurado,
+      dir_asegurado: this.dir_asegurado,
+      tel_asegurado: this.tel_asegurado,
+      veh_asegurado: this.veh_asegurado,
+      patente_asegurado: this.patente_asegurado,
+      hecho: this.hecho,
+      n_poliza: this.n_poliza,
+      tipo_cobertura: this.tipo_cobertura,
+      amp_denuncia: this.amp_denuncia,
+      conclusion: this.conclusion,
+      text_anio: this.text_anio,
+      adjuntos: this.pericia?.informe?.adjuntos!,
+      usuario_carga: user!,
+      relevamiento: this.relevamiento,
+      pericia: this.pericia!,
+      terceros: this.tercerosList(),
+      conductor: this.hasTerceros ? this.conductor : '',
+      dni_conductor: this.hasTerceros ? this.dni_conductor : '',
+    };
+    formData.append('form', JSON.stringify(informe));
+    this.informeService.update(this.pericia?.informe?.id!, formData).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.table.getHistoric();
+        this.dialog.alertMessage(
+          'Confirmación de carga',
+          'El informe se modificó con éxito.',
+          () => {
+            this.setDefault();
+          }
+        );
+      },
+      error: (e) => {
+        console.log(e);
+        this.dialog.alertMessage(
+          'Error de carga',
+          'Ocurrió un error en la carga.',
+          () => {},
+          true
+        );
+      },
+    });
   }
   // --------------------------------------------------------------------------->
   /**                              Sección de PDF                              */
@@ -583,7 +696,7 @@ export class InformesComponent {
             text: 'Informe de investigación',
             decoration: 'underline',
             alignment: 'center',
-            fontSize: 22,
+            fontSize: 20,
             margin: [0, 0, 0, 10],
           },
         ],
@@ -593,7 +706,7 @@ export class InformesComponent {
           {
             text: this.tipo_siniestro,
             alignment: 'center',
-            fontSize: 18,
+            fontSize: 14,
             margin: [0, 0, 0, 10],
           },
         ],
@@ -603,7 +716,7 @@ export class InformesComponent {
           {
             text: this.hecho,
             alignment: 'center',
-            fontSize: 18,
+            fontSize: 14,
             margin: [0, 0, 0, 10],
           },
         ],
@@ -615,7 +728,7 @@ export class InformesComponent {
               this.n_siniestro ? this.n_siniestro : 'No tiene'
             }`,
             alignment: 'left',
-            fontSize: 16,
+            fontSize: 14,
             margin: [14, 0, 0, 8],
           },
         ],
@@ -627,7 +740,7 @@ export class InformesComponent {
               this.n_denuncia ? this.n_denuncia : 'No tiene'
             }`,
             alignment: 'left',
-            fontSize: 16,
+            fontSize: 14,
             margin: [14, 0, 0, 8],
           },
         ],
@@ -649,7 +762,7 @@ export class InformesComponent {
               this.nombre_asegurado ? this.nombre_asegurado : 'No se proveyó'
             }`,
             alignment: 'left',
-            fontSize: 16,
+            fontSize: 14,
             margin: [14, 0, 0, 8],
           },
         ],
@@ -661,7 +774,7 @@ export class InformesComponent {
               this.dir_asegurado ? this.dir_asegurado : 'No se proveyó'
             }`,
             alignment: 'left',
-            fontSize: 16,
+            fontSize: 14,
             margin: [14, 0, 0, 8],
           },
         ],
@@ -673,7 +786,7 @@ export class InformesComponent {
               this.tel_asegurado ? this.tel_asegurado : 'No se proveyó'
             }`,
             alignment: 'left',
-            fontSize: 16,
+            fontSize: 14,
             margin: [14, 0, 0, 8],
           },
         ],
@@ -694,9 +807,11 @@ export class InformesComponent {
         ? {
             stack: [
               {
-                text: `Póliza: ${this.n_poliza}`,
+                text: `Póliza: ${
+                  this.n_poliza ? this.n_poliza : 'Sin definir'
+                }`,
                 alignment: 'left',
-                fontSize: 16,
+                fontSize: 14,
                 margin: [14, 0, 0, 8],
               },
             ],
@@ -706,9 +821,11 @@ export class InformesComponent {
         ? {
             stack: [
               {
-                text: `Cobertura: ${this.tipo_cobertura}`,
+                text: `Cobertura: ${
+                  this.tipo_cobertura ? this.tipo_cobertura : 'Sin definir'
+                }`,
                 alignment: 'left',
-                fontSize: 16,
+                fontSize: 14,
                 margin: [14, 0, 0, 8],
               },
             ],
@@ -731,7 +848,7 @@ export class InformesComponent {
               this.veh_asegurado ? this.veh_asegurado : 'No se proveyó'
             }`,
             alignment: 'left',
-            fontSize: 16,
+            fontSize: 14,
             margin: [14, 0, 0, 8],
           },
         ],
@@ -740,9 +857,9 @@ export class InformesComponent {
         ? {
             stack: [
               {
-                text: `Año: ${this.text_anio}`,
+                text: `Año: ${this.text_anio ? this.text_anio : 'Sin definir'}`,
                 alignment: 'left',
-                fontSize: 16,
+                fontSize: 14,
                 margin: [14, 0, 0, 8],
               },
             ],
@@ -752,14 +869,37 @@ export class InformesComponent {
         ? {
             stack: [
               {
-                text: this.patente ? `Patente: ${this.patente_asegurado}` : '',
+                text: `Patente: ${
+                  this.patente_asegurado
+                    ? this.patente_asegurado
+                    : 'Sin definir'
+                }`,
                 alignment: 'left',
-                fontSize: 16,
+                fontSize: 14,
                 margin: [14, 0, 0, 8],
               },
             ],
           }
         : '',
+      this.hasTerceros
+        ? {
+            stack: [
+              {
+                text: this.conductor
+                  ? `Conductor: ${this.conductor}, DNI: ${
+                      this.dni_conductor
+                        ? this.dni_conductor
+                        : 'Sin información'
+                    }`
+                  : '',
+                alignment: 'left',
+                fontSize: 14,
+                margin: [14, 0, 0, 8],
+              },
+            ],
+          }
+        : '',
+      this.hasTerceros ? this.tercerosPdf() : '',
       {
         stack: [
           {
@@ -773,6 +913,35 @@ export class InformesComponent {
     return content;
   }
 
+  tercerosPdf() {
+    const stack: ContentStack[] = [];
+    stack.push({
+      stack: [
+        {
+          text: 'Datos de terceros',
+          alignment: 'center',
+          fontSize: 16,
+          margin: [14, 0, 0, 8],
+        },
+      ],
+    });
+    this.tercerosComponents.forEach((t) => {
+      stack.push({
+        stack: [
+          {
+            text: `Nombre: ${t.nombre}, DNI: ${
+              t.dni ? t.dni : 'Sin información'
+            }, aseguradora: ${t.aseguradora}`,
+            alignment: 'left',
+            fontSize: 14,
+            margin: [14, 0, 0, 8],
+          },
+        ],
+      });
+    });
+    return stack;
+  }
+
   async ampDenuncia() {
     const content: Content = [
       {
@@ -780,7 +949,7 @@ export class InformesComponent {
           {
             text: 'Ampliación de denuncia',
             alignment: 'center',
-            fontSize: 18,
+            fontSize: 16,
             margin: [0, 0, 0, 10],
           },
         ],
@@ -792,7 +961,7 @@ export class InformesComponent {
               ? this.amp_denuncia
               : 'No se cargó una ampliación de denuncia',
             alignment: 'left',
-            fontSize: 14,
+            fontSize: 13,
             margin: [14, 0, 0, 10],
             pageBreak: 'after',
           },
@@ -813,7 +982,7 @@ export class InformesComponent {
             text: 'No se cargaron imágenes',
             alignment: 'center',
             margin: [0, 0, 0, 20],
-            fontSize: 18,
+            fontSize: 14,
           },
         ],
       });
@@ -840,7 +1009,7 @@ export class InformesComponent {
                 text: image.comment,
                 alignment: 'center',
                 margin: [0, 0, 0, 20],
-                fontSize: 18,
+                fontSize: 14,
               }, // [left, top, right, bottom]
               {
                 image: image.img,
@@ -863,11 +1032,11 @@ export class InformesComponent {
                 text: image.comment,
                 alignment: 'center',
                 margin: [0, 0, 0, 20],
-                fontSize: 18,
+                fontSize: 14,
               }, // [left, top, right, bottom]
               {
                 image: image.img,
-                width: 380,
+                width: 420, //width: 380,
                 alignment: 'center',
                 margin: [0, 0, 0, 20],
                 pageBreak:
@@ -890,11 +1059,11 @@ export class InformesComponent {
               text: image.comment,
               alignment: 'center',
               margin: [0, 0, 0, 20],
-              fontSize: 18,
+              fontSize: 14,
             }, // [left, top, right, bottom]
             {
               image: image.img,
-              width: 280,
+              width: 320, //width: 280,
               alignment: 'center',
               margin: [0, 0, 0, 20],
               pageBreak:
@@ -920,7 +1089,7 @@ export class InformesComponent {
           {
             text: 'Según el relevamiento realizado podemos decir:',
             alignment: 'left',
-            fontSize: 18,
+            fontSize: 14,
             margin: [14, 0, 14, 10],
             pageBreak: 'before',
           },
@@ -933,7 +1102,7 @@ export class InformesComponent {
               ? this.relevamiento
               : 'No se ha cargado un relevamiento.',
             alignment: 'left',
-            fontSize: 14,
+            fontSize: 13,
             margin: [14, 0, 14, 14],
           },
         ],
@@ -943,7 +1112,7 @@ export class InformesComponent {
           {
             text: 'Conclusión',
             alignment: 'left',
-            fontSize: 18,
+            fontSize: 14,
             margin: [14, 0, 14, 10],
           },
         ],
@@ -955,7 +1124,7 @@ export class InformesComponent {
               ? this.conclusion
               : 'No se ha cargado una conclusión',
             alignment: 'left',
-            fontSize: 14,
+            fontSize: 13,
             margin: [14, 0, 14, 14],
           },
         ],
@@ -997,13 +1166,65 @@ export class InformesComponent {
       for (let i = 0; i < files.length; i++) {
         const adjunto = await convertFileToBase64(files[i]);
         this.images.push({
+          id: 0,
           img: adjunto,
           comment: '',
           mimeType: 'image/jpeg',
           originalImg: adjunto,
+          edited: false,
         });
       }
     }
   }
   // --------------------------------------------------------------------------->
+  @ViewChild('tercerosContainer', { read: ViewContainerRef })
+  tercerosContainer!: ViewContainerRef;
+  tercerosComponents: TercerosComponent[] = [];
+
+  generateComponent() {
+    const component = this.tercerosContainer.createComponent(TercerosComponent);
+    component.instance.delete.subscribe(() => {
+      component.destroy();
+      this.tercerosComponents = this.tercerosComponents.filter(
+        (i) => i !== component.instance
+      );
+    });
+    this.tercerosComponents.push(component.instance);
+  }
+
+  initComponent(terceros?: TerceroI[]) {
+    terceros?.forEach((t) => {
+      const component =
+        this.tercerosContainer.createComponent(TercerosComponent);
+      component.instance.id = t.id!;
+      component.instance.nombre = t.nombre;
+      component.instance.dni = t.dni;
+      component.instance.aseguradora = t.aseguradora;
+      component.instance.delete.subscribe(() => {
+        component.destroy();
+        this.tercerosComponents = this.tercerosComponents.filter(
+          (i) => i !== component.instance
+        );
+      });
+      this.tercerosComponents.push(component.instance);
+    });
+  }
+
+  /** @description Devuelve la lista de los terceros, en caso de corresponder */
+  tercerosList() {
+    if (this.hasTerceros) {
+      const terceros: TerceroI[] = [];
+      this.tercerosComponents.forEach((t) => {
+        terceros.push({
+          id: t.id,
+          nombre: t.nombre,
+          dni: t.dni,
+          aseguradora: t.aseguradora,
+        });
+      });
+      return terceros;
+    } else {
+      return [];
+    }
+  }
 }

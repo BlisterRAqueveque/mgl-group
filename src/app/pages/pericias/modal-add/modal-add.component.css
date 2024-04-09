@@ -1,0 +1,19 @@
+.hide {
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: grid;
+  grid-template-rows: 0fr;
+}
+
+.hide > div {
+  overflow: hidden;
+}
+
+.show {
+  grid-template-rows: 1fr;
+  transition: all 0.3s ease;
+}
+
+.forbidden {
+  cursor: not-allowed;
+}

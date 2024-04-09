@@ -26,4 +26,12 @@ export class InformeService {
       .delete<ResponseI>(`${this.url}/${id}`)
       .pipe(catchError((e) => handleError(e)));
   }
+
+  update(id: number, form: any) {
+    const direction = `${this.url}/${id}`;
+    return this.http.put<ResponseI>(direction, form).pipe(
+      map((data) => data.result as InformeI),
+      catchError((e) => handleError(e))
+    );
+  }
 }

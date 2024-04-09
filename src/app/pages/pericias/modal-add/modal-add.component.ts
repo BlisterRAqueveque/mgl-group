@@ -1,20 +1,30 @@
-import { CommonModule, formatDate } from '@angular/common';
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { DialogModule } from 'primeng/dialog';
-import { InputTextModule } from 'primeng/inputtext';
-import { CalendarModule } from 'primeng/calendar';
-import { DropdownModule } from 'primeng/dropdown';
+import { CommonModule } from '@angular/common';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroPlusCircleSolid } from '@ng-icons/heroicons/solid';
+import { CalendarModule } from 'primeng/calendar';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
 import { InputMaskModule } from 'primeng/inputmask';
+import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
-import { PericiaService } from '../../../services/pericias/pericias.service';
+import { RenderDirective } from '../../../directives/render.directive';
 import { AseguradoraI } from '../../../interfaces/aseguradora.interface';
+import { PericiaI, TerceroI } from '../../../interfaces/pericia.interface';
 import { TipoSiniestroI } from '../../../interfaces/tipo-siniestro.interface';
 import { UsuarioI } from '../../../interfaces/user-token.interface';
 import { AuthService } from '../../../services/auth/auth.service';
-import { PericiaI } from '../../../interfaces/pericia.interface';
+import { PericiaService } from '../../../services/pericias/pericias.service';
 import { DialogComponent } from '../../../shared/dialog/dialog.component';
-import { RenderDirective } from '../../../directives/render.directive';
+import { TercerosComponent } from './terceros/terceros.component';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-modal-add',
@@ -30,6 +40,14 @@ import { RenderDirective } from '../../../directives/render.directive';
     RippleModule,
     DialogComponent,
     RenderDirective,
+    NgIconComponent,
+    TercerosComponent,
+    CheckboxModule,
+  ],
+  providers: [
+    provideIcons({
+      heroPlusCircleSolid,
+    }),
   ],
   templateUrl: './modal-add.component.html',
   styleUrl: './modal-add.component.css',
@@ -93,6 +111,10 @@ export class ModalAddComponent {
       this.selectedTipo = this.tipos.find(
         (i) => i.id === pericia?.tipo_siniestro?.id
       )!;
+      this.showOthers();
+      this.conductor = pericia.conductor!;
+      this.dni_conductor = pericia.dni_conductor!;
+      this.sameConductor = pericia.nombre_asegurado === pericia.conductor;
       this.selectedVerificador = this.verificadores.find(
         (i) => i.id === pericia?.verificador?.id
       )!;
@@ -104,6 +126,8 @@ export class ModalAddComponent {
       this.mail_asegurado = pericia.mail_asegurado;
       this.veh_asegurado = pericia.veh_asegurado;
       this.patente_asegurado = pericia.patente_asegurado;
+      this.hasTerceros = pericia.terceros?.length! > 0;
+      if (this.tercerosContainer) this.initComponent(pericia.terceros);
     }
     this.visible = true;
   }
@@ -124,8 +148,15 @@ export class ModalAddComponent {
     this.selectedAseguradora = null;
     this.selectedTipo = null;
     this.selectedVerificador = null;
+    this.tercerosComponents = [];
+    if (this.tercerosContainer) this.tercerosContainer.clear();
     //* Reiniciamos el valor de la pericia en caso de ser cargado.
     this.pericia = undefined;
+    this.hasTerceros = false;
+    this.isVial = false;
+    this.sameConductor = false;
+    this.conductor = '';
+    this.dni_conductor = '';
   }
 
   error = false;
@@ -138,6 +169,14 @@ export class ModalAddComponent {
 
   /** @description Muestra el dialogo para el insert */
   insertDialog() {
+    const terceros: TerceroI[] = [];
+    this.tercerosComponents.forEach((c) => {
+      terceros.push({
+        nombre: c.nombre,
+        dni: c.dni,
+        aseguradora: c.aseguradora,
+      });
+    });
     const newPericia: PericiaI = {
       fecha_asignado: this.fecha_asignado,
       n_siniestro: this.n_siniestro!,
@@ -148,9 +187,12 @@ export class ModalAddComponent {
       mail_asegurado: this.mail_asegurado,
       veh_asegurado: this.veh_asegurado,
       patente_asegurado: this.patente_asegurado,
+      conductor: this.isVial ? this.conductor : '',
+      dni_conductor: this.isVial ? this.dni_conductor : '',
       aseguradora: this.selectedAseguradora!,
       tipo_siniestro: this.selectedTipo!,
       verificador: this.selectedVerificador!,
+      terceros: this.isVial ? (this.hasTerceros ? terceros : []) : [],
       usuario_carga: this.user,
     };
     if (this.validation(newPericia)) {
@@ -186,15 +228,17 @@ export class ModalAddComponent {
             this.error = false;
             this.visible = false;
             //* Reiniciamos el valor de los usuarios
-            this.fecha_asignado = '';
-            this.n_siniestro = undefined;
-            this.n_denuncia = undefined;
-            this.nombre_asegurado = '';
-            this.dir_asegurado = '';
-            this.tel_asegurado = '';
-            this.mail_asegurado = '';
-            this.veh_asegurado = '';
-            this.patente_asegurado = '';
+            //! Se deben reiniciar en el dismissModal()
+            // this.fecha_asignado = '';
+            // this.n_siniestro = undefined;
+            // this.n_denuncia = undefined;
+            // this.nombre_asegurado = '';
+            // this.dir_asegurado = '';
+            // this.tel_asegurado = '';
+            // this.mail_asegurado = '';
+            // this.veh_asegurado = '';
+            // this.patente_asegurado = '';
+            // this.tercerosComponents = [];
           }
         );
       },
@@ -234,6 +278,15 @@ export class ModalAddComponent {
 
   //TODO Cuando se cargue el edit, poner la variable date
   updateDialog() {
+    const terceros: TerceroI[] = [];
+    this.tercerosComponents.forEach((t) => {
+      terceros.push({
+        id: t.id,
+        nombre: t.nombre,
+        dni: t.dni,
+        aseguradora: t.aseguradora,
+      });
+    });
     const pericia: PericiaI = {
       fecha_asignado: this.fecha_asignado,
       aseguradora: this.selectedAseguradora!,
@@ -247,6 +300,9 @@ export class ModalAddComponent {
       veh_asegurado: this.veh_asegurado,
       patente_asegurado: this.patente_asegurado,
       verificador: this.selectedVerificador!,
+      conductor: this.isVial ? this.conductor : '',
+      dni_conductor: this.isVial ? this.dni_conductor : '',
+      terceros: this.isVial ? (this.hasTerceros ? terceros : []) : [],
     };
     if (this.validation(pericia)) {
       this.dialog.confirm(
@@ -282,6 +338,18 @@ export class ModalAddComponent {
             this.visible = false;
             //* Reiniciamos el valor
             this.pericia = undefined;
+            //* Reiniciamos el valor de los usuarios
+            //! Se deben reiniciar en el dismissModal()
+            // this.fecha_asignado = '';
+            // this.n_siniestro = undefined;
+            // this.n_denuncia = undefined;
+            // this.nombre_asegurado = '';
+            // this.dir_asegurado = '';
+            // this.tel_asegurado = '';
+            // this.mail_asegurado = '';
+            // this.veh_asegurado = '';
+            // this.patente_asegurado = '';
+            // this.tercerosComponents = [];
           }
         );
       },
@@ -328,4 +396,64 @@ export class ModalAddComponent {
     );
   }
   //----------------------------------------------------------------------------------->
+  /** @description Muestra los terceros */
+  hasTerceros = false;
+  sameConductor = false;
+  isVial = false;
+
+  conductor = '';
+  dni_conductor = '';
+  showOthers() {
+    if (
+      this.selectedTipo
+        ? this.selectedTipo.nombre.toLowerCase().includes('vial')
+        : false
+    ) {
+      this.isVial = true;
+    } else {
+      this.isVial = false;
+      this.sameConductor = false;
+      this.dni_conductor = '';
+      this.conductor = '';
+    }
+  }
+
+  @ViewChild('tercerosContainer', { read: ViewContainerRef })
+  tercerosContainer!: ViewContainerRef;
+  tercerosComponents: TercerosComponent[] = [];
+
+  generateComponent() {
+    const component = this.tercerosContainer.createComponent(TercerosComponent);
+    component.instance.delete.subscribe(() => {
+      component.destroy();
+      this.tercerosComponents = this.tercerosComponents.filter(
+        (i) => i !== component.instance
+      );
+    });
+    this.tercerosComponents.push(component.instance);
+  }
+
+  initComponent(terceros?: TerceroI[]) {
+    terceros?.forEach((t) => {
+      const component =
+        this.tercerosContainer.createComponent(TercerosComponent);
+      component.instance.id = t.id!;
+      component.instance.nombre = t.nombre;
+      component.instance.dni = t.dni;
+      component.instance.aseguradora = t.aseguradora;
+      component.instance.delete.subscribe(() => {
+        component.destroy();
+        this.tercerosComponents = this.tercerosComponents.filter(
+          (i) => i !== component.instance
+        );
+      });
+      this.tercerosComponents.push(component.instance);
+    });
+  }
+
+  setConductor() {
+    if (this.sameConductor) {
+      this.conductor = this.nombre_asegurado;
+    }
+  }
 }
