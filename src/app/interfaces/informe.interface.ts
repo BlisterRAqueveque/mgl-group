@@ -19,7 +19,7 @@ export interface InformeI {
   conclusion: string;
   text_anio: string;
   adjuntos: AdjuntoI[];
-  usuario_carga: UsuarioI;
+  usuario_carga?: UsuarioI;
   pericia: PericiaI;
   fecha_carga?: Date;
   terceros?: TerceroI[];

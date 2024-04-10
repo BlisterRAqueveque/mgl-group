@@ -11,6 +11,13 @@
       justify-center items-center shadow-lg shadow-gray-500/50" pRipple (click)="viewPdf()">
       Visualizar PDF <ng-icon class="ml-2" name="heroDocumentSolid" />
     </div>
+
+    @if(pericia?.abierta) {
+      <div *render="['admin']" class="ml-3 cursor-pointer p-4 rounded-full bg-purple-900 text-white mb-4 flex flex-row
+        justify-center items-center shadow-lg shadow-gray-500/50" pRipple (click)="closeInforme()">
+        Cerrar informe <ng-icon class="ml-2" name="heroDocumentCheckSolid" />
+      </div>
+    }
   </div>
 
   <div class="hide w-full" [ngClass]="{ 'show': close }">
@@ -186,8 +193,8 @@
   </div>
 
   <!-- Conclusión -->
-  <h1 class="text-center my-6 text-2xl md:text-4xl">Conclusión</h1>
-  <div class="grid grid-cols-12 gap-4">
+  <h1 *render="['admin']" class="text-center my-6 text-2xl md:text-4xl">Conclusión</h1>
+  <div *render="['admin']" class="grid grid-cols-12 gap-4">
     <div class="col-span-12 px-2 flex flex-col">
       <textarea pInputTextarea class="p-3 border border-gray-300 rounded-md focus:outline-none
           focus:border-indigo-500 mt-4 w-full" placeholder="Ingrese conclusión." rows="6" [(ngModel)]="conclusion"
@@ -219,10 +226,11 @@
       </div>
       <textarea *ngIf="!img.dot" pInputTextarea class="mt-4 p-3 w-full border border-gray-300 rounded-md focus:outline-none
         focus:border-indigo-500" placeholder="Agregue una cabecera." rows="3" [(ngModel)]="img.comment"></textarea>
-      <p-dropdown *ngIf="isRoboRueda" class="mt-4 w-full border border-gray-300" placeholder="Seleccione si pertenece a un tipo de rueda"
-        [showClear]="true" [options]="dots" (onChange)="selectDot($event, i)" optionLabel="name"
-        [style]="{ width: '100%', height: '48px' }" tooltipStyleClass="w-full" panelStyleClass="panel"
-        [(ngModel)]="img.dot" tooltip="Seleccione una posición de la rueda" tooltipPosition="bottom">
+      <p-dropdown *ngIf="isRoboRueda" class="mt-4 w-full border border-gray-300"
+        placeholder="Seleccione si pertenece a un tipo de rueda" [showClear]="true" [options]="dots"
+        (onChange)="selectDot($event, i)" optionLabel="name" [style]="{ width: '100%', height: '48px' }"
+        tooltipStyleClass="w-full" panelStyleClass="panel" [(ngModel)]="img.dot"
+        tooltip="Seleccione una posición de la rueda" tooltipPosition="bottom">
         <ng-template pTemplate="selectedItem">
           <div *ngIf="img.dot?.name">
             <div>{{ img.dot?.name }}</div>
@@ -296,9 +304,11 @@
     </div>
   </p-dialog>
 
-  <app-button [text]="!pericia?.informe ? 'Cargar informe' : 'Modificar informe'"
-    [moreWidth]="!pericia?.informe ? false : true" [upload]="true"
-    (click)="!pericia?.informe ? onUploadInforme() : onUpdateInforme()" />
+  @if(!close) {
+    <app-button [text]="!pericia?.informe ? 'Cargar informe' : 'Modificar informe'"
+      [moreWidth]="!pericia?.informe ? false : true" [upload]="true"
+      (click)="!pericia?.informe ? onUploadInforme() : onUpdateInforme()" />
+  }
 
 
   <div class="fixed top-0 left-0 w-screen h-screen bg-sky-200/80 flex justify-center items-center

@@ -18,6 +18,7 @@ import {
   heroArrowUturnLeftSolid,
   heroArrowUturnRightSolid,
   heroArrowsPointingOutSolid,
+  heroDocumentCheckSolid,
   heroDocumentSolid,
   heroEyeSolid,
   heroMagnifyingGlassSolid,
@@ -62,6 +63,8 @@ import { TablePericiasInformesComponent } from './table-pericias-informes/table-
 import { AuthService } from '../../services/auth/auth.service';
 import { TercerosComponent } from '../pericias/modal-add/terceros/terceros.component';
 import { DropdownModule } from 'primeng/dropdown';
+import { RenderDirective } from '../../directives/render.directive';
+import { urlToBase64 } from '../../tools/tools';
 
 @Component({
   selector: 'app-informes',
@@ -83,6 +86,7 @@ import { DropdownModule } from 'primeng/dropdown';
     TablePericiasInformesComponent,
     TercerosComponent,
     DropdownModule,
+    RenderDirective,
   ],
   templateUrl: './informes.component.html',
   styleUrl: './informes.component.css',
@@ -98,6 +102,7 @@ import { DropdownModule } from 'primeng/dropdown';
       heroDocumentSolid,
       heroArrowsPointingOutSolid,
       heroArrowDownOnSquareSolid,
+      heroDocumentCheckSolid,
     }),
   ],
 })
@@ -243,7 +248,7 @@ export class InformesComponent {
       this.patente_asegurado = pericia.patente_asegurado;
       this.conductor = pericia.conductor!;
       this.dni_conductor = pericia.dni_conductor!;
-      this.initComponent(pericia.terceros);
+      this.initComponent(pericia.terceros, !pericia.abierta);
     } else {
       this.tipo_siniestro = pericia.informe.tipo_siniestro;
       this.n_siniestro = pericia.informe.n_siniestro;
@@ -276,7 +281,7 @@ export class InformesComponent {
       this.dni_conductor = pericia.informe.dni_conductor!;
 
       const url = environment.imagesUrl;
-      this.initComponent(pericia.informe.terceros);
+      this.initComponent(pericia.informe.terceros, !pericia.abierta);
       for (const a of pericia.informe.adjuntos) {
         const img = await imgToBase64(url + a.adjunto);
         this.images.push({
@@ -1122,28 +1127,146 @@ export class InformesComponent {
           );
           const stack: ContentStack = {
             stack: [
+              a
+                ? {
+                    text: a?.dot?.name!,
+                    alignment: 'center',
+                    margin: [0, 0, 0, 10],
+                    fontSize: 14,
+                    pageBreak: i === 1 ? 'before' : undefined,
+                  }
+                : '',
+              a
+                ? {
+                    image: a!.img,
+                    fit: [320, 220],
+                    alignment: 'center',
+                    margin: [0, 0, 0, 15],
+                  }
+                : '',
+              b
+                ? {
+                    text: b?.dot?.name!,
+                    alignment: 'center',
+                    margin: [0, 0, 0, 10],
+                    fontSize: 14,
+                  }
+                : '',
+              b
+                ? {
+                    image: b!.img,
+                    fit: [320, 220],
+                    alignment: 'center',
+                    margin: [0, 0, 0, 15],
+                    pageBreak:
+                      index !== this.images.length - 1
+                        ? i === 2
+                          ? 'after'
+                          : undefined
+                        : undefined,
+                  }
+                : '',
+              c
+                ? {
+                    text: c?.dot?.name!,
+                    alignment: 'center',
+                    margin: [0, 0, 0, 10],
+                    fontSize: 14,
+                  }
+                : '',
+              c
+                ? {
+                    image: c!.img,
+                    fit: [300, 200],
+                    alignment: 'center',
+                    margin: [0, 0, 0, 15],
+                    pageBreak: 'after',
+                  }
+                : '',
+            ],
+          };
+          content.push(stack);
+          i = 0;
+        }
+      } else {
+        const compare = await compareDimensions(image.img);
+        if (compare) {
+          /**
+           * Ahora comparamos que no sea mayor que el alto de la hora
+           *   ! fit: [495, 742],
+           *   !El restante de una hoja A4, con los margin, es de 736 de alto, y 368 de ancho aprox,
+           */
+          const imgHeight: number = await getImageHeight(image.img);
+          if (imgHeight > 710) {
+            //* En esta sección, no manejamos el ancho, sino el alto
+            const stack: ContentStack = {
+              stack: [
+                {
+                  text: image.comment,
+                  alignment: 'center',
+                  margin: [0, 0, 0, 10],
+                  fontSize: 14,
+                  pageBreak: i === 1 ? 'before' : undefined,
+                }, // [left, top, right, bottom]
+                {
+                  image: image.img,
+                  fit: [495, 600],
+                  //height: 600,
+                  alignment: 'center',
+                  margin: [0, 0, 0, 15],
+                  pageBreak:
+                    index !== this.images.length - 1 ? 'after' : undefined,
+                },
+              ],
+            };
+            content.push(stack);
+          } else {
+            /**
+             * En caso que no sea mayor que el ancho de la hoja, lo manejamos por el ancho
+             */
+            const stack: ContentStack = {
+              stack: [
+                {
+                  text: image.comment,
+                  alignment: 'center',
+                  margin: [0, 0, 0, 10],
+                  fontSize: 14,
+                  pageBreak: i === 1 ? 'before' : undefined,
+                }, // [left, top, right, bottom]
+                {
+                  image: image.img,
+                  fit: [495, 700],
+                  //width: 420, //width: 380,
+                  alignment: 'center',
+                  margin: [0, 0, 0, 15],
+                  pageBreak:
+                    index !== this.images.length - 1 ? 'after' : undefined,
+                },
+              ],
+            };
+            content.push(stack);
+          }
+          i = 0;
+        } else {
+          /**
+           * Si no supera el ancho, significa que se pueden colocar 2 por hoja
+           */
+          //* Si el contador entra en 2, agregamos un salto de página
+          //! TENER EN CUENTA QUE SI LA IMAGEN ES LA ÚLTIMA, NO DEBE SALTAR LA PÁG.
+          i++;
+          const stack: ContentStack = {
+            stack: [
               {
-                text: a?.dot?.name!,
+                text: image.comment,
                 alignment: 'center',
                 margin: [0, 0, 0, 10],
                 fontSize: 14,
-                pageBreak: i === 1 ? 'before' : undefined,
-              },
+              }, // [left, top, right, bottom]
               {
-                image: a!.img,
-                fit: [320, 220],
-                alignment: 'center',
-                margin: [0, 0, 0, 15],
-              },
-              {
-                text: b?.dot?.name!,
-                alignment: 'center',
-                margin: [0, 0, 0, 10],
-                fontSize: 14,
-              },
-              {
-                image: b!.img,
-                fit: [320, 220],
+                image: image.img,
+                //width: 368, //width: 280,
+                //fit: [380, 300],
+                fit: [480, 330],
                 alignment: 'center',
                 margin: [0, 0, 0, 15],
                 pageBreak:
@@ -1153,23 +1276,10 @@ export class InformesComponent {
                       : undefined
                     : undefined,
               },
-              {
-                text: c?.dot?.name!,
-                alignment: 'center',
-                margin: [0, 0, 0, 10],
-                fontSize: 14,
-              },
-              {
-                image: c!.img,
-                fit: [300, 200],
-                alignment: 'center',
-                margin: [0, 0, 0, 15],
-                pageBreak: 'after',
-              },
             ],
           };
           content.push(stack);
-          i = 0;
+          if (i === 2) i = 0;
         }
       }
     }
@@ -1209,20 +1319,53 @@ export class InformesComponent {
             fontSize: 14,
             margin: [14, 0, 14, 10],
           },
-        ],
-      },
-      {
-        stack: [
           {
-            text: this.conclusion
-              ? this.conclusion
-              : 'No se ha cargado una conclusión',
-            alignment: 'left',
-            fontSize: 13,
-            margin: [14, 0, 14, 14],
+            stack: [
+              {
+                text: this.conclusion
+                  ? this.conclusion
+                  : 'No se ha cargado una conclusión',
+                alignment: 'left',
+                fontSize: 13,
+                margin: [14, 0, 14, 14],
+              },
+            ],
           },
         ],
       },
+      !this.pericia?.abierta
+        ? {
+            stack: [
+              {
+                image: await urlToBase64(
+                  environment.webUrl + 'assets/img/signature.jpg'
+                ),
+                fit: [150, 150],
+                alignment: 'right',
+                margin: [0, 0, 0, 6],
+              },
+              {
+                text: 'Martin Gabriel Larracharte',
+                alignment: 'right',
+                fontSize: 13,
+                margin: [14, 0, 14, 6],
+                bold: true,
+              },
+              {
+                text: 'Tec. en pericias de Siniestros Viales',
+                alignment: 'right',
+                fontSize: 13,
+                margin: [14, 0, 14, 6],
+              },
+              {
+                text: 'Mat: 4542',
+                alignment: 'right',
+                fontSize: 13,
+                margin: [14, 0, 14, 6],
+              },
+            ],
+          }
+        : '',
     ];
     return content;
   }
@@ -1296,7 +1439,7 @@ export class InformesComponent {
     this.tercerosComponents.push(component.instance);
   }
 
-  initComponent(terceros?: TerceroI[]) {
+  initComponent(terceros?: TerceroI[], readonly?: boolean) {
     terceros?.forEach((t) => {
       const component =
         this.tercerosContainer.createComponent(TercerosComponent);
@@ -1304,6 +1447,7 @@ export class InformesComponent {
       component.instance.nombre = t.nombre;
       component.instance.dni = t.dni;
       component.instance.aseguradora = t.aseguradora;
+      component.instance.readonly = readonly!;
       component.instance.delete.subscribe(() => {
         component.destroy();
         this.tercerosComponents = this.tercerosComponents.filter(
@@ -1348,5 +1492,150 @@ export class InformesComponent {
     this.dots = this.dots.filter(
       (d) => !this.images.some((i) => i.dot?.code === d.code)
     );
+  }
+
+  closeInforme() {
+    if (this.conclusion) {
+      this.dialog.confirm(
+        'Confirmación de carga',
+        '¿Esta seguro de querer cerrar este informe? Para seguir editando, debe cambiar su estado a abierto.',
+        () => {
+          this.updatePericia();
+        }
+      );
+    } else {
+      this.dialog.alertMessage(
+        'Error de carga',
+        'Para cerrar el informe, se debe cargar una conclusión.',
+        () => {},
+        true
+      );
+    }
+  }
+  async updatePericia() {
+    this.dialog.loading = true;
+    try {
+      await this.updateBeforeClose();
+      this.periciaService
+        .update(this.pericia?.id!, { abierta: false })
+        .subscribe({
+          next: (data) => {
+            this.pericia = null;
+            this.close = true;
+            this.dialog.alertMessage(
+              'Confirmación de carga',
+              'El informe se cerro correctamente.',
+              () => {}
+            );
+          },
+          error: (e) => {
+            console.log(e);
+            this.dialog.alertMessage(
+              'Error de carga',
+              'Ocurrió un error al intentar cerrar el informe.',
+              () => {},
+              true
+            );
+          },
+        });
+    } catch (error) {
+      console.log(error);
+      this.dialog.alertMessage(
+        'Error de carga',
+        'Ocurrió un error al intentar cerrar el informe.',
+        () => {},
+        true
+      );
+    }
+  }
+  async updateBeforeClose() {
+    const formData = new FormData();
+    const editedImages: AdjuntoI[] = [];
+    this.images.forEach((img, index) => {
+      //* Si la imagen fue editada
+      if (img.id === 0) {
+        formData.append(
+          'files',
+          dataURLtoFile(img.img, 'newFile', img.mimeType)
+        );
+        editedImages.push({
+          adjunto: '',
+          dot: img.dot?.code,
+          descripcion: img.comment,
+          index,
+        });
+      }
+      if (img.edited && img.id !== 0) {
+        formData.append(
+          'files',
+          dataURLtoFile(img.img, 'newFile', img.mimeType)
+        );
+        //? Creamos un nuevo registro
+        editedImages.push({
+          adjunto: '',
+          dot: img.dot?.code,
+          descripcion: img.comment,
+          index,
+        });
+        //! Quitamos el adjunto editado para que se elimine de la base de datos
+        // if (
+        //   this.pericia &&
+        //   this.pericia.informe &&
+        //   this.pericia.informe.adjuntos
+        // ) {
+        //   this.pericia.informe.adjuntos =
+        //     this.pericia?.informe?.adjuntos.filter((i) => {
+        //       return i.id !== img.id;
+        //     });
+        // }
+      } else {
+        //* Caso contrario, solo modificamos estas propiedades
+        const ad = this.pericia?.informe?.adjuntos.find((i) => i.id === img.id);
+        if (ad) {
+          ad.index = index;
+          ad.descripcion = img.comment;
+          ad.dot = img.dot?.code;
+          editedImages.push(ad);
+        }
+      }
+    });
+    const informe: InformeI = {
+      id: this.pericia?.informe?.id,
+      tipo_siniestro: this.tipo_siniestro,
+      n_siniestro: this.n_siniestro,
+      n_denuncia: this.n_denuncia,
+      nombre_asegurado: this.nombre_asegurado,
+      dir_asegurado: this.dir_asegurado,
+      tel_asegurado: this.tel_asegurado,
+      veh_asegurado: this.veh_asegurado,
+      patente_asegurado: this.patente_asegurado,
+      hecho: this.hecho,
+      n_poliza: this.n_poliza,
+      tipo_cobertura: this.tipo_cobertura,
+      amp_denuncia: this.amp_denuncia,
+      conclusion: this.conclusion,
+      text_anio: this.text_anio,
+      adjuntos: editedImages,
+      relevamiento: this.relevamiento,
+      pericia: this.pericia!,
+      terceros: this.tercerosList(),
+      conductor: this.hasTerceros ? this.conductor : '',
+      dni_conductor: this.hasTerceros ? this.dni_conductor : '',
+    };
+    formData.append('form', JSON.stringify(informe));
+    try {
+      const result = await firstValueFrom(
+        this.informeService.update(this.pericia?.informe?.id!, formData)
+      );
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+      this.dialog.alertMessage(
+        'Error de carga',
+        'Ocurrió un error al intentar cerrar el informe.',
+        () => {},
+        true
+      );
+    }
   }
 }
