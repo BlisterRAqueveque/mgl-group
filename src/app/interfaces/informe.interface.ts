@@ -30,6 +30,22 @@ export interface InformeI {
 export interface AdjuntoI {
   id?: number;
   adjunto: string;
+  dot: string | undefined;
   descripcion: string;
   index: number;
 }
+
+export const originalDots = [
+  { name: 'Rueda delantera izq.', code: 'rdi' },
+  { name: 'Rueda delantera izq. desgaste', code: 'rdid' },
+  { name: 'Rueda delantera izq. DOT', code: 'rdidot' },
+  { name: 'Rueda delantera der.', code: 'rdd' },
+  { name: 'Rueda delantera der. desgaste', code: 'rddd' },
+  { name: 'Rueda delantera der. DOT', code: 'rdddot' },
+  { name: 'Rueda trasera izq.', code: 'rti' },
+  { name: 'Rueda trasera izq. desgaste', code: 'rtid' },
+  { name: 'Rueda trasera izq. DOT', code: 'rtidot' },
+  { name: 'Rueda trasera der.', code: 'rtd' },
+  { name: 'Rueda trasera der. desgaste', code: 'rtdd' },
+  { name: 'Rueda trasera der. DOT', code: 'rtddot' },
+];

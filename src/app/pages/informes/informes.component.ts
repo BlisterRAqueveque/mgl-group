@@ -44,7 +44,11 @@ import { RippleModule } from 'primeng/ripple';
 import { TooltipModule } from 'primeng/tooltip';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AdjuntoI, InformeI } from '../../interfaces/informe.interface';
+import {
+  AdjuntoI,
+  InformeI,
+  originalDots,
+} from '../../interfaces/informe.interface';
 import { PericiaI, TerceroI } from '../../interfaces/pericia.interface';
 import { InformeService } from '../../services/informes/informe.service';
 import { PericiaService } from '../../services/pericias/pericias.service';
@@ -57,6 +61,7 @@ import { dataURLtoFile } from '../../tools/img-url-to-file';
 import { TablePericiasInformesComponent } from './table-pericias-informes/table-pericias-informes.component';
 import { AuthService } from '../../services/auth/auth.service';
 import { TercerosComponent } from '../pericias/modal-add/terceros/terceros.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-informes',
@@ -77,6 +82,7 @@ import { TercerosComponent } from '../pericias/modal-add/terceros/terceros.compo
     ButtonComponent,
     TablePericiasInformesComponent,
     TercerosComponent,
+    DropdownModule,
   ],
   templateUrl: './informes.component.html',
   styleUrl: './informes.component.css',
@@ -276,12 +282,14 @@ export class InformesComponent {
         this.images.push({
           id: a?.id!,
           img: img as string,
+          dot: this.setDots(a.dot),
           comment: a.descripcion,
           mimeType: 'image/jpeg',
           originalImg: img as string,
           edited: false,
         });
       }
+      this.selectDot();
     }
 
     //? El objeto completo para tener referencia mas tarde
@@ -301,6 +309,7 @@ export class InformesComponent {
     id: number;
     img: string;
     comment: string;
+    dot: { name: string; code: string } | undefined;
     mimeType: string;
     originalImg: string;
     edited: boolean;
@@ -319,6 +328,7 @@ export class InformesComponent {
           this.images.push({
             id: 0,
             img: imageUrl.toString(),
+            dot: undefined,
             comment: '',
             mimeType: 'image/jpeg',
             originalImg: imageUrl.toString(),
@@ -412,6 +422,7 @@ export class InformesComponent {
         id: number;
         img: string;
         comment: string;
+        dot: { name: string; code: string } | undefined;
         mimeType: string;
         originalImg: string;
         edited: boolean;
@@ -471,6 +482,7 @@ export class InformesComponent {
       formData.append('files', dataURLtoFile(img.img, 'newFile', img.mimeType));
       adjuntos.push({
         adjunto: '',
+        dot: img.dot?.code,
         descripcion: img.comment,
         index,
       });
@@ -545,6 +557,7 @@ export class InformesComponent {
         );
         editedImages.push({
           adjunto: '',
+          dot: img.dot?.code,
           descripcion: img.comment,
           index,
         });
@@ -557,6 +570,7 @@ export class InformesComponent {
         //? Creamos un nuevo registro
         editedImages.push({
           adjunto: '',
+          dot: img.dot?.code,
           descripcion: img.comment,
           index,
         });
@@ -577,6 +591,7 @@ export class InformesComponent {
         if (ad) {
           ad.index = index;
           ad.descripcion = img.comment;
+          ad.dot = img.dot?.code;
           editedImages.push(ad);
         }
       }
@@ -998,100 +1013,164 @@ export class InformesComponent {
       });
     // Esta variable sirve para los saltos de página
     let i = 0;
+    let ruedas = ['rdi', 'rdd', 'rti', 'rtd'];
     for (const [index, image] of this.images.entries()) {
       /**
        * Comparamos las dimensiones, si el alto es mayor que el ancho (con un 10% +),
        * significa que la imagen entra en una hoja solamente, caso contrario, serían 2
        */
-      const compare = await compareDimensions(image.img);
-      if (compare) {
-        i = 0;
-        /**
-         * Ahora comparamos que no sea mayor que el alto de la hora
-         *   ! fit: [495, 742],
-         *   !El restante de una hoja A4, con los margin, es de 736 de alto, y 368 de ancho aprox,
-         */
-        const imgHeight: number = await getImageHeight(image.img);
-        if (imgHeight > 710) {
-          //* En esta sección, no manejamos el ancho, sino el alto
+      if (this.isRoboRueda) {
+        if (!image.dot) {
+          const compare = await compareDimensions(image.img);
+          if (compare) {
+            i = 0;
+            /**
+             * Ahora comparamos que no sea mayor que el alto de la hora
+             *   ! fit: [495, 742],
+             *   !El restante de una hoja A4, con los margin, es de 736 de alto, y 368 de ancho aprox,
+             */
+            const imgHeight: number = await getImageHeight(image.img);
+            if (imgHeight > 710) {
+              //* En esta sección, no manejamos el ancho, sino el alto
+              const stack: ContentStack = {
+                stack: [
+                  {
+                    text: image.comment,
+                    alignment: 'center',
+                    margin: [0, 0, 0, 10],
+                    fontSize: 14,
+                  }, // [left, top, right, bottom]
+                  {
+                    image: image.img,
+                    fit: [495, 600],
+                    //height: 600,
+                    alignment: 'center',
+                    margin: [0, 0, 0, 15],
+                    pageBreak:
+                      index !== this.images.length - 1 ? 'after' : undefined,
+                  },
+                ],
+              };
+              content.push(stack);
+            } else {
+              /**
+               * En caso que no sea mayor que el ancho de la hoja, lo manejamos por el ancho
+               */
+              const stack: ContentStack = {
+                stack: [
+                  {
+                    text: image.comment,
+                    alignment: 'center',
+                    margin: [0, 0, 0, 10],
+                    fontSize: 14,
+                  }, // [left, top, right, bottom]
+                  {
+                    image: image.img,
+                    fit: [495, 700],
+                    //width: 420, //width: 380,
+                    alignment: 'center',
+                    margin: [0, 0, 0, 15],
+                    pageBreak:
+                      index !== this.images.length - 1 ? 'after' : undefined,
+                  },
+                ],
+              };
+              content.push(stack);
+            }
+          } else {
+            /**
+             * Si no supera el ancho, significa que se pueden colocar 2 por hoja
+             */
+            //* Si el contador entra en 2, agregamos un salto de página
+            //! TENER EN CUENTA QUE SI LA IMAGEN ES LA ÚLTIMA, NO DEBE SALTAR LA PÁG.
+            i++;
+            const stack: ContentStack = {
+              stack: [
+                {
+                  text: image.comment,
+                  alignment: 'center',
+                  margin: [0, 0, 0, 10],
+                  fontSize: 14,
+                }, // [left, top, right, bottom]
+                {
+                  image: image.img,
+                  //width: 368, //width: 280,
+                  //fit: [380, 300],
+                  fit: [480, 330],
+                  alignment: 'center',
+                  margin: [0, 0, 0, 15],
+                  pageBreak:
+                    index !== this.images.length - 1
+                      ? i === 2
+                        ? 'after'
+                        : undefined
+                      : undefined,
+                },
+              ],
+            };
+            content.push(stack);
+            if (i === 2) i = 0;
+          }
+        } else if (ruedas.includes(image.dot.code)) {
+          ruedas = ruedas.filter((r) => r !== image.dot?.code);
+          const a = this.images.find((i) => i.dot?.code === image.dot?.code);
+          const b = this.images.find(
+            (i) => i.dot?.code === image.dot?.code + 'd'
+          );
+          const c = this.images.find(
+            (i) => i.dot?.code === image.dot?.code + 'dot'
+          );
           const stack: ContentStack = {
             stack: [
               {
-                text: image.comment,
+                text: a?.dot?.name!,
                 alignment: 'center',
                 margin: [0, 0, 0, 10],
                 fontSize: 14,
-              }, // [left, top, right, bottom]
+                pageBreak: i === 1 ? 'before' : undefined,
+              },
               {
-                image: image.img,
-                fit: [495, 600],
-                //height: 600,
+                image: a!.img,
+                fit: [320, 220],
+                alignment: 'center',
+                margin: [0, 0, 0, 15],
+              },
+              {
+                text: b?.dot?.name!,
+                alignment: 'center',
+                margin: [0, 0, 0, 10],
+                fontSize: 14,
+              },
+              {
+                image: b!.img,
+                fit: [320, 220],
                 alignment: 'center',
                 margin: [0, 0, 0, 15],
                 pageBreak:
-                  index !== this.images.length - 1 ? 'after' : undefined,
+                  index !== this.images.length - 1
+                    ? i === 2
+                      ? 'after'
+                      : undefined
+                    : undefined,
+              },
+              {
+                text: c?.dot?.name!,
+                alignment: 'center',
+                margin: [0, 0, 0, 10],
+                fontSize: 14,
+              },
+              {
+                image: c!.img,
+                fit: [300, 200],
+                alignment: 'center',
+                margin: [0, 0, 0, 15],
+                pageBreak: 'after',
               },
             ],
           };
           content.push(stack);
-        } else {
-          /**
-           * En caso que no sea mayor que el ancho de la hoja, lo manejamos por el ancho
-           */
-          const stack: ContentStack = {
-            stack: [
-              {
-                text: image.comment,
-                alignment: 'center',
-                margin: [0, 0, 0, 10],
-                fontSize: 14,
-              }, // [left, top, right, bottom]
-              {
-                image: image.img,
-                fit: [495, 700],
-                //width: 420, //width: 380,
-                alignment: 'center',
-                margin: [0, 0, 0, 15],
-                pageBreak:
-                  index !== this.images.length - 1 ? 'after' : undefined,
-              },
-            ],
-          };
-          content.push(stack);
+          i = 0;
         }
-      } else {
-        /**
-         * Si no supera el ancho, significa que se pueden colocar 2 por hoja
-         */
-        //* Si el contador entra en 2, agregamos un salto de página
-        //! TENER EN CUENTA QUE SI LA IMAGEN ES LA ÚLTIMA, NO DEBE SALTAR LA PÁG.
-        i++;
-        const stack: ContentStack = {
-          stack: [
-            {
-              text: image.comment,
-              alignment: 'center',
-              margin: [0, 0, 0, 10],
-              fontSize: 14,
-            }, // [left, top, right, bottom]
-            {
-              image: image.img,
-              //width: 368, //width: 280,
-              //fit: [380, 300],
-              fit: [480, 330],
-              alignment: 'center',
-              margin: [0, 0, 0, 15],
-              pageBreak:
-                index !== this.images.length - 1
-                  ? i === 2
-                    ? 'after'
-                    : undefined
-                  : undefined,
-            },
-          ],
-        };
-        content.push(stack);
-        if (i === 2) i = 0;
       }
     }
     return content;
@@ -1191,6 +1270,7 @@ export class InformesComponent {
           this.images.push({
             id: 0,
             img: adjunto,
+            dot: undefined,
             comment: '',
             mimeType: 'image/jpeg',
             originalImg: adjunto,
@@ -1250,5 +1330,23 @@ export class InformesComponent {
     } else {
       return [];
     }
+  }
+
+  dots = originalDots;
+
+  setDots(code: string | undefined) {
+    const dot = this.dots.find((d) => d.code === code);
+    //this.dots = this.dots.filter((d) => d.code !== code);
+    return dot;
+  }
+
+  selectDot(ev?: any, index?: number) {
+    if (this.images[index!]) {
+      this.images[index!].dot = ev.value;
+    }
+    this.dots = originalDots;
+    this.dots = this.dots.filter(
+      (d) => !this.images.some((i) => i.dot?.code === d.code)
+    );
   }
 }
