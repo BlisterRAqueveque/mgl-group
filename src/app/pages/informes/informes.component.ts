@@ -12,12 +12,7 @@ import {
   heroMagnifyingGlassSolid,
   heroPlusCircleSolid,
 } from '@ng-icons/heroicons/solid';
-import * as pdfMake from 'pdfmake/build/pdfmake';
-import {
-  Content,
-  ContentStack,
-  TDocumentDefinitions,
-} from 'pdfmake/interfaces';
+import { AccordionModule } from 'primeng/accordion';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
@@ -29,29 +24,26 @@ import { TooltipModule } from 'primeng/tooltip';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { RenderDirective } from '../../directives/render.directive';
+import { Images } from '../../interfaces/images.interface';
 import {
   AdjuntoI,
   InformeI,
   originalDots,
 } from '../../interfaces/informe.interface';
+import { FirstPage, LastPage } from '../../interfaces/pdf.interface';
 import { PericiaI, TerceroI } from '../../interfaces/pericia.interface';
 import { AuthService } from '../../services/auth/auth.service';
 import { InformeService } from '../../services/informes/informe.service';
 import { PericiaService } from '../../services/pericias/pericias.service';
 import { ButtonComponent } from '../../shared/button/button.component';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
-import { compareDimensions, getImageHeight } from '../../tools/image-height';
 import { imgToBase64 } from '../../tools/img-to-url';
 import { dataURLtoFile } from '../../tools/img-url-to-file';
-import { urlToBase64 } from '../../tools/tools';
-import { TercerosComponent } from '../pericias/modal-add/terceros/terceros.component';
 import { AttachmentsComponent } from './components/attachments/attachments.component';
-import { TablePericiasInformesComponent } from './table-pericias-informes/table-pericias-informes.component';
 import { TercerosInformeComponent } from './components/terceros/terceros.component';
-import { Images } from '../../interfaces/images.interface';
-import { AccordionModule } from 'primeng/accordion';
 import { viewPdfTerceros } from './reports/informe-vial';
-import { FirstPage, LastPage } from '../../interfaces/pdf.interface';
+import { TablePericiasInformesComponent } from './table-pericias-informes/table-pericias-informes.component';
+import { viewPdfRuedas } from './reports/informe-robo-rueda';
 
 @Component({
   selector: 'app-informes',
@@ -179,6 +171,16 @@ export class InformesComponent {
     this.tercerosContainer.clear();
     this.hasTerceros = false;
     this.isRoboRueda = false;
+
+    this.documents = [];
+    this.car = [];
+    this.damages = [];
+    this.others = [];
+    this.rdi = [];
+    this.rdd = [];
+    this.rti = [];
+    this.rtd = [];
+    this.rda = [];
   }
   // ---------------------------------------------------------------------------->
   /**                           Inicializar el modulo                           */
@@ -273,7 +275,7 @@ export class InformesComponent {
             this.documents.push({
               id: a?.id!,
               img: img as string,
-              dot: this.setDots(a.dot),
+              dot: undefined,
               comment: a.descripcion,
               type: a.type,
               mimeType: 'image/jpeg',
@@ -286,7 +288,7 @@ export class InformesComponent {
             this.car.push({
               id: a?.id!,
               img: img as string,
-              dot: this.setDots(a.dot),
+              dot: undefined,
               comment: a.descripcion,
               type: a.type,
               mimeType: 'image/jpeg',
@@ -299,7 +301,7 @@ export class InformesComponent {
             this.damages.push({
               id: a?.id!,
               img: img as string,
-              dot: this.setDots(a.dot),
+              dot: undefined,
               comment: a.descripcion,
               type: a.type,
               mimeType: 'image/jpeg',
@@ -312,7 +314,72 @@ export class InformesComponent {
             this.others.push({
               id: a?.id!,
               img: img as string,
-              dot: this.setDots(a.dot),
+              dot: undefined,
+              comment: a.descripcion,
+              type: a.type,
+              mimeType: 'image/jpeg',
+              originalImg: img as string,
+              edited: false,
+            });
+            break;
+          }
+          case 'rdi': {
+            this.rdi.push({
+              id: a?.id!,
+              img: img as string,
+              dot: undefined,
+              comment: a.descripcion,
+              type: a.type,
+              mimeType: 'image/jpeg',
+              originalImg: img as string,
+              edited: false,
+            });
+            break;
+          }
+          case 'rdd': {
+            this.rdd.push({
+              id: a?.id!,
+              img: img as string,
+              dot: undefined,
+              comment: a.descripcion,
+              type: a.type,
+              mimeType: 'image/jpeg',
+              originalImg: img as string,
+              edited: false,
+            });
+            break;
+          }
+          case 'rti': {
+            this.rti.push({
+              id: a?.id!,
+              img: img as string,
+              dot: undefined,
+              comment: a.descripcion,
+              type: a.type,
+              mimeType: 'image/jpeg',
+              originalImg: img as string,
+              edited: false,
+            });
+            break;
+          }
+          case 'rtd': {
+            this.rtd.push({
+              id: a?.id!,
+              img: img as string,
+              dot: undefined,
+              comment: a.descripcion,
+              type: a.type,
+              mimeType: 'image/jpeg',
+              originalImg: img as string,
+              edited: false,
+            });
+            break;
+          }
+          case 'rda': {
+            this.rda.push({
+              id: a?.id!,
+              img: img as string,
+              dot: undefined,
               comment: a.descripcion,
               type: a.type,
               mimeType: 'image/jpeg',
@@ -323,9 +390,7 @@ export class InformesComponent {
           }
         }
       }
-      this.selectDot();
     }
-
     //? El objeto completo para tener referencia mas tarde
     if (pericia.abierta === true) this.pericia = pericia;
     else this.close = true;
@@ -344,6 +409,11 @@ export class InformesComponent {
   car: Images[] = [];
   damages: Images[] = [];
   others: Images[] = [];
+  rdi: Images[] = [];
+  rdd: Images[] = [];
+  rti: Images[] = [];
+  rtd: Images[] = [];
+  rda: Images[] = [];
 
   /** @description Seteamos los valores de la lista */
   setList(img_list: Images[], type: string) {
@@ -428,6 +498,156 @@ export class InformesComponent {
         }
         break;
       }
+      case 'rdi': {
+        if (img_list.length > 0) {
+          img_list.forEach((d, i) => {
+            switch (i) {
+              case 0: {
+                d.comment = 'Rueda delantera izquierda';
+                break;
+              }
+              case 1: {
+                d.comment = 'Desgaste';
+                break;
+              }
+              case 2: {
+                d.comment = 'DOT';
+                break;
+              }
+              default: {
+                img_list.pop();
+                this.dialog.alertMessage(
+                  'No disponible',
+                  '¡No se pueden cargar mas imágenes en esta sección!',
+                  () => {},
+                  true
+                );
+              }
+            }
+          });
+        }
+        break;
+      }
+      case 'rdd': {
+        if (img_list.length > 0) {
+          img_list.forEach((d, i) => {
+            switch (i) {
+              case 0: {
+                d.comment = 'Rueda delantera derecha';
+                break;
+              }
+              case 1: {
+                d.comment = 'Desgaste';
+                break;
+              }
+              case 2: {
+                d.comment = 'DOT';
+                break;
+              }
+              default: {
+                img_list.pop();
+                this.dialog.alertMessage(
+                  'No disponible',
+                  '¡No se pueden cargar mas imágenes en esta sección!',
+                  () => {},
+                  true
+                );
+              }
+            }
+          });
+        }
+        break;
+      }
+      case 'rti': {
+        if (img_list.length > 0) {
+          img_list.forEach((d, i) => {
+            switch (i) {
+              case 0: {
+                d.comment = 'Rueda trasera izquierda';
+                break;
+              }
+              case 1: {
+                d.comment = 'Desgaste';
+                break;
+              }
+              case 2: {
+                d.comment = 'DOT';
+                break;
+              }
+              default: {
+                img_list.pop();
+                this.dialog.alertMessage(
+                  'No disponible',
+                  '¡No se pueden cargar mas imágenes en esta sección!',
+                  () => {},
+                  true
+                );
+              }
+            }
+          });
+        }
+        break;
+      }
+      case 'rtd': {
+        if (img_list.length > 0) {
+          img_list.forEach((d, i) => {
+            switch (i) {
+              case 0: {
+                d.comment = 'Rueda trasera derecha';
+                break;
+              }
+              case 1: {
+                d.comment = 'Desgaste';
+                break;
+              }
+              case 2: {
+                d.comment = 'DOT';
+                break;
+              }
+              default: {
+                img_list.pop();
+                this.dialog.alertMessage(
+                  'No disponible',
+                  '¡No se pueden cargar mas imágenes en esta sección!',
+                  () => {},
+                  true
+                );
+              }
+            }
+          });
+        }
+        break;
+      }
+      case 'rda': {
+        if (img_list.length > 0) {
+          img_list.forEach((d, i) => {
+            switch (i) {
+              case 0: {
+                d.comment = 'Rueda de auxilio';
+                break;
+              }
+              case 1: {
+                d.comment = 'Desgaste';
+                break;
+              }
+              case 2: {
+                d.comment = 'DOT';
+                break;
+              }
+              default: {
+                img_list.pop();
+                this.dialog.alertMessage(
+                  'No disponible',
+                  '¡No se pueden cargar mas imágenes en esta sección!',
+                  () => {},
+                  true
+                );
+              }
+            }
+          });
+        }
+        break;
+      }
     }
   }
   // ---------------------------------------------------------------------------->
@@ -489,6 +709,56 @@ export class InformesComponent {
       });
     });
     this.others.forEach((img, index) => {
+      formData.append('files', dataURLtoFile(img.img, 'newFile', img.mimeType));
+      adjuntos.push({
+        adjunto: '',
+        dot: img.dot?.code,
+        descripcion: img.comment,
+        type: img.type,
+        index,
+      });
+    });
+    this.rdi.forEach((img, index) => {
+      formData.append('files', dataURLtoFile(img.img, 'newFile', img.mimeType));
+      adjuntos.push({
+        adjunto: '',
+        dot: img.dot?.code,
+        descripcion: img.comment,
+        type: img.type,
+        index,
+      });
+    });
+    this.rdd.forEach((img, index) => {
+      formData.append('files', dataURLtoFile(img.img, 'newFile', img.mimeType));
+      adjuntos.push({
+        adjunto: '',
+        dot: img.dot?.code,
+        descripcion: img.comment,
+        type: img.type,
+        index,
+      });
+    });
+    this.rti.forEach((img, index) => {
+      formData.append('files', dataURLtoFile(img.img, 'newFile', img.mimeType));
+      adjuntos.push({
+        adjunto: '',
+        dot: img.dot?.code,
+        descripcion: img.comment,
+        type: img.type,
+        index,
+      });
+    });
+    this.rtd.forEach((img, index) => {
+      formData.append('files', dataURLtoFile(img.img, 'newFile', img.mimeType));
+      adjuntos.push({
+        adjunto: '',
+        dot: img.dot?.code,
+        descripcion: img.comment,
+        type: img.type,
+        index,
+      });
+    });
+    this.rda.forEach((img, index) => {
       formData.append('files', dataURLtoFile(img.img, 'newFile', img.mimeType));
       adjuntos.push({
         adjunto: '',
@@ -759,6 +1029,256 @@ export class InformesComponent {
         }
       }
     });
+    this.rdi.forEach((img, index) => {
+      //* Si la imagen fue editada
+      if (img.id === 0) {
+        formData.append(
+          'files',
+          dataURLtoFile(img.img, 'newFile', img.mimeType)
+        );
+        editedImages.push({
+          adjunto: '',
+          dot: img.dot?.code,
+          descripcion: img.comment,
+          type: img.type,
+          index,
+        });
+      }
+      if (img.edited && img.id !== 0) {
+        formData.append(
+          'files',
+          dataURLtoFile(img.img, 'newFile', img.mimeType)
+        );
+        //? Creamos un nuevo registro
+        editedImages.push({
+          adjunto: '',
+          dot: img.dot?.code,
+          descripcion: img.comment,
+          type: img.type,
+          index,
+        });
+        //! Quitamos el adjunto editado para que se elimine de la base de datos
+        // if (
+        //   this.pericia &&
+        //   this.pericia.informe &&
+        //   this.pericia.informe.adjuntos
+        // ) {
+        //   this.pericia.informe.adjuntos =
+        //     this.pericia?.informe?.adjuntos.filter((i) => {
+        //       return i.id !== img.id;
+        //     });
+        // }
+      } else {
+        //* Caso contrario, solo modificamos estas propiedades
+        const ad = this.pericia?.informe?.adjuntos.find((i) => i.id === img.id);
+        if (ad) {
+          ad.index = index;
+          ad.descripcion = img.comment;
+          ad.dot = img.dot?.code;
+          editedImages.push(ad);
+        }
+      }
+    });
+    this.rdd.forEach((img, index) => {
+      //* Si la imagen fue editada
+      if (img.id === 0) {
+        formData.append(
+          'files',
+          dataURLtoFile(img.img, 'newFile', img.mimeType)
+        );
+        editedImages.push({
+          adjunto: '',
+          dot: img.dot?.code,
+          descripcion: img.comment,
+          type: img.type,
+          index,
+        });
+      }
+      if (img.edited && img.id !== 0) {
+        formData.append(
+          'files',
+          dataURLtoFile(img.img, 'newFile', img.mimeType)
+        );
+        //? Creamos un nuevo registro
+        editedImages.push({
+          adjunto: '',
+          dot: img.dot?.code,
+          descripcion: img.comment,
+          type: img.type,
+          index,
+        });
+        //! Quitamos el adjunto editado para que se elimine de la base de datos
+        // if (
+        //   this.pericia &&
+        //   this.pericia.informe &&
+        //   this.pericia.informe.adjuntos
+        // ) {
+        //   this.pericia.informe.adjuntos =
+        //     this.pericia?.informe?.adjuntos.filter((i) => {
+        //       return i.id !== img.id;
+        //     });
+        // }
+      } else {
+        //* Caso contrario, solo modificamos estas propiedades
+        const ad = this.pericia?.informe?.adjuntos.find((i) => i.id === img.id);
+        if (ad) {
+          ad.index = index;
+          ad.descripcion = img.comment;
+          ad.dot = img.dot?.code;
+          editedImages.push(ad);
+        }
+      }
+    });
+    this.rti.forEach((img, index) => {
+      //* Si la imagen fue editada
+      if (img.id === 0) {
+        formData.append(
+          'files',
+          dataURLtoFile(img.img, 'newFile', img.mimeType)
+        );
+        editedImages.push({
+          adjunto: '',
+          dot: img.dot?.code,
+          descripcion: img.comment,
+          type: img.type,
+          index,
+        });
+      }
+      if (img.edited && img.id !== 0) {
+        formData.append(
+          'files',
+          dataURLtoFile(img.img, 'newFile', img.mimeType)
+        );
+        //? Creamos un nuevo registro
+        editedImages.push({
+          adjunto: '',
+          dot: img.dot?.code,
+          descripcion: img.comment,
+          type: img.type,
+          index,
+        });
+        //! Quitamos el adjunto editado para que se elimine de la base de datos
+        // if (
+        //   this.pericia &&
+        //   this.pericia.informe &&
+        //   this.pericia.informe.adjuntos
+        // ) {
+        //   this.pericia.informe.adjuntos =
+        //     this.pericia?.informe?.adjuntos.filter((i) => {
+        //       return i.id !== img.id;
+        //     });
+        // }
+      } else {
+        //* Caso contrario, solo modificamos estas propiedades
+        const ad = this.pericia?.informe?.adjuntos.find((i) => i.id === img.id);
+        if (ad) {
+          ad.index = index;
+          ad.descripcion = img.comment;
+          ad.dot = img.dot?.code;
+          editedImages.push(ad);
+        }
+      }
+    });
+    this.rtd.forEach((img, index) => {
+      //* Si la imagen fue editada
+      if (img.id === 0) {
+        formData.append(
+          'files',
+          dataURLtoFile(img.img, 'newFile', img.mimeType)
+        );
+        editedImages.push({
+          adjunto: '',
+          dot: img.dot?.code,
+          descripcion: img.comment,
+          type: img.type,
+          index,
+        });
+      }
+      if (img.edited && img.id !== 0) {
+        formData.append(
+          'files',
+          dataURLtoFile(img.img, 'newFile', img.mimeType)
+        );
+        //? Creamos un nuevo registro
+        editedImages.push({
+          adjunto: '',
+          dot: img.dot?.code,
+          descripcion: img.comment,
+          type: img.type,
+          index,
+        });
+        //! Quitamos el adjunto editado para que se elimine de la base de datos
+        // if (
+        //   this.pericia &&
+        //   this.pericia.informe &&
+        //   this.pericia.informe.adjuntos
+        // ) {
+        //   this.pericia.informe.adjuntos =
+        //     this.pericia?.informe?.adjuntos.filter((i) => {
+        //       return i.id !== img.id;
+        //     });
+        // }
+      } else {
+        //* Caso contrario, solo modificamos estas propiedades
+        const ad = this.pericia?.informe?.adjuntos.find((i) => i.id === img.id);
+        if (ad) {
+          ad.index = index;
+          ad.descripcion = img.comment;
+          ad.dot = img.dot?.code;
+          editedImages.push(ad);
+        }
+      }
+    });
+    this.rda.forEach((img, index) => {
+      //* Si la imagen fue editada
+      if (img.id === 0) {
+        formData.append(
+          'files',
+          dataURLtoFile(img.img, 'newFile', img.mimeType)
+        );
+        editedImages.push({
+          adjunto: '',
+          dot: img.dot?.code,
+          descripcion: img.comment,
+          type: img.type,
+          index,
+        });
+      }
+      if (img.edited && img.id !== 0) {
+        formData.append(
+          'files',
+          dataURLtoFile(img.img, 'newFile', img.mimeType)
+        );
+        //? Creamos un nuevo registro
+        editedImages.push({
+          adjunto: '',
+          dot: img.dot?.code,
+          descripcion: img.comment,
+          type: img.type,
+          index,
+        });
+        //! Quitamos el adjunto editado para que se elimine de la base de datos
+        // if (
+        //   this.pericia &&
+        //   this.pericia.informe &&
+        //   this.pericia.informe.adjuntos
+        // ) {
+        //   this.pericia.informe.adjuntos =
+        //     this.pericia?.informe?.adjuntos.filter((i) => {
+        //       return i.id !== img.id;
+        //     });
+        // }
+      } else {
+        //* Caso contrario, solo modificamos estas propiedades
+        const ad = this.pericia?.informe?.adjuntos.find((i) => i.id === img.id);
+        if (ad) {
+          ad.index = index;
+          ad.descripcion = img.comment;
+          ad.dot = img.dot?.code;
+          editedImages.push(ad);
+        }
+      }
+    });
     const user = await this.auth.returnUserInfo();
     const informe: InformeI = {
       id: this.pericia?.informe?.id,
@@ -938,15 +1458,28 @@ export class InformesComponent {
       conclusion: this.conclusion,
       abierta: this.pericia?.abierta!,
     };
-    await viewPdfTerceros(
-      firstPage,
-      lastPage,
-      this.tercerosComponents,
-      this.documents,
-      this.car,
-      this.damages,
-      this.others
-    );
+    if (this.hasTerceros)
+      await viewPdfTerceros(
+        firstPage,
+        lastPage,
+        this.tercerosComponents,
+        this.documents,
+        this.car,
+        this.damages,
+        this.others
+      );
+    if (this.isRoboRueda)
+      viewPdfRuedas(
+        firstPage,
+        lastPage,
+        this.documents,
+        this.others,
+        this.rdi,
+        this.rdd,
+        this.rti,
+        this.rtd,
+        this.rda
+      );
   }
 
   // --------------------------------------------------------------------------->
@@ -982,7 +1515,7 @@ export class InformesComponent {
             component.instance.documents.push({
               id: a?.id!,
               img: img as string,
-              dot: this.setDots(a.dot),
+              dot: undefined,
               comment: a.descripcion,
               type: a.type,
               mimeType: 'image/jpeg',
@@ -995,7 +1528,7 @@ export class InformesComponent {
             component.instance.car.push({
               id: a?.id!,
               img: img as string,
-              dot: this.setDots(a.dot),
+              dot: undefined,
               comment: a.descripcion,
               type: a.type,
               mimeType: 'image/jpeg',
@@ -1072,24 +1605,6 @@ export class InformesComponent {
     } else {
       return [];
     }
-  }
-
-  dots = originalDots;
-
-  setDots(code: string | undefined) {
-    const dot = this.dots.find((d) => d.code === code);
-    //this.dots = this.dots.filter((d) => d.code !== code);
-    return dot;
-  }
-
-  selectDot(ev?: any, index?: number) {
-    if (this.images[index!]) {
-      this.images[index!].dot = ev.value;
-    }
-    this.dots = originalDots;
-    this.dots = this.dots.filter(
-      (d) => !this.images.some((i) => i.dot?.code === d.code)
-    );
   }
 
   closeInforme() {

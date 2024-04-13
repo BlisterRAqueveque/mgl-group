@@ -136,23 +136,25 @@
       </div>
 
       <!-- Sección vial -->
+      @if(hasTerceros) {
       <h1 class="text-center my-6 text-2xl md:text-4xl">Datos del conductor</h1>
 
       <div class="grid grid-cols-12 gap-4">
         <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
           <label class="text-sm font-medium text-gray-700 w-full">Nombre del conductor</label>
           <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
-                  focus:border-indigo-500" placeholder="Ingrese nombre del asegurado." [(ngModel)]="conductor"
+                    focus:border-indigo-500" placeholder="Ingrese nombre del asegurado." [(ngModel)]="conductor"
             [disabled]="!pericia" />
         </div>
 
         <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
           <label class="text-sm font-medium text-gray-700 w-full">DNI del conductor</label>
           <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
-                  focus:border-indigo-500" placeholder="Ingrese nombre del asegurado." [(ngModel)]="dni_conductor"
+                    focus:border-indigo-500" placeholder="Ingrese nombre del asegurado." [(ngModel)]="dni_conductor"
             [disabled]="!pericia" />
         </div>
       </div>
+      }
 
       <!-- Ampliación de denuncia -->
       <h1 class="text-center my-6 text-2xl md:text-4xl">Ampliación de denuncia</h1>
@@ -182,12 +184,72 @@
       </div>
     </p-tabPanel>
     <p-tabPanel header="Daños" [disabled]="!hasTerceros">
-      <app-attachments [helpText]="'Agregue aquí: Imágenes con los daños de los vehículos.'"
-        [images]="damages" [type]="'damages'" />
+      <app-attachments [helpText]="'Agregue aquí: Imágenes con los daños de los vehículos.'" [images]="damages"
+        [type]="'damages'" />
+    </p-tabPanel>
+    <p-tabPanel header="Ruedas" [disabled]="!isRoboRueda" [selected]="true">
+      <h1 class="text-center my-6 text-2xl md:text-4xl">Completar solo las que correspondan</h1>
+      <p-accordion id="accordion">
+        <p-accordionTab>
+          <ng-template pTemplate="header">
+            <div>
+              <p>Rueda delantera izquierda</p>
+            </div>
+          </ng-template>
+          <app-attachments
+            [helpText]="'Agregue aquí: Imágenes de la rueda delantera izquierda, completa, desgaste y DOT.'"
+            [images]="rdi" (hasChange)="setList(rdi, $event)" [type]="'rdi'" [readonly]="true" />
+        </p-accordionTab>
+      </p-accordion>
+      <p-accordion id="accordion">
+        <p-accordionTab>
+          <ng-template pTemplate="header">
+            <div>
+              <p>Rueda delantera derecha</p>
+            </div>
+          </ng-template>
+          <app-attachments
+            [helpText]="'Agregue aquí: Imágenes de la rueda delantera derecha, completa, desgaste y DOT.'"
+            [images]="rdd" (hasChange)="setList(rdd, $event)" [type]="'rdd'" [readonly]="true" />
+        </p-accordionTab>
+      </p-accordion>
+      <p-accordion id="accordion">
+        <p-accordionTab>
+          <ng-template pTemplate="header">
+            <div>
+              <p>Rueda trasera izquierda</p>
+            </div>
+          </ng-template>
+          <app-attachments
+            [helpText]="'Agregue aquí: Imágenes de la rueda trasera izquierda, completa, desgaste y DOT.'"
+            [images]="rti" (hasChange)="setList(rti, $event)" rti [type]="'rti'" [readonly]="true" />
+        </p-accordionTab>
+      </p-accordion>
+      <p-accordion id="accordion">
+        <p-accordionTab>
+          <ng-template pTemplate="header">
+            <div>
+              <p>Rueda trasera derecha</p>
+            </div>
+          </ng-template>
+          <app-attachments [helpText]="'Agregue aquí: Imágenes de la rueda trasera derecha, completa, desgaste y DOT.'"
+            [images]="rtd" (hasChange)="setList(rtd, $event)" [type]="'rtd'" [readonly]="true" />
+        </p-accordionTab>
+      </p-accordion>
+      <p-accordion id="accordion">
+        <p-accordionTab>
+          <ng-template pTemplate="header">
+            <div>
+              <p>Rueda de auxilio</p>
+            </div>
+          </ng-template>
+          <app-attachments [helpText]="'Agregue aquí: Imágenes de la rueda de auxilio, completa, desgaste y DOT.'"
+            [images]="rda" (hasChange)="setList(rda, $event)" [type]="'rda'" [readonly]="true" />
+        </p-accordionTab>
+      </p-accordion>
     </p-tabPanel>
     <p-tabPanel header="Otros">
-      <app-attachments [helpText]="'Agregue aquí: Imágenes varias.'"
-        [images]="others" [type]="'others'" />
+      <app-attachments [helpText]="'Agregue aquí: Imágenes varias.'" [images]="others" [type]="'others'" />
     </p-tabPanel>
     <p-tabPanel header="Relevamiento">
       <h1 class="text-center my-6 text-2xl md:text-4xl">Según el relevamiento realizado podemos decir:</h1>
