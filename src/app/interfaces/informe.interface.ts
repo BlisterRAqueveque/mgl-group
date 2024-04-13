@@ -32,6 +32,7 @@ export interface AdjuntoI {
   adjunto: string;
   dot: string | undefined;
   descripcion: string;
+  type: string;
   index: number;
 }
 

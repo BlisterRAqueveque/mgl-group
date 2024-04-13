@@ -1,5 +1,4 @@
-<div (dragenter)="onDragEnter($event)" (dragleave)="onDragLeave($event)" (dragover)="onDragOver($event)"
-  (drop)="onDrop($event)">
+<div>
   <h1 class="text-center my-6 text-2xl md:text-4xl">Informe de investigación</h1>
   <div class="w-full flex justify-center items-center">
     <div class="mr-3 cursor-pointer p-4 rounded-full bg-gray-900 text-white mb-4 flex flex-row
@@ -13,10 +12,10 @@
     </div>
 
     @if(pericia?.abierta) {
-      <div *render="['admin']" class="ml-3 cursor-pointer p-4 rounded-full bg-purple-900 text-white mb-4 flex flex-row
+    <div *render="['admin']" class="ml-3 cursor-pointer p-4 rounded-full bg-purple-900 text-white mb-4 flex flex-row
         justify-center items-center shadow-lg shadow-gray-500/50" pRipple (click)="closeInforme()">
-        Cerrar informe <ng-icon class="ml-2" name="heroDocumentCheckSolid" />
-      </div>
+      Cerrar informe <ng-icon class="ml-2" name="heroDocumentCheckSolid" />
+    </div>
     }
   </div>
 
@@ -27,270 +26,192 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-12 gap-4 mt-3">
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Tipo de siniestro</label>
-      <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
-        focus:border-indigo-500" placeholder="Ingrese tipo de siniestro." [(ngModel)]="tipo_siniestro"
-        [disabled]="!pericia" />
-    </div>
+  <p-tabView id="tab-view" [scrollable]="true">
+    <p-tabPanel header="Datos del siniestro">
+      <h1 class="text-center my-6 text-2xl md:text-4xl">Datos del siniestro</h1>
+      <div class="grid grid-cols-12 gap-4 mt-3">
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Tipo de siniestro</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+            focus:border-indigo-500" placeholder="Ingrese tipo de siniestro." [(ngModel)]="tipo_siniestro"
+            [disabled]="!pericia" />
+        </div>
 
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Tipo hecho</label>
-      <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
-        focus:border-indigo-500" placeholder="Ingrese tipo hecho." [(ngModel)]="hecho" [disabled]="!pericia" />
-    </div>
-  </div>
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Tipo hecho</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+            focus:border-indigo-500" placeholder="Ingrese tipo hecho." [(ngModel)]="hecho" [disabled]="!pericia" />
+        </div>
 
-  <!-- Datos del siniestro -->
-  <h1 class="text-center my-6 text-2xl md:text-4xl">Datos del siniestro</h1>
-  <div class="grid grid-cols-12 gap-4">
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Número de siniestro</label>
-      <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Número de siniestro</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
         focus:border-indigo-500" placeholder="Ingrese n° siniestro." [(ngModel)]="n_siniestro" [disabled]="!pericia" />
-    </div>
+        </div>
 
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Número de denuncia</label>
-      <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Número de denuncia</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
         focus:border-indigo-500" placeholder="Ingrese n° denuncia." [(ngModel)]="n_denuncia" [disabled]="!pericia" />
-    </div>
-  </div>
+        </div>
+      </div>
 
-  <!-- Datos del siniestro -->
-  <h1 class="text-center my-6 text-2xl md:text-4xl">Datos del asegurado</h1>
-  <div class="grid grid-cols-12 gap-4">
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Nombre del asegurado</label>
-      <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+      <!-- Datos del siniestro -->
+      <h1 class="text-center my-6 text-2xl md:text-4xl">Datos del asegurado</h1>
+      <div class="grid grid-cols-12 gap-4">
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Nombre del asegurado</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
         focus:border-indigo-500" placeholder="Ingrese nombre del asegurado." [(ngModel)]="nombre_asegurado"
-        [disabled]="!pericia" />
-    </div>
+            [disabled]="!pericia" />
+        </div>
 
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Domicilio del asegurado</label>
-      <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Domicilio del asegurado</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
         focus:border-indigo-500" placeholder="Ingrese domicilio del asegurado." [(ngModel)]="dir_asegurado"
-        [disabled]="!pericia" />
-    </div>
+            [disabled]="!pericia" />
+        </div>
 
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Teléfono del asegurado</label>
-      <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Teléfono del asegurado</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
         focus:border-indigo-500" placeholder="Ingrese teléfono del asegurado." [(ngModel)]="tel_asegurado"
-        [disabled]="!pericia" />
-    </div>
+            [disabled]="!pericia" />
+        </div>
 
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Póliza</label>
-      <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Póliza</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
         focus:border-indigo-500" placeholder="Ingrese póliza." [(ngModel)]="n_poliza"
-        [disabled]="!pericia || poliza" />
+            [disabled]="!pericia || poliza" />
 
-      <div class="flex items-center mt-2 ml-2">
-        <p-checkbox [(ngModel)]="poliza" [binary]="true" [disabled]="!pericia"></p-checkbox>
-        <label class="ml-2">¿No tiene póliza?</label>
-      </div>
-    </div>
+          <div class="flex items-center mt-2 ml-2">
+            <p-checkbox [(ngModel)]="poliza" [binary]="true" [disabled]="!pericia"></p-checkbox>
+            <label class="ml-2">¿No tiene póliza?</label>
+          </div>
+        </div>
 
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Tipo cobertura</label>
-      <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Tipo cobertura</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
         focus:border-indigo-500" placeholder="Ingrese tipo cobertura." [(ngModel)]="tipo_cobertura"
-        [disabled]="!pericia || cobertura" />
+            [disabled]="!pericia || cobertura" />
 
-      <div class="flex items-center mt-2 ml-2">
-        <p-checkbox [(ngModel)]="cobertura" [binary]="true" [disabled]="!pericia"></p-checkbox>
-        <label class="ml-2">¿No tiene un tipo de cobertura?</label>
-      </div>
-    </div>
+          <div class="flex items-center mt-2 ml-2">
+            <p-checkbox [(ngModel)]="cobertura" [binary]="true" [disabled]="!pericia"></p-checkbox>
+            <label class="ml-2">¿No tiene un tipo de cobertura?</label>
+          </div>
+        </div>
 
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Bien asegurado</label>
-      <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Bien asegurado</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
         focus:border-indigo-500" placeholder="Ingrese bien asegurado." [(ngModel)]="veh_asegurado"
-        [disabled]="!pericia" />
-    </div>
+            [disabled]="!pericia" />
+        </div>
 
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Año</label>
-      <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Año</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
         focus:border-indigo-500" placeholder="Ingrese año." [(ngModel)]="text_anio" [disabled]="!pericia || anio" />
 
-      <div class="flex items-center mt-2 ml-2">
-        <p-checkbox [(ngModel)]="anio" [binary]="true" [disabled]="!pericia"></p-checkbox>
-        <label class="ml-2">¿Se desconoce el año?</label>
-      </div>
-    </div>
+          <div class="flex items-center mt-2 ml-2">
+            <p-checkbox [(ngModel)]="anio" [binary]="true" [disabled]="!pericia"></p-checkbox>
+            <label class="ml-2">¿Se desconoce el año?</label>
+          </div>
+        </div>
 
-    <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-      <label class="text-sm font-medium text-gray-700 w-full">Patente</label>
-      <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Patente</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
         focus:border-indigo-500" placeholder="Ingrese patente." [(ngModel)]="patente_asegurado"
-        [disabled]="!pericia || patente" />
+            [disabled]="!pericia || patente" />
 
-      <div class="flex items-center mt-2 ml-2">
-        <p-checkbox [(ngModel)]="patente" [binary]="true" [disabled]="!pericia"></p-checkbox>
-        <label class="ml-2">¿No tiene patente?</label>
+          <div class="flex items-center mt-2 ml-2">
+            <p-checkbox [(ngModel)]="patente" [binary]="true" [disabled]="!pericia"></p-checkbox>
+            <label class="ml-2">¿No tiene patente?</label>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Sección de terceros -->
-  <div class="hide" [ngClass]="{ 'show': hasTerceros }">
-    <div>
+      <!-- Sección vial -->
       <h1 class="text-center my-6 text-2xl md:text-4xl">Datos del conductor</h1>
 
       <div class="grid grid-cols-12 gap-4">
         <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
           <label class="text-sm font-medium text-gray-700 w-full">Nombre del conductor</label>
           <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
-            focus:border-indigo-500" placeholder="Ingrese nombre del asegurado." [(ngModel)]="conductor"
+                  focus:border-indigo-500" placeholder="Ingrese nombre del asegurado." [(ngModel)]="conductor"
             [disabled]="!pericia" />
         </div>
 
         <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
           <label class="text-sm font-medium text-gray-700 w-full">DNI del conductor</label>
           <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
-            focus:border-indigo-500" placeholder="Ingrese nombre del asegurado." [(ngModel)]="dni_conductor"
+                  focus:border-indigo-500" placeholder="Ingrese nombre del asegurado." [(ngModel)]="dni_conductor"
             [disabled]="!pericia" />
         </div>
       </div>
 
+      <!-- Ampliación de denuncia -->
+      <h1 class="text-center my-6 text-2xl md:text-4xl">Ampliación de denuncia</h1>
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-12 px-2 flex flex-col">
+          <textarea pInputTextarea class="p-3 border border-gray-300 rounded-md focus:outline-none
+        focus:border-indigo-500 mt-4 w-full" placeholder="Ingrese ampliación de denuncia." rows="5"
+            [(ngModel)]="amp_denuncia" [disabled]="!pericia"></textarea>
+        </div>
+      </div>
+      <!-- !INPUT DE IMÁGENES -->
+      <app-attachments [helpText]="'Agregue aquí: Ampliación de denuncia y documentación del asegurado.'"
+        [images]="documents" (hasChange)="setList(documents, $event)" [type]="'documents'" [readonly]="true" />
+
+      <app-attachments [helpText]="'Agregue aquí: fotografías del vehículo.'" [title]="'Imágenes del vehículo'"
+        [images]="car" (hasChange)="setList(car, $event)" [type]="'asegurado-auto'" [readonly]="true" />
+    </p-tabPanel>
+    <p-tabPanel header="Datos de terceros" [disabled]="!hasTerceros">
       <h1 class="text-center my-6 text-2xl md:text-4xl">Datos de terceros</h1>
       <ng-template #tercerosContainer></ng-template>
-      <div class="col-span-12 px-2 pb-2 flex flex-col justify-center items-center">
+      <div class="mt-2 col-span-12 px-2 pb-2 flex flex-col justify-center items-center">
         <p>Agregar datos de tercero</p>
         <div class="w-20 h-20 mt-3 bg-gray-900 rounded-lg shadow-md shadow-black/75 flex justify-center items-center"
           pRipple (click)="generateComponent()">
           <ng-icon name="heroPlusCircleSolid" color="white" size="2rem" />
         </div>
       </div>
-
-    </div>
-  </div>
-
-  <!-- Ampliación de denuncia -->
-  <h1 class="text-center my-6 text-2xl md:text-4xl">Ampliación de denuncia</h1>
-  <div class="grid grid-cols-12 gap-4">
-    <div class="col-span-12 px-2 flex flex-col">
-      <textarea pInputTextarea class="p-3 border border-gray-300 rounded-md focus:outline-none
-          focus:border-indigo-500 mt-4 w-full" placeholder="Ingrese ampliación de denuncia." rows="6"
-        [(ngModel)]="amp_denuncia" [disabled]="!pericia">
-      </textarea>
-    </div>
-  </div>
-
-  <h1 class="text-center my-6 text-2xl md:text-4xl">Según el relevamiento realizado podemos decir:</h1>
-  <div class="grid grid-cols-12 gap-4">
-    <div class="col-span-12 px-2 flex flex-col">
-      <textarea pInputTextarea class="p-3 border border-gray-300 rounded-md focus:outline-none
+    </p-tabPanel>
+    <p-tabPanel header="Daños" [disabled]="!hasTerceros">
+      <app-attachments [helpText]="'Agregue aquí: Imágenes con los daños de los vehículos.'"
+        [images]="damages" [type]="'damages'" />
+    </p-tabPanel>
+    <p-tabPanel header="Otros">
+      <app-attachments [helpText]="'Agregue aquí: Imágenes varias.'"
+        [images]="others" [type]="'others'" />
+    </p-tabPanel>
+    <p-tabPanel header="Relevamiento">
+      <h1 class="text-center my-6 text-2xl md:text-4xl">Según el relevamiento realizado podemos decir:</h1>
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-12 px-2 flex flex-col">
+          <textarea pInputTextarea class="p-3 border border-gray-300 rounded-md focus:outline-none
           focus:border-indigo-500 mt-4 w-full" placeholder="Ingrese conclusiones según el relevamiento." rows="6"
-        [(ngModel)]="relevamiento" [disabled]="!pericia">
+            [(ngModel)]="relevamiento" [disabled]="!pericia">
       </textarea>
-    </div>
-  </div>
-
-  <!-- Conclusión -->
-  <h1 *render="['admin']" class="text-center my-6 text-2xl md:text-4xl">Conclusión</h1>
-  <div *render="['admin']" class="grid grid-cols-12 gap-4">
-    <div class="col-span-12 px-2 flex flex-col">
-      <textarea pInputTextarea class="p-3 border border-gray-300 rounded-md focus:outline-none
-          focus:border-indigo-500 mt-4 w-full" placeholder="Ingrese conclusión." rows="6" [(ngModel)]="conclusion"
-        [disabled]="!pericia">
-      </textarea>
-    </div>
-  </div>
-
-  <!-- !INPUT DE IMÁGENES -->
-  <h1 class="text-center my-6 text-2xl md:text-4xl">Imágenes</h1>
-  <h4 class="text-center text-xl m-0">Agregue las imágenes en orden cronológico, teniendo en cuenta que de la misma
-    manera, serán agregadas en el informe final</h4>
-  <h4 class="text-center m-0">Para mas comodidad, puede arrastrar las mismas y cambiar su orden</h4>
-
-
-
-  <div class="grid grid-cols-12 gap-4 py-24 md:pt-20 lg:pt-16 lg:px-80 md:px:20 px-4 w-full" cdkDropList
-    (cdkDropListDropped)="moveImg($event)" [cdkDropListData]="images" [cdkDropListOrientation]="'vertical'">
-    <div cdkDrag cdkDragPreviewContainer="parent" class="relative col-span-12
-      flex justify-center items-center flex-col bg-gray-100 p-4 rounded-xl shadow-gray-500/50 shadow-lg"
-      *ngFor="let img of images; let i = index">
-      <div class="relative">
-        <img [src]="img.img" alt="" class="max-w-full max-h-80 md:max-h-60 w-auto h-auto object-cover">
-        <div class="absolute top-0 left-0 w-full h-full bg-black/50 opacity-0 transition-all duration-500
-          hover:opacity-100 flex justify-center items-center cursor-pointer" (click)="editImage(i)"
-          pTooltip="Click en la imagen para editarla" tooltipPosition="bottom">
-          <ng-icon name="heroEyeSolid" size="1.5rem" class="text-white" />
         </div>
       </div>
-      <textarea *ngIf="!img.dot" pInputTextarea class="mt-4 p-3 w-full border border-gray-300 rounded-md focus:outline-none
-        focus:border-indigo-500" placeholder="Agregue una cabecera." rows="3" [(ngModel)]="img.comment"></textarea>
-      <p-dropdown *ngIf="isRoboRueda" class="mt-4 w-full border border-gray-300"
-        placeholder="Seleccione si pertenece a un tipo de rueda" [showClear]="true" [options]="dots"
-        (onChange)="selectDot($event, i)" optionLabel="name" [style]="{ width: '100%', height: '48px' }"
-        tooltipStyleClass="w-full" panelStyleClass="panel" [(ngModel)]="img.dot"
-        tooltip="Seleccione una posición de la rueda" tooltipPosition="bottom">
-        <ng-template pTemplate="selectedItem">
-          <div *ngIf="img.dot?.name">
-            <div>{{ img.dot?.name }}</div>
-          </div>
-        </ng-template>
-        <ng-template let-dot pTemplate="item">
-          <div class="flex align-items-center gap-2">
-            <div>{{ dot.name }}</div>
-          </div>
-        </ng-template>
-      </p-dropdown>
-      <!-- Elimina la imagen seleccionada -->
-      <div pTooltip="Eliminar imagen" tooltipPosition="left" class="bg-red-700 flex justify-center
-        items-center w-10 h-10 rounded-full shadow-gray-500/50 shadow-lg absolute top-5 right-5 cursor-pointer" pRipple
-        (click)="deleteImg(i)">
-        <ng-icon name="heroTrashSolid" class="text-white" size="1rem" />
+    </p-tabPanel>
+    <p-tabPanel *render="['admin']" header="Conclusión">
+      <!-- Conclusión -->
+      <h1 class="text-center my-6 text-2xl md:text-4xl">Conclusión</h1>
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-12 px-2 flex flex-col">
+          <textarea pInputTextarea class="p-3 border border-gray-300 rounded-md focus:outline-none
+        focus:border-indigo-500 mt-4 w-full" placeholder="Ingrese conclusión." rows="6" [(ngModel)]="conclusion"
+            [disabled]="!pericia"></textarea>
+        </div>
       </div>
-
-      <!-- Div para mover las imágenes -->
-      <div pTooltip="Mover imagen" cdkDragHandle tooltipPosition="right" class="bg-gray-100 flex justify-center 
-        items-center w-8 h-12 rounded-md shadow-gray-500/50 shadow-md absolute top-5 left-5 cursor-move" pRipple>
-        <ng-icon name="heroArrowsPointingOutSolid" class="text-black" size="1rem" />
-      </div>
-    </div>
-  </div>
-
-  <div class="w-full flex flex-col justify-center items-center mt-3">
-    <label>Agregar imagen:</label>
-    <div pRipple (click)="input.click()"
-      class="mt-2 w-20 h-20 rounded-xl bg-gray-900 shadow-gray-500/50 shadow-lg flex justify-center items-center">
-      <ng-icon name="heroPlusCircleSolid" size="2rem" class="text-white" />
-    </div>
-    <input type="file" accept="image/*" multiple #input (change)="addImage($event, input)" class="hidden"
-      [disabled]="!pericia" />
-  </div>
-
-  <!-- Dialogo de modificación para la imagen -->
-  <p-dialog header="Editar imagen" [(visible)]="visible" [modal]="true" [style]="{ width: '90vw', height: '90vh' }"
-    [draggable]="false" [resizable]="false">
-    <div class="w-full h-full relative flex justify-center items-center">
-      <image-cropper [imageBase64]="imageToEdit" [transform]="transform" (imageCropped)="imageCropped($event)"
-        [canvasRotation]="canvasRotation" [style]="{ width: 'auto' }" [maintainAspectRatio]="false"></image-cropper>
-
-      <div class="w-14 h-14 flex justify-center items-center absolute bottom-20 left-10
-        bg-purple-700 rounded-full shadow-gray-500/50 shadow-lg z-50" pRipple (click)="rotateLeft()">
-        <ng-icon name="heroArrowUturnLeftSolid" size="2rem" class="text-white" />
-      </div>
-
-      <div class="w-14 h-14 flex justify-center items-center absolute bottom-20 right-10
-        bg-purple-700 rounded-full shadow-gray-500/50 shadow-lg z-50" pRipple (click)="rotateRight()">
-        <ng-icon name="heroArrowUturnRightSolid" size="2rem" class="text-white" />
-      </div>
-
-      <div class="w-20 h-20 flex justify-center items-center absolute bottom-0 left-1/2 transform
-        -translate-x-1/2 -translate-y-1/2 bg-purple-700 rounded-full shadow-gray-500/50
-        shadow-lg z-50" pRipple (click)="finishImgEdition()">
-        <ng-icon name="heroPencilSquareSolid" size="2rem" class="text-white" />
-      </div>
-    </div>
-  </p-dialog>
+    </p-tabPanel>
+  </p-tabView>
 
   <app-dialog #dialog />
 
@@ -305,20 +226,8 @@
   </p-dialog>
 
   @if(!close) {
-    <app-button [text]="!pericia?.informe ? 'Cargar informe' : 'Modificar informe'"
-      [moreWidth]="!pericia?.informe ? false : true" [upload]="true"
-      (click)="!pericia?.informe ? onUploadInforme() : onUpdateInforme()" />
+  <app-button [text]="!pericia?.informe ? 'Cargar informe' : 'Modificar informe'"
+    [moreWidth]="!pericia?.informe ? false : true" [upload]="true"
+    (click)="!pericia?.informe ? onUploadInforme() : onUpdateInforme()" />
   }
-
-
-  <div class="fixed top-0 left-0 w-screen h-screen bg-sky-200/80 flex justify-center items-center
-      flex-col z-50 pointer-events-none transition-all duration-500 opacity-0"
-    [ngClass]="{ 'opacity-100': isDragging, }">
-    <div class="flex justify-center items-center flex-col border-dotted border-black rounded-xl
-        border-2 p-20 pointer-events-none">
-      <h1 class="text-2x pointer-events-nonel">Suelte la imagen para cargarla</h1>
-      <ng-icon name="heroArrowDownOnSquareSolid" size="5rem" class="my-4 pointer-events-none" />
-      <p><cite>Solo se soportan imágenes de tipo png / jpg / jpeg</cite></p>
-    </div>
-  </div>
 </div>

@@ -1,5 +1,5 @@
 import { AseguradoraI } from './aseguradora.interface';
-import { InformeI } from './informe.interface';
+import { AdjuntoI, InformeI } from './informe.interface';
 import { TipoSiniestroI } from './tipo-siniestro.interface';
 import { UsuarioI } from './user-token.interface';
 
@@ -36,9 +36,14 @@ export interface PericiaI {
 export interface TerceroI {
   id?: number;
   nombre: string;
-  dni: string;
+  domicilio: string;
+  tel: string;
+  veh: string;
+  patente: string;
+  amp_denuncia?: string;
   aseguradora: string;
 
   pericia?: PericiaI;
   informe?: TerceroI;
+  adjuntos?: AdjuntoI[]
 }

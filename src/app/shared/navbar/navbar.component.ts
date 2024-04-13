@@ -34,9 +34,9 @@ export class NavbarComponent {
 
   onRouterLinkActive(el: HTMLAnchorElement) {
     this.active.nativeElement.style.left = el.offsetLeft - 10 + 'px';
-    this.active.nativeElement.style.top = el.offsetTop - 10 + 'px';
+    this.active.nativeElement.style.top = el.offsetTop - 4 + 'px';
     this.active.nativeElement.style.width = el.offsetWidth + 22 + 'px';
-    this.active.nativeElement.style.height = el.offsetHeight + 22 + 'px';
+    this.active.nativeElement.style.height = el.offsetHeight + 8 + 'px';
     this.active.nativeElement.classList.add('animate');
   }
 

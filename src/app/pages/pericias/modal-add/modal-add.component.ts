@@ -173,7 +173,10 @@ export class ModalAddComponent {
     this.tercerosComponents.forEach((c) => {
       terceros.push({
         nombre: c.nombre,
-        dni: c.dni,
+        domicilio: '',
+        tel: '',
+        veh: '',
+        patente: '',
         aseguradora: c.aseguradora,
       });
     });
@@ -283,8 +286,11 @@ export class ModalAddComponent {
       terceros.push({
         id: t.id,
         nombre: t.nombre,
-        dni: t.dni,
         aseguradora: t.aseguradora,
+        domicilio: '',
+        tel: '',
+        veh: '',
+        patente: '',
       });
     });
     const pericia: PericiaI = {
@@ -439,7 +445,7 @@ export class ModalAddComponent {
         this.tercerosContainer.createComponent(TercerosComponent);
       component.instance.id = t.id!;
       component.instance.nombre = t.nombre;
-      component.instance.dni = t.dni;
+      component.instance.dni = '';
       component.instance.aseguradora = t.aseguradora;
       component.instance.delete.subscribe(() => {
         component.destroy();

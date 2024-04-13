@@ -15,6 +15,9 @@
   <div class="flex justify-center self-center  z-10">
     <div class="p-12 bg-white mx-auto rounded-3xl w-96 sm:mt-0 md:mt-0 lg:mt-0 mt-10 z-50">
       <div class="mb-7">
+        <div class="w-full flex justify-center items-center mb-3">
+          <img src="assets/img/logo.png" alt="" width="200">
+        </div>
         <h3 class="font-semibold text-2xl text-gray-800">Ingresar </h3>
         <!-- <p class="text-gray-400">¿Olvido su contraseña? <a href="#"
                         class="text-sm text-gray-700 hover:text-gray-700">Ingresar</a></p> -->
@@ -146,12 +149,14 @@
     <ng-icon name="{{!show ? 'heroEyeSolid' : 'heroEyeSlashSolid'}}" size="1.5rem"
       class="text-gray-700 transition-all duration-200 absolute top-4 right-4" [ngClass]="{ 'rotate-180': showRNPass }"
       (click)="showRNPass = !showRNPass" />
-    <p class="text-red-500 opacity-0 duration-300 transition-all" [ngClass]="{ 'opacity-100': error }">Las contraseñas no coinciden.</p>
+    <p class="text-red-500 opacity-0 duration-300 transition-all" [ngClass]="{ 'opacity-100': error }">Las contraseñas
+      no coinciden.</p>
   </div>
   <ng-template pTemplate="footer">
     <div class="w-full flex justify-end items-center mt-2">
       <div pRipple class="shadow-lg shadow-gray-500/50 w-auto h-16 bg-gray-800 rounded-full flex
-        items-center justify-center p-5 cursor-pointer hover:bg-gray-600 transition-all duration-500" (click)="changePassword()">
+        items-center justify-center p-5 cursor-pointer hover:bg-gray-600 transition-all duration-500"
+        (click)="changePassword()">
         <p class="text-white">Cambiar contraseña</p>
       </div>
     </div>

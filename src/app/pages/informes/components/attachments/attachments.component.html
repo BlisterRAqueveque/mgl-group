@@ -1,0 +1,95 @@
+<div (dragenter)="onDragEnter($event)" (dragleave)="onDragLeave($event)" (dragover)="onDragOver($event)"
+    (drop)="onDrop($event)">
+    <h1 class="text-center my-6 text-2xl md:text-4xl">{{title}}</h1>
+    <h4 class="text-center text-xl m-0 font-bold">{{helpText}}</h4>
+    <h4 class="text-center text-xl m-0">Agregue las imágenes en orden cronológico, teniendo en cuenta que de la misma
+        manera, serán agregadas en el informe final</h4>
+    <h4 class="text-center m-0">Para mas comodidad, puede arrastrar las mismas y cambiar su orden</h4>
+
+
+
+    <div class="grid grid-cols-12 gap-4 px-4 w-full" cdkDropList
+        [ngClass]="{'py-24 md:pt-20 lg:pt-16 lg:px-86 lg:px-96 md:px:20': images.length > 0}"
+        (cdkDropListDropped)="moveImg($event)" [cdkDropListData]="images" [cdkDropListOrientation]="'vertical'">
+        <div cdkDrag cdkDragPreviewContainer="parent" class="relative col-span-12
+          flex justify-center items-center flex-col bg-gray-100 p-4 rounded-xl shadow-gray-500/50 shadow-lg"
+            *ngFor="let img of images; let i = index">
+            <div class="relative">
+                <img [src]="img.img" alt="" class="max-w-full max-h-80 md:max-h-60 w-auto h-auto object-cover">
+                <div class="absolute top-0 left-0 w-full h-full bg-black/50 opacity-0 transition-all duration-500
+              hover:opacity-100 flex justify-center items-center cursor-pointer" (click)="editImage(i)"
+                    pTooltip="Click en la imagen para editarla" tooltipPosition="bottom">
+                    <ng-icon name="heroEyeSolid" size="1.5rem" class="text-white" />
+                </div>
+            </div>
+
+            @if(readonly) {
+            <p class="text-center text-lg mt-3">{{img.comment}}</p>
+            }
+            @else {
+            <textarea pInputTextarea class="mt-4 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+              focus:border-indigo-500" placeholder="Agregue una cabecera." rows="3"
+                [(ngModel)]="img.comment"></textarea>
+            }
+            <!-- Elimina la imagen seleccionada -->
+            <div pTooltip="Eliminar imagen" tooltipPosition="left" class="bg-red-700 flex justify-center
+            items-center w-10 h-10 rounded-full shadow-gray-500/50 shadow-lg absolute top-5 right-5 cursor-pointer"
+                pRipple (click)="deleteImg(i)">
+                <ng-icon name="heroTrashSolid" class="text-white" size="1rem" />
+            </div>
+
+            <!-- Div para mover las imágenes -->
+            <div pTooltip="Mover imagen" cdkDragHandle tooltipPosition="right" class="bg-gray-100 flex justify-center 
+            items-center w-8 h-12 rounded-md shadow-gray-500/50 shadow-md absolute top-5 left-5 cursor-move" pRipple>
+                <ng-icon name="heroArrowsPointingOutSolid" class="text-black" size="1rem" />
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full flex flex-col justify-center items-center mt-3">
+        <label>Agregar imagen:</label>
+        <div pRipple (click)="input.click()"
+            class="mt-2 w-20 h-20 rounded-xl bg-gray-900 shadow-gray-500/50 shadow-lg flex justify-center items-center">
+            <ng-icon name="heroPlusCircleSolid" size="2rem" class="text-white" />
+        </div>
+        <input type="file" accept="image/*" multiple #input (change)="addImage($event, input)" class="hidden" />
+    </div>
+
+    <div class="fixed top-0 left-0 w-screen h-screen bg-sky-200/80 flex justify-center items-center
+      flex-col z-50 pointer-events-none transition-all duration-500 opacity-0"
+        [ngClass]="{ 'opacity-100': isDragging, }">
+        <div class="flex justify-center items-center flex-col border-dotted border-black rounded-xl
+        border-2 p-20 pointer-events-none">
+            <h1 class="text-2x pointer-events-nonel">Suelte la imagen para cargarla</h1>
+            <ng-icon name="heroArrowDownOnSquareSolid" size="5rem" class="my-4 pointer-events-none" />
+            <p><cite>Solo se soportan imágenes de tipo png / jpg / jpeg</cite></p>
+        </div>
+    </div>
+</div>
+
+<!-- Dialogo de modificación para la imagen -->
+<p-dialog header="Editar imagen" [(visible)]="visible" [modal]="true" [style]="{ width: '90vw', height: '90vh' }"
+    [draggable]="false" [resizable]="false">
+    <div class="w-full h-full relative flex justify-center items-center">
+        <image-cropper [imageBase64]="imageToEdit" [transform]="transform" (imageCropped)="imageCropped($event)"
+            [canvasRotation]="canvasRotation" [style]="{ width: 'auto' }" [maintainAspectRatio]="false"></image-cropper>
+
+        <div class="w-14 h-14 flex justify-center items-center absolute bottom-20 left-10
+    bg-purple-700 rounded-full shadow-gray-500/50 shadow-lg z-50" pRipple (click)="rotateLeft()">
+            <ng-icon name="heroArrowUturnLeftSolid" size="2rem" class="text-white" />
+        </div>
+
+        <div class="w-14 h-14 flex justify-center items-center absolute bottom-20 right-10
+    bg-purple-700 rounded-full shadow-gray-500/50 shadow-lg z-50" pRipple (click)="rotateRight()">
+            <ng-icon name="heroArrowUturnRightSolid" size="2rem" class="text-white" />
+        </div>
+
+        <div class="w-20 h-20 flex justify-center items-center absolute bottom-0 left-1/2 transform
+    -translate-x-1/2 -translate-y-1/2 bg-purple-700 rounded-full shadow-gray-500/50
+    shadow-lg z-50" pRipple (click)="finishImgEdition()">
+            <ng-icon name="heroPencilSquareSolid" size="2rem" class="text-white" />
+        </div>
+    </div>
+</p-dialog>
+
+<app-dialog #dialog />

@@ -62,8 +62,9 @@ export class TablePericiasComponent {
   params = new HttpParams();
 
   async ngAfterViewInit() {
-    const user = await this.auth.returnUserInfo()
-    if(user?.rol !== 'admin') this.params = this.params.set('verificador', user?.id!);
+    const user = await this.auth.returnUserInfo();
+    if (user?.rol !== 'admin')
+      this.params = this.params.set('verificador', user?.id!);
     this.params = this.params.set('page', 1);
     this.params = this.params.set('perPage', 10);
     this.params = this.params.set('sortBy', 'DESC');
@@ -267,18 +268,18 @@ Patente: ${pericia.patente_asegurado ?? 'sin datos'}.
             next: (data) => {
               pericia.abierta = !pericia.abierta;
               this.dialog.alertMessage(
+                'Confirmación de carga',
                 `El estado se cambio a ${
                   pericia.abierta ? 'abierta' : 'cerrada'
                 }`,
-                'Confirmación de carga',
                 () => {}
               );
             },
             error: (e) => {
               console.log(e);
               this.dialog.alertMessage(
-                'Ocurrió un error al intentar cambiar el estado.',
                 'Error de carga',
+                'Ocurrió un error al intentar cambiar el estado.',
                 () => {},
                 true
               );
