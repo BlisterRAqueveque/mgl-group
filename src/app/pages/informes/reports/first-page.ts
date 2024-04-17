@@ -12,7 +12,7 @@ export const firstPage = async (firstPageI: FirstPage) => {
           image: img!,
           width: 300,
           alignment: 'center',
-          margin: [0, 0, 0, 50], // [left, top, right, bottom]
+          margin: [0, 20, 0, 50], // [left, top, right, bottom]
         },
       ],
     },
@@ -22,8 +22,8 @@ export const firstPage = async (firstPageI: FirstPage) => {
           text: 'Informe de investigación',
           decoration: 'underline',
           alignment: 'center',
-          fontSize: 20,
-          margin: [0, 0, 0, 10],
+          fontSize: 22,
+          margin: [0, 0, 0, 12],
         },
       ],
     },
@@ -32,8 +32,8 @@ export const firstPage = async (firstPageI: FirstPage) => {
         {
           text: firstPageI.tipo_siniestro,
           alignment: 'center',
-          fontSize: 14,
-          margin: [0, 0, 0, 10],
+          fontSize: 20,
+          margin: [0, 0, 0, 14],
         },
       ],
     },
@@ -42,8 +42,8 @@ export const firstPage = async (firstPageI: FirstPage) => {
         {
           text: firstPageI.hecho,
           alignment: 'center',
-          fontSize: 14,
-          margin: [0, 0, 0, 10],
+          fontSize: 16,
+          margin: [0, 0, 0, 14],
         },
       ],
     },
@@ -54,7 +54,7 @@ export const firstPage = async (firstPageI: FirstPage) => {
             firstPageI.n_siniestro ? firstPageI.n_siniestro : 'No tiene'
           }`,
           alignment: 'left',
-          fontSize: 14,
+          fontSize: 16,
           margin: [14, 0, 0, 8],
         },
       ],
@@ -66,7 +66,7 @@ export const firstPage = async (firstPageI: FirstPage) => {
             firstPageI.n_denuncia ? firstPageI.n_denuncia : 'No tiene'
           }`,
           alignment: 'left',
-          fontSize: 14,
+          fontSize: 16,
           margin: [14, 0, 0, 8],
         },
       ],
@@ -76,8 +76,8 @@ export const firstPage = async (firstPageI: FirstPage) => {
         {
           text: 'Datos del asegurado',
           alignment: 'center',
-          fontSize: 16,
-          margin: [14, 0, 0, 10],
+          fontSize: 20,
+          margin: [0, 14],
         },
       ],
     },
@@ -90,7 +90,7 @@ export const firstPage = async (firstPageI: FirstPage) => {
               : 'No se proveyó'
           }`,
           alignment: 'left',
-          fontSize: 14,
+          fontSize: 16,
           margin: [14, 0, 0, 8],
         },
       ],
@@ -104,7 +104,7 @@ export const firstPage = async (firstPageI: FirstPage) => {
               : 'No se proveyó'
           }`,
           alignment: 'left',
-          fontSize: 14,
+          fontSize: 16,
           margin: [14, 0, 0, 8],
         },
       ],
@@ -118,7 +118,7 @@ export const firstPage = async (firstPageI: FirstPage) => {
               : 'No se proveyó'
           }`,
           alignment: 'left',
-          fontSize: 14,
+          fontSize: 16,
           margin: [14, 0, 0, 8],
         },
       ],
@@ -129,8 +129,8 @@ export const firstPage = async (firstPageI: FirstPage) => {
             {
               text: 'Datos del seguro',
               alignment: 'center',
-              fontSize: 16,
-              margin: [14, 0, 0, 8],
+              fontSize: 20,
+              margin: [0, 14],
             },
           ],
         }
@@ -143,7 +143,7 @@ export const firstPage = async (firstPageI: FirstPage) => {
                 firstPageI.n_poliza ? firstPageI.n_poliza : 'Sin definir'
               }`,
               alignment: 'left',
-              fontSize: 14,
+              fontSize: 16,
               margin: [14, 0, 0, 8],
             },
           ],
@@ -159,7 +159,7 @@ export const firstPage = async (firstPageI: FirstPage) => {
                   : 'Sin definir'
               }`,
               alignment: 'left',
-              fontSize: 14,
+              fontSize: 16,
               margin: [14, 0, 0, 8],
             },
           ],
@@ -170,8 +170,8 @@ export const firstPage = async (firstPageI: FirstPage) => {
         {
           text: 'Datos del vehículo',
           alignment: 'center',
-          fontSize: 16,
-          margin: [14, 0, 0, 8],
+          fontSize: 20,
+          margin: [0, 14],
         },
       ],
     },
@@ -184,7 +184,7 @@ export const firstPage = async (firstPageI: FirstPage) => {
               : 'No se proveyó'
           }`,
           alignment: 'left',
-          fontSize: 14,
+          fontSize: 16,
           margin: [14, 0, 0, 8],
         },
       ],
@@ -197,7 +197,7 @@ export const firstPage = async (firstPageI: FirstPage) => {
                 firstPageI.text_anio ? firstPageI.text_anio : 'Sin definir'
               }`,
               alignment: 'left',
-              fontSize: 14,
+              fontSize: 16,
               margin: [14, 0, 0, 8],
             },
           ],
@@ -213,7 +213,7 @@ export const firstPage = async (firstPageI: FirstPage) => {
                   : 'Sin definir'
               }`,
               alignment: 'left',
-              fontSize: 14,
+              fontSize: 16,
               margin: [14, 0, 0, 8],
             },
           ],
@@ -231,7 +231,7 @@ export const firstPage = async (firstPageI: FirstPage) => {
                   }`
                 : '',
               alignment: 'left',
-              fontSize: 14,
+              fontSize: 16,
               margin: [14, 0, 0, 8],
             },
           ],
@@ -251,8 +251,8 @@ export const firstPage = async (firstPageI: FirstPage) => {
           {
             text: 'Ampliación de denuncia',
             alignment: 'center',
-            fontSize: 16,
-            margin: [0, 0, 0, 10],
+            fontSize: 20,
+            margin: [0, 20],
           },
         ],
       },
@@ -263,7 +263,7 @@ export const firstPage = async (firstPageI: FirstPage) => {
               ? firstPageI.amp_denuncia
               : 'No se cargó una ampliación de denuncia',
             alignment: 'left',
-            fontSize: 13,
+            fontSize: 16,
             margin: [14, 0, 0, 10],
             pageBreak: 'after',
           },

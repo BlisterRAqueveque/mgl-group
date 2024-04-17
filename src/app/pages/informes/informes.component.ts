@@ -44,6 +44,7 @@ import { TercerosInformeComponent } from './components/terceros/terceros.compone
 import { viewPdfTerceros } from './reports/informe-vial';
 import { TablePericiasInformesComponent } from './table-pericias-informes/table-pericias-informes.component';
 import { viewPdfRuedas } from './reports/informe-robo-rueda';
+import { viewPdfBase } from './reports/informe-base';
 
 @Component({
   selector: 'app-informes',
@@ -149,38 +150,37 @@ export class InformesComponent {
 
   /** @description Vacía todos los campos */
   setDefault() {
-    this.pericia = null;
-    this.images = [];
-    this.hecho = '';
-    this.n_poliza = '';
-    this.tipo_cobertura = '';
-    this.amp_denuncia = '';
-    this.conclusion = '';
-    this.tipo_siniestro = '';
-    this.n_siniestro = '';
-    this.n_denuncia = '';
-    this.nombre_asegurado = '';
-    this.dir_asegurado = '';
-    this.tel_asegurado = '';
-    this.veh_asegurado = '';
-    this.patente_asegurado = '';
-    this.text_anio = '';
-    this.relevamiento = '';
-    this.conductor = '';
-    this.dni_conductor = '';
-    this.tercerosContainer.clear();
-    this.hasTerceros = false;
-    this.isRoboRueda = false;
-
-    this.documents = [];
-    this.car = [];
-    this.damages = [];
-    this.others = [];
-    this.rdi = [];
-    this.rdd = [];
-    this.rti = [];
-    this.rtd = [];
-    this.rda = [];
+    // this.pericia = null;
+    // this.images = [];
+    // this.hecho = '';
+    // this.n_poliza = '';
+    // this.tipo_cobertura = '';
+    // this.amp_denuncia = '';
+    // this.conclusion = '';
+    // this.tipo_siniestro = '';
+    // this.n_siniestro = '';
+    // this.n_denuncia = '';
+    // this.nombre_asegurado = '';
+    // this.dir_asegurado = '';
+    // this.tel_asegurado = '';
+    // this.veh_asegurado = '';
+    // this.patente_asegurado = '';
+    // this.text_anio = '';
+    // this.relevamiento = '';
+    // this.conductor = '';
+    // this.dni_conductor = '';
+    // this.tercerosContainer.clear();
+    // this.hasTerceros = false;
+    // this.isRoboRueda = false;
+    // this.documents = [];
+    // this.car = [];
+    // this.damages = [];
+    // this.others = [];
+    // this.rdi = [];
+    // this.rdd = [];
+    // this.rti = [];
+    // this.rtd = [];
+    // this.rda = [];
   }
   // ---------------------------------------------------------------------------->
   /**                           Inicializar el modulo                           */
@@ -245,21 +245,33 @@ export class InformesComponent {
       this.veh_asegurado = pericia.informe.veh_asegurado;
 
       this.patente_asegurado = pericia.informe.patente_asegurado;
-      this.patente = this.patente_asegurado === '';
+      this.patente =
+        this.patente_asegurado === '' ||
+        this.patente_asegurado === null ||
+        this.patente_asegurado === undefined;
 
       this.hecho = pericia.informe.hecho;
 
       this.n_poliza = pericia.informe.n_poliza;
-      this.poliza = this.n_poliza === '';
+      this.poliza =
+        this.n_poliza === '' ||
+        this.n_poliza === null ||
+        this.n_poliza === undefined;
 
       this.tipo_cobertura = pericia.informe.tipo_cobertura;
-      this.cobertura = this.tipo_cobertura === '';
+      this.cobertura =
+        this.tipo_cobertura === '' ||
+        this.tipo_cobertura === null ||
+        this.tipo_cobertura === undefined;
 
       this.amp_denuncia = pericia.informe.amp_denuncia;
       this.conclusion = pericia.informe.conclusion;
 
       this.text_anio = pericia.informe.text_anio;
-      this.anio = this.text_anio === '';
+      this.anio =
+        this.text_anio === '' ||
+        this.text_anio === null ||
+        this.text_anio === undefined;
 
       this.relevamiento = pericia.informe.relevamiento;
 
@@ -268,6 +280,8 @@ export class InformesComponent {
 
       const url = environment.imagesUrl;
       this.initComponent(pericia.informe.terceros, !pericia.abierta);
+      if (pericia.informe.adjuntos)
+        pericia.informe.adjuntos.sort((a, b) => a.index - b.index);
       for (const a of pericia.informe.adjuntos) {
         const img = await imgToBase64(url + a.adjunto);
         switch (a.type) {
@@ -469,11 +483,11 @@ export class InformesComponent {
           img_list.forEach((d, i) => {
             switch (i) {
               case 0: {
-                d.comment = 'Frente latera izquierdo';
+                d.comment = 'Frente lateral izquierdo';
                 break;
               }
               case 1: {
-                d.comment = 'Frente latera derecho';
+                d.comment = 'Frente lateral derecho';
                 break;
               }
               case 2: {
@@ -825,7 +839,7 @@ export class InformesComponent {
       }
     );
   }
-  async updateInforme() {
+  async updateInforme(onlyUpload?: boolean) {
     this.dialog.loading = true;
     const formData = new FormData();
     const editedImages: AdjuntoI[] = [];
@@ -1305,29 +1319,234 @@ export class InformesComponent {
       dni_conductor: this.hasTerceros ? this.dni_conductor : '',
     };
     formData.append('form', JSON.stringify(informe));
-    this.informeService.update(this.pericia?.informe?.id!, formData).subscribe({
-      next: (data) => {
-        this.table.getHistoric();
-        this.dialog.alertMessage(
-          'Confirmación de carga',
-          'El informe se modificó con éxito.',
-          () => {
-            this.setDefault();
-          }
+    if (!onlyUpload) {
+      this.informeService
+        .update(this.pericia?.informe?.id!, formData)
+        .subscribe({
+          next: (data) => {
+            this.table.getHistoric();
+            this.dialog.alertMessage(
+              'Confirmación de carga',
+              'El informe se modificó con éxito.',
+              () => {
+                this.setDefault();
+              }
+            );
+          },
+          error: (e) => {
+            console.log(e);
+            this.dialog.alertMessage(
+              'Error de carga',
+              'Ocurrió un error en la carga.',
+              () => {},
+              true
+            );
+          },
+        });
+    } else {
+      try {
+        const result = await firstValueFrom(
+          this.informeService.update(this.pericia?.informe?.id!, formData)
         );
-      },
-      error: (e) => {
-        console.log(e);
+      } catch (error) {
+        console.log(error);
         this.dialog.alertMessage(
           'Error de carga',
-          'Ocurrió un error en la carga.',
+          'Ocurrió un error al intentar cerrar el informe.',
           () => {},
           true
         );
-      },
+      }
+    }
+  }
+  // --------------------------------------------------------------------------->
+  /**                              Sección de PDF                              */
+
+  async viewPdf() {
+    const firstPage: FirstPage = {
+      poliza: this.poliza,
+      cobertura: this.cobertura,
+      hasTerceros: this.hasTerceros,
+      anio: this.anio,
+      tipo_siniestro: this.tipo_siniestro,
+      hecho: this.hecho,
+      n_siniestro: this.n_siniestro,
+      n_denuncia: this.n_denuncia,
+      nombre_asegurado: this.nombre_asegurado,
+      dir_asegurado: this.dir_asegurado,
+      tel_asegurado: this.tel_asegurado,
+      n_poliza: this.n_poliza,
+      tipo_cobertura: this.tipo_cobertura,
+      veh_asegurado: this.veh_asegurado,
+      text_anio: this.text_anio,
+      patente: this.patente,
+      patente_asegurado: this.patente_asegurado,
+      conductor: this.conductor,
+      dni_conductor: this.dni_conductor,
+      amp_denuncia: this.amp_denuncia,
+    };
+    const lastPage: LastPage = {
+      relevamiento: this.relevamiento,
+      conclusion: this.conclusion,
+      abierta: this.pericia?.abierta!,
+    };
+    if (this.hasTerceros)
+      await viewPdfTerceros(
+        firstPage,
+        lastPage,
+        this.tercerosComponents,
+        this.documents,
+        this.car,
+        this.damages,
+        this.others
+      );
+    else if (this.isRoboRueda)
+      viewPdfRuedas(
+        firstPage,
+        lastPage,
+        this.documents,
+        this.car,
+        this.others,
+        this.rdi,
+        this.rdd,
+        this.rti,
+        this.rtd,
+        this.rda
+      );
+    else {
+      viewPdfBase(firstPage, lastPage, this.documents, this.car, this.others);
+    }
+  }
+
+  // --------------------------------------------------------------------------->
+
+  @ViewChild('tercerosContainer', { read: ViewContainerRef })
+  tercerosContainer!: ViewContainerRef;
+  tercerosComponents: TercerosInformeComponent[] = [];
+
+  generateComponent() {
+    const component = this.tercerosContainer.createComponent(
+      TercerosInformeComponent
+    );
+    component.instance.delete.subscribe(() => {
+      component.destroy();
+      this.tercerosComponents = this.tercerosComponents.filter(
+        (i) => i !== component.instance
+      );
+    });
+    this.tercerosComponents.push(component.instance);
+  }
+
+  initComponent(terceros?: TerceroI[], readonly?: boolean) {
+    const url = environment.imagesUrl;
+    terceros?.forEach(async (t) => {
+      const component = this.tercerosContainer.createComponent(
+        TercerosInformeComponent
+      );
+      t.adjuntos!.sort((a, b) => a.index - b.index);
+      for (const a of t.adjuntos!) {
+        const img = await imgToBase64(url + a.adjunto);
+        switch (a.type) {
+          case 'documents': {
+            component.instance.documents.push({
+              id: a?.id!,
+              img: img as string,
+              dot: undefined,
+              comment: a.descripcion,
+              type: a.type,
+              mimeType: 'image/jpeg',
+              originalImg: img as string,
+              edited: false,
+            });
+            break;
+          }
+          case 'asegurado-auto': {
+            component.instance.car.push({
+              id: a?.id!,
+              img: img as string,
+              dot: undefined,
+              comment: a.descripcion,
+              type: a.type,
+              mimeType: 'image/jpeg',
+              originalImg: img as string,
+              edited: false,
+            });
+            break;
+          }
+        }
+      }
+      component.instance.id = t.id!;
+      component.instance.nombre = t.nombre;
+      component.instance.domicilio = t.domicilio;
+      component.instance.tel = t.tel;
+      component.instance.veh = t.veh;
+      component.instance.aseguradora = t.aseguradora;
+      component.instance.amp_denuncia = t.amp_denuncia!;
+      component.instance.patente = t.patente;
+      component.instance.readonly = readonly!;
+      component.instance.tercero = t;
+      component.instance.delete.subscribe(() => {
+        component.destroy();
+        this.tercerosComponents = this.tercerosComponents.filter(
+          (i) => i !== component.instance
+        );
+      });
+      this.tercerosComponents.push(component.instance);
     });
   }
 
+  /** @description Devuelve la lista de los terceros, en caso de corresponder */
+  tercerosList(formData: FormData) {
+    if (this.hasTerceros) {
+      const terceros: TerceroI[] = [];
+      const adjuntos: AdjuntoI[] = [];
+      this.tercerosComponents.forEach((t) => {
+        t.documents.forEach((img, index) => {
+          formData.append(
+            'files',
+            dataURLtoFile(img.img, 'newFile', img.mimeType)
+          );
+          adjuntos.push({
+            adjunto: '',
+            dot: img.dot?.code,
+            descripcion: img.comment,
+            type: img.type,
+            index,
+          });
+        });
+        t.car.forEach((img, index) => {
+          formData.append(
+            'files',
+            dataURLtoFile(img.img, 'newFile', img.mimeType)
+          );
+          adjuntos.push({
+            adjunto: '',
+            dot: img.dot?.code,
+            descripcion: img.comment,
+            type: img.type,
+            index,
+          });
+        });
+        terceros.push({
+          id: t.id,
+          nombre: t.nombre,
+          domicilio: t.domicilio,
+          tel: t.tel,
+          veh: t.veh,
+          amp_denuncia: t.amp_denuncia,
+          aseguradora: t.aseguradora,
+          patente: t.patente,
+          adjuntos: adjuntos,
+          anio: t.anio,
+          poliza: t.poliza,
+          cobertura: t.cobertura,
+        });
+      });
+      return terceros;
+    } else {
+      return [];
+    }
+  }
   tercerosEditList(formData: FormData): TerceroI[] | undefined {
     if (this.hasTerceros) {
       const terceros: TerceroI[] = [];
@@ -1417,188 +1636,13 @@ export class InformesComponent {
           domicilio: t.domicilio,
           tel: t.tel,
           veh: t.veh,
+          amp_denuncia: t.amp_denuncia,
           aseguradora: t.aseguradora,
           patente: t.patente,
           adjuntos: editedImages,
-        });
-      });
-      return terceros;
-    } else {
-      return [];
-    }
-  }
-  // --------------------------------------------------------------------------->
-  /**                              Sección de PDF                              */
-
-  async viewPdf() {
-    const firstPage: FirstPage = {
-      poliza: this.poliza,
-      cobertura: this.cobertura,
-      hasTerceros: this.hasTerceros,
-      anio: this.anio,
-      tipo_siniestro: this.tipo_siniestro,
-      hecho: this.hecho,
-      n_siniestro: this.n_siniestro,
-      n_denuncia: this.n_denuncia,
-      nombre_asegurado: this.nombre_asegurado,
-      dir_asegurado: this.dir_asegurado,
-      tel_asegurado: this.tel_asegurado,
-      n_poliza: this.n_poliza,
-      tipo_cobertura: this.tipo_cobertura,
-      veh_asegurado: this.veh_asegurado,
-      text_anio: this.text_anio,
-      patente: this.patente,
-      patente_asegurado: this.patente_asegurado,
-      conductor: this.conductor,
-      dni_conductor: this.dni_conductor,
-      amp_denuncia: this.amp_denuncia,
-    };
-    const lastPage: LastPage = {
-      relevamiento: this.relevamiento,
-      conclusion: this.conclusion,
-      abierta: this.pericia?.abierta!,
-    };
-    if (this.hasTerceros)
-      await viewPdfTerceros(
-        firstPage,
-        lastPage,
-        this.tercerosComponents,
-        this.documents,
-        this.car,
-        this.damages,
-        this.others
-      );
-    if (this.isRoboRueda)
-      viewPdfRuedas(
-        firstPage,
-        lastPage,
-        this.documents,
-        this.others,
-        this.rdi,
-        this.rdd,
-        this.rti,
-        this.rtd,
-        this.rda
-      );
-  }
-
-  // --------------------------------------------------------------------------->
-
-  @ViewChild('tercerosContainer', { read: ViewContainerRef })
-  tercerosContainer!: ViewContainerRef;
-  tercerosComponents: TercerosInformeComponent[] = [];
-
-  generateComponent() {
-    const component = this.tercerosContainer.createComponent(
-      TercerosInformeComponent
-    );
-    component.instance.delete.subscribe(() => {
-      component.destroy();
-      this.tercerosComponents = this.tercerosComponents.filter(
-        (i) => i !== component.instance
-      );
-    });
-    this.tercerosComponents.push(component.instance);
-  }
-
-  initComponent(terceros?: TerceroI[], readonly?: boolean) {
-    const url = environment.imagesUrl;
-    terceros?.forEach(async (t) => {
-      const component = this.tercerosContainer.createComponent(
-        TercerosInformeComponent
-      );
-      t.adjuntos!.sort((a, b) => a.index - b.index);
-      for (const a of t.adjuntos!) {
-        const img = await imgToBase64(url + a.adjunto);
-        switch (a.type) {
-          case 'documents': {
-            component.instance.documents.push({
-              id: a?.id!,
-              img: img as string,
-              dot: undefined,
-              comment: a.descripcion,
-              type: a.type,
-              mimeType: 'image/jpeg',
-              originalImg: img as string,
-              edited: false,
-            });
-            break;
-          }
-          case 'asegurado-auto': {
-            component.instance.car.push({
-              id: a?.id!,
-              img: img as string,
-              dot: undefined,
-              comment: a.descripcion,
-              type: a.type,
-              mimeType: 'image/jpeg',
-              originalImg: img as string,
-              edited: false,
-            });
-            break;
-          }
-        }
-      }
-      component.instance.id = t.id!;
-      component.instance.nombre = t.nombre;
-      component.instance.domicilio = t.domicilio;
-      component.instance.tel = t.tel;
-      component.instance.veh = t.veh;
-      component.instance.aseguradora = t.aseguradora;
-      component.instance.patente = t.patente;
-      component.instance.readonly = readonly!;
-      component.instance.tercero = t;
-      component.instance.delete.subscribe(() => {
-        component.destroy();
-        this.tercerosComponents = this.tercerosComponents.filter(
-          (i) => i !== component.instance
-        );
-      });
-      this.tercerosComponents.push(component.instance);
-    });
-  }
-
-  /** @description Devuelve la lista de los terceros, en caso de corresponder */
-  tercerosList(formData: FormData) {
-    if (this.hasTerceros) {
-      const terceros: TerceroI[] = [];
-      const adjuntos: AdjuntoI[] = [];
-      this.tercerosComponents.forEach((t) => {
-        t.documents.forEach((img, index) => {
-          formData.append(
-            'files',
-            dataURLtoFile(img.img, 'newFile', img.mimeType)
-          );
-          adjuntos.push({
-            adjunto: '',
-            dot: img.dot?.code,
-            descripcion: img.comment,
-            type: img.type,
-            index,
-          });
-        });
-        t.car.forEach((img, index) => {
-          formData.append(
-            'files',
-            dataURLtoFile(img.img, 'newFile', img.mimeType)
-          );
-          adjuntos.push({
-            adjunto: '',
-            dot: img.dot?.code,
-            descripcion: img.comment,
-            type: img.type,
-            index,
-          });
-        });
-        terceros.push({
-          id: t.id,
-          nombre: t.nombre,
-          domicilio: t.domicilio,
-          tel: t.tel,
-          veh: t.veh,
-          aseguradora: t.aseguradora,
-          patente: t.patente,
-          adjuntos: adjuntos,
+          anio: t.anio,
+          poliza: t.poliza,
+          cobertura: t.cobertura,
         });
       });
       return terceros;
@@ -1628,7 +1672,7 @@ export class InformesComponent {
   async updatePericia() {
     this.dialog.loading = true;
     try {
-      await this.updateBeforeClose();
+      await this.updateInforme(true);
       this.periciaService
         .update(this.pericia?.id!, { abierta: false })
         .subscribe({
@@ -1737,20 +1781,5 @@ export class InformesComponent {
       conductor: this.hasTerceros ? this.conductor : '',
       dni_conductor: this.hasTerceros ? this.dni_conductor : '',
     };
-    formData.append('form', JSON.stringify(informe));
-    try {
-      const result = await firstValueFrom(
-        this.informeService.update(this.pericia?.informe?.id!, formData)
-      );
-      console.log(result);
-    } catch (error) {
-      console.log(error);
-      this.dialog.alertMessage(
-        'Error de carga',
-        'Ocurrió un error al intentar cerrar el informe.',
-        () => {},
-        true
-      );
-    }
   }
 }

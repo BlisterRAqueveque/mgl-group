@@ -12,6 +12,7 @@ import { RippleModule } from 'primeng/ripple';
 import { DialogComponent } from '../../../../shared/dialog/dialog.component';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroTrashSolid } from '@ng-icons/heroicons/solid';
+import { AccordionModule } from 'primeng/accordion';
 
 @Component({
   selector: 'app-terceros',
@@ -23,6 +24,7 @@ import { heroTrashSolid } from '@ng-icons/heroicons/solid';
     RippleModule,
     DialogComponent,
     NgIcon,
+    AccordionModule,
   ],
   providers: [
     provideIcons({
@@ -38,13 +40,21 @@ export class TercerosComponent {
   @Input() nombre!: string;
   @Input() dni!: string;
   @Input() aseguradora!: string;
+  @Input() domicilio!: string;
+  @Input() tel!: string;
+  @Input() veh!: string;
+  @Input() patente!: string;
+
+  @Input() anio!: number;
+  @Input() poliza!: string;
+  @Input() cobertura!: string;
 
   @ViewChild('dialog') dialog!: DialogComponent;
   @Output() delete = new EventEmitter<boolean>();
   onDelete() {
     this.dialog.confirm(
-      '¿Está seguro de borrar esta información?',
       'Confirmar',
+      '¿Está seguro de borrar esta información?',
       () => {
         this.delete.emit(true);
       }

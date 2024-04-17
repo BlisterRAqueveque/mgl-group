@@ -14,6 +14,7 @@
       <th>Fecha</th>
       <th>Asignado</th>
       <th>¿Informe?</th>
+      <th>Tipo siniestro</th>
       <th>Siniestro n°</th>
       <th>Denuncia n°</th>
       <th>Nombre asegurado</th>
@@ -30,7 +31,8 @@
             [estado]="pericia.abierta" (click)="onClickButton = true; changeState(pericia)" /></p>
       </td>
       <td *render="['user']">
-        <p tooltipPosition="bottom" pTooltip="{{pericia.abierta ? 'Abierta' : 'Cerrada'}}">{{ pericia.abierta ? 'Abierta' : 'Cerrada' }}</p>
+        <p tooltipPosition="bottom" pTooltip="{{pericia.abierta ? 'Abierta' : 'Cerrada'}}">
+          {{ pericia.abierta ? 'Abierta' : 'Cerrada' }}</p>
       </td>
       <td>
         <p tooltipPosition="bottom" pTooltip="{{pericia.fecha_asignado | date: 'dd/MM/yyyy'}}">
@@ -45,6 +47,11 @@
       <td>
         <p tooltipPosition="bottom" pTooltip="{{pericia.informe ? 'Tiene informe' : 'No tiene informe'}}">
           {{pericia.informe ? 'Si' : 'No'}}</p>
+      </td>
+      <td>
+        <p tooltipPosition="bottom"
+          pTooltip="{{pericia.tipo_siniestro ? pericia.tipo_siniestro.nombre : 'Sin asignar'}}">
+          {{pericia.tipo_siniestro ? pericia.tipo_siniestro.nombre : 'Sin asignar'}}</p>
       </td>
       <td>
         <p tooltipPosition="bottom" pTooltip="{{pericia.n_siniestro}}">{{pericia.n_siniestro}}</p>

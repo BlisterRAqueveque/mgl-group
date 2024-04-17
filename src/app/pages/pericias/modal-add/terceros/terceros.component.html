@@ -1,4 +1,4 @@
-<div class="grid grid-cols-12 border-solid border-2 border-gray-100 p-2 rounded-md mb-2">
+<!-- <div class="grid grid-cols-12 border-solid border-2 border-gray-100 p-2 rounded-md mb-2">
   <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
     <input pInputText id="nombre" type="text" class="mt-1 p-3 w-full border border-gray-300
           rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese nombre y apellido"
@@ -26,6 +26,90 @@
     </div>
   </div>
   }
+</div> -->
+
+
+<div class="relative">
+  @if (!readonly) {
+  <div class="w-10 h-10 bg-red-600 rounded-full absolute top-3 right-3 z-20 shadow-md shadow-black/75
+      flex justify-center items-center" pRipple (click)="onDelete()">
+    <ng-icon name="heroTrashSolid" size="1.2rem" color="white" />
+  </div>
+  }
+  <p-accordion id="terceros">
+    <p-accordionTab>
+      <ng-template pTemplate="header">
+        <div class="relative">
+          <p>{{nombre ? nombre : 'Completar los campos'}}</p>
+        </div>
+      </ng-template>
+      <div class="grid grid-cols-12 border-solid">
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Nombre y apellido</label>
+          <input pInputText id="nombre" type="text" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese nombre y apellido"
+            [(ngModel)]="nombre" [readonly]="readonly">
+        </div>
+
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Domicilio</label>
+          <input pInputText id="dni" type="text" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese domicilio"
+            [(ngModel)]="domicilio" [readonly]="readonly">
+        </div>
+
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Teléfono</label>
+          <input pInputText id="teléfono" type="text" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese teléfono" [(ngModel)]="tel"
+            [readonly]="readonly">
+        </div>
+
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Vehículo</label>
+          <input pInputText id="vehículo" type="text" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese vehículo" [(ngModel)]="veh"
+            [readonly]="readonly">
+        </div>
+
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Aseguradora</label>
+          <input pInputText id="aseguradora" type="text" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese aseguradora"
+            [(ngModel)]="aseguradora" [readonly]="readonly">
+        </div>
+
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Patente</label>
+          <input pInputText id="patente" type="text" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese patente"
+            [(ngModel)]="patente" [readonly]="readonly">
+        </div>
+
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Año</label>
+          <input pInputText id="anio" type="number" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese año del vehículo"
+            [(ngModel)]="anio" [readonly]="readonly">
+        </div>
+
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Póliza</label>
+          <input pInputText id="patente" type="text" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese póliza"
+            [(ngModel)]="poliza" [readonly]="readonly">
+        </div>
+
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Cobertura</label>
+          <input pInputText id="patente" type="text" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese cobertura"
+            [(ngModel)]="cobertura" [readonly]="readonly">
+        </div>
+      </div>
+    </p-accordionTab>
+  </p-accordion>
+
 </div>
 
 <app-dialog #dialog />

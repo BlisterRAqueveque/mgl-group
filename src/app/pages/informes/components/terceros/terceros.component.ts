@@ -53,6 +53,10 @@ export class TercerosInformeComponent {
 
   @Input() tercero!: TerceroI;
 
+  @Input() anio!: number;
+  @Input() poliza!: string;
+  @Input() cobertura!: string;
+
   documents: Images[] = [];
   car: Images[] = [];
 

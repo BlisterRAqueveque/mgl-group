@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroPlusCircleSolid } from '@ng-icons/heroicons/solid';
 import { CalendarModule } from 'primeng/calendar';
+import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputMaskModule } from 'primeng/inputmask';
@@ -24,7 +25,6 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { PericiaService } from '../../../services/pericias/pericias.service';
 import { DialogComponent } from '../../../shared/dialog/dialog.component';
 import { TercerosComponent } from './terceros/terceros.component';
-import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-modal-add',
@@ -81,6 +81,15 @@ export class ModalAddComponent {
   veh_asegurado!: string;
   patente_asegurado!: string;
 
+  anio: number | undefined;
+  hasAnio = false;
+
+  poliza!: string;
+  hasPoliza = false;
+
+  cobertura!: string;
+  hasCobertura = false;
+
   async ngOnInit() {
     this.user = (await this.auth.returnUserInfo()) as UsuarioI;
     this.periciaService.getFormFormat().subscribe({
@@ -127,6 +136,16 @@ export class ModalAddComponent {
       this.veh_asegurado = pericia.veh_asegurado;
       this.patente_asegurado = pericia.patente_asegurado;
       this.hasTerceros = pericia.terceros?.length! > 0;
+
+      this.anio = pericia.anio;
+      this.hasAnio = this.anio === undefined || this.anio === 0;
+
+      this.poliza = pericia.poliza;
+      this.hasPoliza = this.poliza === '' || this.poliza === null;
+
+      this.cobertura = pericia.cobertura;
+      this.hasCobertura = this.cobertura === null || this.cobertura === '';
+      console.log(this.hasAnio, this.hasCobertura, this.hasPoliza);
       if (this.tercerosContainer) this.initComponent(pericia.terceros);
     }
     this.visible = true;
@@ -157,6 +176,15 @@ export class ModalAddComponent {
     this.sameConductor = false;
     this.conductor = '';
     this.dni_conductor = '';
+
+    this.anio = undefined;
+    this.hasAnio = false;
+
+    this.poliza = '';
+    this.hasPoliza = false;
+
+    this.cobertura = '';
+    this.hasCobertura = false;
   }
 
   error = false;
@@ -170,14 +198,17 @@ export class ModalAddComponent {
   /** @description Muestra el dialogo para el insert */
   insertDialog() {
     const terceros: TerceroI[] = [];
-    this.tercerosComponents.forEach((c) => {
+    this.tercerosComponents.forEach((t) => {
       terceros.push({
-        nombre: c.nombre,
-        domicilio: '',
-        tel: '',
-        veh: '',
-        patente: '',
-        aseguradora: c.aseguradora,
+        nombre: t.nombre,
+        domicilio: t.domicilio,
+        tel: t.tel,
+        veh: t.veh,
+        patente: t.patente,
+        aseguradora: t.aseguradora,
+        anio: t.anio,
+        cobertura: t.cobertura,
+        poliza: t.poliza,
       });
     });
     const newPericia: PericiaI = {
@@ -197,6 +228,9 @@ export class ModalAddComponent {
       verificador: this.selectedVerificador!,
       terceros: this.isVial ? (this.hasTerceros ? terceros : []) : [],
       usuario_carga: this.user,
+      anio: this.anio!,
+      poliza: this.poliza,
+      cobertura: this.cobertura,
     };
     if (this.validation(newPericia)) {
       this.dialog.confirm(
@@ -230,18 +264,6 @@ export class ModalAddComponent {
             this.emitNewPericia.emit(data);
             this.error = false;
             this.visible = false;
-            //* Reiniciamos el valor de los usuarios
-            //! Se deben reiniciar en el dismissModal()
-            // this.fecha_asignado = '';
-            // this.n_siniestro = undefined;
-            // this.n_denuncia = undefined;
-            // this.nombre_asegurado = '';
-            // this.dir_asegurado = '';
-            // this.tel_asegurado = '';
-            // this.mail_asegurado = '';
-            // this.veh_asegurado = '';
-            // this.patente_asegurado = '';
-            // this.tercerosComponents = [];
           }
         );
       },
@@ -287,10 +309,13 @@ export class ModalAddComponent {
         id: t.id,
         nombre: t.nombre,
         aseguradora: t.aseguradora,
-        domicilio: '',
-        tel: '',
-        veh: '',
-        patente: '',
+        domicilio: t.domicilio,
+        tel: t.tel,
+        veh: t.veh,
+        patente: t.patente,
+        anio: t.anio,
+        poliza: t.poliza,
+        cobertura: t.cobertura,
       });
     });
     const pericia: PericiaI = {
@@ -309,6 +334,9 @@ export class ModalAddComponent {
       conductor: this.isVial ? this.conductor : '',
       dni_conductor: this.isVial ? this.dni_conductor : '',
       terceros: this.isVial ? (this.hasTerceros ? terceros : []) : [],
+      anio: this.anio!,
+      poliza: this.poliza,
+      cobertura: this.cobertura,
     };
     if (this.validation(pericia)) {
       this.dialog.confirm(
@@ -331,6 +359,7 @@ export class ModalAddComponent {
 
   @Output() emitUpdatePericia = new EventEmitter<PericiaI>();
   update(pericia: PericiaI) {
+    console.log(pericia);
     this.dialog.loading = true;
     this.periciaService.update(this.pericia?.id!, pericia).subscribe({
       next: (data) => {
@@ -344,18 +373,6 @@ export class ModalAddComponent {
             this.visible = false;
             //* Reiniciamos el valor
             this.pericia = undefined;
-            //* Reiniciamos el valor de los usuarios
-            //! Se deben reiniciar en el dismissModal()
-            // this.fecha_asignado = '';
-            // this.n_siniestro = undefined;
-            // this.n_denuncia = undefined;
-            // this.nombre_asegurado = '';
-            // this.dir_asegurado = '';
-            // this.tel_asegurado = '';
-            // this.mail_asegurado = '';
-            // this.veh_asegurado = '';
-            // this.patente_asegurado = '';
-            // this.tercerosComponents = [];
           }
         );
       },
@@ -446,7 +463,14 @@ export class ModalAddComponent {
       component.instance.id = t.id!;
       component.instance.nombre = t.nombre;
       component.instance.dni = '';
+      component.instance.domicilio = t.domicilio;
+      component.instance.tel = t.tel;
+      component.instance.veh = t.veh;
+      component.instance.patente = t.patente;
       component.instance.aseguradora = t.aseguradora;
+      component.instance.anio = t.anio;
+      component.instance.poliza = t.poliza;
+      component.instance.cobertura = t.cobertura;
       component.instance.delete.subscribe(() => {
         component.destroy();
         this.tercerosComponents = this.tercerosComponents.filter(

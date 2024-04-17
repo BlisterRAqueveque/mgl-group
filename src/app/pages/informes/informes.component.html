@@ -21,7 +21,8 @@
 
   <div class="hide w-full" [ngClass]="{ 'show': close }">
     <div>
-      <h1 class="p-4 rounded-md text-center text-xl bg-orange-400">Esta pericia se encuentra cerrada, no se puede
+      <h1 class="p-4 rounded-md text-center text-xl bg-orange-400" [ngClass]="{'mb-3': close}">Esta pericia se encuentra
+        cerrada, no se puede
         modificar el informe ya creado.</h1>
     </div>
   </div>
@@ -166,9 +167,11 @@
         </div>
       </div>
       <!-- !INPUT DE IMÁGENES -->
+      <hr class="my-10">
       <app-attachments [helpText]="'Agregue aquí: Ampliación de denuncia y documentación del asegurado.'"
         [images]="documents" (hasChange)="setList(documents, $event)" [type]="'documents'" [readonly]="true" />
 
+      <hr class="my-10">
       <app-attachments [helpText]="'Agregue aquí: fotografías del vehículo.'" [title]="'Imágenes del vehículo'"
         [images]="car" (hasChange)="setList(car, $event)" [type]="'asegurado-auto'" [readonly]="true" />
     </p-tabPanel>
@@ -187,7 +190,7 @@
       <app-attachments [helpText]="'Agregue aquí: Imágenes con los daños de los vehículos.'" [images]="damages"
         [type]="'damages'" />
     </p-tabPanel>
-    <p-tabPanel header="Ruedas" [disabled]="!isRoboRueda" [selected]="true">
+    <p-tabPanel header="Ruedas" [disabled]="!isRoboRueda">
       <h1 class="text-center my-6 text-2xl md:text-4xl">Completar solo las que correspondan</h1>
       <p-accordion id="accordion">
         <p-accordionTab>

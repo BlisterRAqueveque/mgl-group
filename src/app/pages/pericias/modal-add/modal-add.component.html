@@ -121,6 +121,29 @@
           [ngClass]="{ 'border-red-600': (error && !selectedVerificador), 'border-gray-300': !(error && !selectedVerificador) }"></p-dropdown>
       </div>
 
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full">Año</label>
+        <input class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
+          focus:border-indigo-500" [disabled]="hasAnio" [(ngModel)]="anio" placeholder="Ingrese año del vehículo"
+          type="number" />
+        <p-checkbox [(ngModel)]="hasAnio" class="mt-2" label="¿Se conoce el año?" [binary]="true" />
+      </div>
+
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full">Póliza</label>
+        <input class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
+          focus:border-indigo-500" [(ngModel)]="poliza" [disabled]="hasPoliza" placeholder="Ingrese la póliza"
+          type="text" />
+        <p-checkbox [(ngModel)]="hasPoliza" class="mt-2" label="¿Se conoce la póliza?" [binary]="true" />
+      </div>
+
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full">Cobertura</label>
+        <input [disabled]="hasCobertura" class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
+          focus:border-indigo-500" [(ngModel)]="cobertura" placeholder="Ingrese la cobertura" type="text" />
+        <p-checkbox [(ngModel)]="hasCobertura" class="mt-2" label="¿Se conoce la cobertura?" [binary]="true" />
+      </div>
+
       <!-- Datos de siniestro vial -->
       <div class="col-span-12 px-2 flex flex-col hide" [ngClass]="{ 'show': isVial }">
         <div>
@@ -129,7 +152,7 @@
             <p-checkbox label="¿Es el asegurado?" [binary]="true" [(ngModel)]="sameConductor"
               (ngModelChange)="setConductor()" />
           </div>
-  
+
           <div class="grid grid-cols-12 gap-4 mb-3">
             <div class="lg:col-span-6 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
               <label class="text-sm font-medium text-gray-700 w-full">Conductor del vehículo</label>
@@ -137,7 +160,7 @@
                   rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese datos conductor"
                 [(ngModel)]="conductor" [readOnly]="sameConductor" [ngClass]="{ 'forbidden': sameConductor }">
             </div>
-  
+
             <div class="lg:col-span-6 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
               <label class="text-sm font-medium text-gray-700 w-full">DNI del conductor</label>
               <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
@@ -145,17 +168,17 @@
                 [(ngModel)]="dni_conductor">
             </div>
           </div>
-  
+
           <hr class="mb-3">
           <p-checkbox class="mb-3" label="¿Terceros involucrados?" [binary]="true" [(ngModel)]="hasTerceros" />
-  
+
           <div class="hide col-span-12 mb-2" [ngClass]="{ 'show': hasTerceros }">
             <div>
               <div class="mb-3">
                 <h1 class="text-xl mb-3">Datos de terceros</h1>
               </div>
               <ng-template #tercerosContainer></ng-template>
-              <div class="col-span-12 px-2 pb-2 flex flex-col justify-center items-center">
+              <div class="col-span-12 px-2 pb-2 mt-3 flex flex-col justify-center items-center">
                 <p>Agregar datos de tercero</p>
                 <div
                   class="w-20 h-20 mt-3 bg-gray-900 rounded-lg shadow-md shadow-black/75 flex justify-center items-center"
@@ -308,48 +331,48 @@
       </div>
 
       @if(isVial) {
-        <!-- Datos de siniestro vial -->
-        <div class="col-span-12 px-2 flex flex-col hide" [ngClass]="{ 'show': isVial }">
-          <div>
-            <h1 class="text-xl mb-3">Datos del conductor</h1>
-    
-            <div class="grid grid-cols-12 gap-4 mb-3">
-              <div class="lg:col-span-6 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-                <label class="text-sm font-medium text-gray-700 w-full">Conductor del vehículo</label>
-                <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
+      <!-- Datos de siniestro vial -->
+      <div class="col-span-12 px-2 flex flex-col hide" [ngClass]="{ 'show': isVial }">
+        <div>
+          <h1 class="text-xl mb-3">Datos del conductor</h1>
+
+          <div class="grid grid-cols-12 gap-4 mb-3">
+            <div class="lg:col-span-6 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+              <label class="text-sm font-medium text-gray-700 w-full">Conductor del vehículo</label>
+              <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
                     rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese datos conductor"
-                  [(ngModel)]="conductor" [readOnly]="true" [ngClass]="{ 'forbidden': sameConductor }">
-              </div>
-    
-              <div class="lg:col-span-6 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-                <label class="text-sm font-medium text-gray-700 w-full">DNI del conductor</label>
-                <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
-                    rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese DNI conductor"
-                  [(ngModel)]="dni_conductor" [readOnly]="true">
-              </div>
+                [(ngModel)]="conductor" [readOnly]="true" [ngClass]="{ 'forbidden': sameConductor }">
             </div>
-            
-            @if (pericia ? pericia.terceros!.length > 0 : false) {
-              <hr class="mb-3">
-              <div class="hide col-span-12 mb-2" [ngClass]="{ 'show': hasTerceros }">
-                <div>
-                  <div class="mb-3">
-                    <h1 class="text-xl mb-3">Datos de terceros</h1>
-                  </div>
-                    @for (tercero of pericia?.terceros; track $index) {
-                      <app-terceros [id]="tercero.id!" [nombre]="tercero.nombre" [dni]="'tercero.dni'"
-                        [aseguradora]="tercero.aseguradora" [readonly]="true" />
-                    }
-                </div>
-              </div>
-            }
+
+            <div class="lg:col-span-6 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+              <label class="text-sm font-medium text-gray-700 w-full">DNI del conductor</label>
+              <input pInputText id="direction" type="text" class="mt-1 p-3 w-full border border-gray-300
+                    rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese DNI conductor"
+                [(ngModel)]="dni_conductor" [readOnly]="true">
+            </div>
           </div>
+
+          @if (pericia ? pericia.terceros!.length > 0 : false) {
+          <hr class="mb-3">
+          <div class="hide col-span-12 mb-2" [ngClass]="{ 'show': hasTerceros }">
+            <div>
+              <div class="mb-3">
+                <h1 class="text-xl mb-3">Datos de terceros</h1>
+              </div>
+              @for (tercero of pericia?.terceros; track $index) {
+              <app-terceros [id]="tercero.id!" [nombre]="tercero.nombre" [dni]="'tercero.dni'"
+                [aseguradora]="tercero.aseguradora" [readonly]="true" />
+              }
+            </div>
+          </div>
+          }
         </div>
+      </div>
       }
 
-      
 
-      
+
+
     </ng-container>
 
   </div>

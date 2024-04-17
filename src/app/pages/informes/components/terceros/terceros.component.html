@@ -55,6 +55,27 @@
             [(ngModel)]="patente" [readonly]="readonly">
         </div>
 
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Año</label>
+          <input pInputText id="anio" type="text" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese el año del vehículo"
+            [(ngModel)]="anio" [readonly]="readonly">
+        </div>
+
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Póliza</label>
+          <input pInputText id="poliza" type="text" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese póliza"
+            [(ngModel)]="poliza" [readonly]="readonly">
+        </div>
+
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Cobertura</label>
+          <input pInputText id="cobertura" type="text" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese patente"
+            [(ngModel)]="cobertura" [readonly]="readonly">
+        </div>
+
         <div class="col-span-12 px-2 flex flex-col">
           <label class="text-sm font-medium text-gray-700 w-full">Ampliación de denuncia</label>
           <textarea pInputTextarea id="amp_denuncia" type="text" class="mt-1 p-3 w-full border border-gray-300
@@ -62,9 +83,11 @@
             [(ngModel)]="amp_denuncia" [readonly]="readonly"></textarea>
         </div>
       </div>
+      <hr class="my-10">
       <app-attachments [helpText]="'Agregue aquí: Ampliación de denuncia y documentación del asegurado.'"
         [images]="documents" (hasChange)="setList(documents, $event)" [type]="'documents'" [readonly]="true" />
 
+      <hr class="my-10">
       <app-attachments [helpText]="'Agregue aquí: fotografías del vehículo.'" [title]="'Imágenes del vehículo'"
         [images]="car" (hasChange)="setList(car, $event)" [type]="'asegurado-auto'" [readonly]="true" />
     </p-accordionTab>

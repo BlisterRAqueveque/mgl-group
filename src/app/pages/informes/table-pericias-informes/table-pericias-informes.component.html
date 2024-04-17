@@ -10,6 +10,7 @@
       </th>
       <th>Fecha</th>
       <th>Verificador</th>
+      <th>Tipo de siniestro</th>
       <th>Siniestro n°</th>
       <th>Denuncia n°</th>
       <th>Nombre asegurado</th>
@@ -29,6 +30,9 @@
       <td>
         <p>
           {{pericia.verificador ? pericia.verificador.nombre + ' ' + pericia.verificador.apellido : 'Sin asignar' }}</p>
+      </td>
+      <td>
+        <p>{{pericia.tipo_siniestro ? pericia.tipo_siniestro.nombre : 'Sin asignar'}}</p>
       </td>
       <td>
         <p>{{pericia.n_siniestro}}</p>

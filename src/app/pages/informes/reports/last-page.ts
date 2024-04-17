@@ -10,8 +10,8 @@ export const lastPage = async (lastPageI: LastPage) => {
         {
           text: 'Según el relevamiento realizado podemos decir:',
           alignment: 'left',
-          fontSize: 14,
-          margin: [14, 0, 14, 10],
+          fontSize: 20,
+          margin: [14, 14],
           pageBreak: 'before',
         },
       ],
@@ -23,7 +23,7 @@ export const lastPage = async (lastPageI: LastPage) => {
             ? lastPageI.relevamiento
             : 'No se ha cargado un relevamiento.',
           alignment: 'left',
-          fontSize: 13,
+          fontSize: 16,
           margin: [14, 0, 14, 14],
         },
       ],
@@ -33,8 +33,8 @@ export const lastPage = async (lastPageI: LastPage) => {
         {
           text: 'Conclusión',
           alignment: 'left',
-          fontSize: 14,
-          margin: [14, 0, 14, 10],
+          fontSize: 20,
+          margin: [14, 14],
         },
         {
           stack: [
@@ -43,7 +43,7 @@ export const lastPage = async (lastPageI: LastPage) => {
                 ? lastPageI.conclusion
                 : 'No se ha cargado una conclusión',
               alignment: 'left',
-              fontSize: 13,
+              fontSize: 16,
               margin: [14, 0, 14, 14],
             },
           ],

@@ -18,6 +18,9 @@ export interface PericiaI {
   dni_conductor?: string;
   abierta?: boolean;
   activo?: boolean;
+  anio: number;
+  poliza: string;
+  cobertura: string;
 
   fecha_creado?: Date;
   fecha_eliminado?: Date;
@@ -43,7 +46,11 @@ export interface TerceroI {
   amp_denuncia?: string;
   aseguradora: string;
 
+  anio: number;
+  poliza: string;
+  cobertura: string;
+
   pericia?: PericiaI;
   informe?: TerceroI;
-  adjuntos?: AdjuntoI[]
+  adjuntos?: AdjuntoI[];
 }

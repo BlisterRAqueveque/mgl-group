@@ -19,18 +19,6 @@ export const imagesPage = async (
         ],
       })
     : '';
-  if (images.length === 0)
-    //En caso que no existan imágenes
-    content.push({
-      stack: [
-        {
-          text: 'No se cargaron imágenes',
-          alignment: 'center',
-          margin: [0, 0, 0, 20],
-          fontSize: 14,
-        },
-      ],
-    });
   // Esta variable sirve para los saltos de página
   let i = 0;
   let ruedas = ['rdi', 'rdd', 'rti', 'rtd'];
@@ -62,7 +50,7 @@ export const imagesPage = async (
                 }, // [left, top, right, bottom]
                 {
                   image: image.img,
-                  fit: [495, 600],
+                  fit: [550, 800],
                   //height: 600,
                   alignment: 'center',
                   margin: [0, 0, 0, 15],
@@ -85,8 +73,7 @@ export const imagesPage = async (
                 }, // [left, top, right, bottom]
                 {
                   image: image.img,
-                  fit: [495, 700],
-                  //width: 420, //width: 380,
+                  fit: [550, 800],
                   alignment: 'center',
                   margin: [0, 0, 0, 15],
                   pageBreak: index !== images.length - 1 ? 'after' : undefined,
@@ -219,8 +206,7 @@ export const imagesPage = async (
               }, // [left, top, right, bottom]
               {
                 image: image.img,
-                fit: [495, 600],
-                //height: 600,
+                fit: [480, 690],
                 alignment: 'center',
                 margin: [0, 0, 0, 15],
                 pageBreak: index !== images.length - 1 ? 'after' : undefined,
@@ -243,8 +229,7 @@ export const imagesPage = async (
               }, // [left, top, right, bottom]
               {
                 image: image.img,
-                fit: [495, 700],
-                //width: 420, //width: 380,
+                fit: [500, 720],
                 alignment: 'center',
                 margin: [0, 0, 0, 15],
                 pageBreak: index !== images.length - 1 ? 'after' : undefined,
@@ -271,8 +256,6 @@ export const imagesPage = async (
             }, // [left, top, right, bottom]
             {
               image: image.img,
-              //width: 368, //width: 280,
-              //fit: [380, 300],
               fit: [480, 330],
               alignment: 'center',
               margin: [0, 0, 0, 15],
