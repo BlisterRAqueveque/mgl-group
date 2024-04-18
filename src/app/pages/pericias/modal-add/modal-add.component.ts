@@ -209,6 +209,7 @@ export class ModalAddComponent {
         anio: t.anio,
         cobertura: t.cobertura,
         poliza: t.poliza,
+        mail_tercero: t.email,
       });
     });
     const newPericia: PericiaI = {
@@ -316,6 +317,7 @@ export class ModalAddComponent {
         anio: t.anio,
         poliza: t.poliza,
         cobertura: t.cobertura,
+        mail_tercero: t.email,
       });
     });
     const pericia: PericiaI = {
@@ -471,6 +473,7 @@ export class ModalAddComponent {
       component.instance.anio = t.anio;
       component.instance.poliza = t.poliza;
       component.instance.cobertura = t.cobertura;
+      component.instance.email = t.mail_tercero;
       component.instance.delete.subscribe(() => {
         component.destroy();
         this.tercerosComponents = this.tercerosComponents.filter(

@@ -35,6 +35,13 @@
         </div>
 
         <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Correo electrónico</label>
+          <input pInputText id="teléfono" type="text" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese correo electrónico"
+            [(ngModel)]="email" [readonly]="readonly">
+        </div>
+
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
           <label class="text-sm font-medium text-gray-700 w-full">Vehículo</label>
           <input pInputText id="vehículo" type="text" class="mt-1 p-3 w-full border border-gray-300
                 rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese vehículo" [(ngModel)]="veh"

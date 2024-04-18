@@ -50,6 +50,7 @@ export class TercerosInformeComponent {
   @Input() patente!: string;
   @Input() amp_denuncia!: string;
   @Input() aseguradora!: string;
+  @Input() email!: string;
 
   @Input() tercero!: TerceroI;
 

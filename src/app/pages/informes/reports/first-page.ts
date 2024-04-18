@@ -5,6 +5,7 @@ import { FirstPage } from '../../../interfaces/pdf.interface';
 
 export const firstPage = async (firstPageI: FirstPage) => {
   const img = await imgToBase64(`${environment.webUrl}assets/logo.png`);
+  console.log(firstPageI.mail_asegurado);
   const content: Content = [
     {
       stack: [
@@ -123,6 +124,18 @@ export const firstPage = async (firstPageI: FirstPage) => {
         },
       ],
     },
+    firstPageI.mail_asegurado
+      ? {
+          stack: [
+            {
+              text: `Correo electrónico: ${firstPageI.mail_asegurado}`,
+              alignment: 'left',
+              fontSize: 16,
+              margin: [14, 0, 0, 8],
+            },
+          ],
+        }
+      : '',
     !firstPageI.poliza || !firstPageI.cobertura
       ? {
           stack: [
@@ -247,28 +260,28 @@ export const firstPage = async (firstPageI: FirstPage) => {
     },
     // Aca hay un salto de pagina
     {
-        stack: [
-          {
-            text: 'Ampliación de denuncia',
-            alignment: 'center',
-            fontSize: 20,
-            margin: [0, 20],
-          },
-        ],
-      },
-      {
-        stack: [
-          {
-            text: firstPageI.amp_denuncia
-              ? firstPageI.amp_denuncia
-              : 'No se cargó una ampliación de denuncia',
-            alignment: 'left',
-            fontSize: 16,
-            margin: [14, 0, 0, 10],
-            pageBreak: 'after',
-          },
-        ],
-      },
+      stack: [
+        {
+          text: 'Ampliación de denuncia',
+          alignment: 'center',
+          fontSize: 20,
+          margin: [0, 20],
+        },
+      ],
+    },
+    {
+      stack: [
+        {
+          text: firstPageI.amp_denuncia
+            ? firstPageI.amp_denuncia
+            : 'No se cargó una ampliación de denuncia',
+          alignment: 'left',
+          fontSize: 16,
+          margin: [14, 0, 0, 10],
+          pageBreak: 'after',
+        },
+      ],
+    },
   ];
   return content;
 };

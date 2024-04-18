@@ -82,6 +82,13 @@
         </div>
 
         <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Email del asegurado</label>
+          <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
+        focus:border-indigo-500" placeholder="Ingrese email del asegurado." [(ngModel)]="email"
+            [disabled]="!pericia" />
+        </div>
+
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
           <label class="text-sm font-medium text-gray-700 w-full">Póliza</label>
           <input pInputText class="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none
         focus:border-indigo-500" placeholder="Ingrese póliza." [(ngModel)]="n_poliza"

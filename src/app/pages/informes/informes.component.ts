@@ -204,6 +204,8 @@ export class InformesComponent {
   text_anio!: string;
   relevamiento!: string;
 
+  email: string = '';
+
   /** @description Si la pericia está cerrada, muestra el cartel */
   close = false;
 
@@ -234,6 +236,7 @@ export class InformesComponent {
       this.patente_asegurado = pericia.patente_asegurado;
       this.conductor = pericia.conductor!;
       this.dni_conductor = pericia.dni_conductor!;
+      this.email = pericia.mail_asegurado;
       this.initComponent(pericia.terceros, !pericia.abierta);
     } else {
       this.tipo_siniestro = pericia.informe.tipo_siniestro;
@@ -266,6 +269,8 @@ export class InformesComponent {
 
       this.amp_denuncia = pericia.informe.amp_denuncia;
       this.conclusion = pericia.informe.conclusion;
+
+      this.email = pericia.informe.mail_asegurado!;
 
       this.text_anio = pericia.informe.text_anio;
       this.anio =
@@ -805,6 +810,7 @@ export class InformesComponent {
       terceros: this.tercerosList(formData),
       conductor: this.hasTerceros ? this.conductor : '',
       dni_conductor: this.hasTerceros ? this.dni_conductor : '',
+      mail_asegurado: this.email,
     };
     formData.append('form', JSON.stringify(informe));
     this.informeService.insert(formData).subscribe({
@@ -1317,6 +1323,7 @@ export class InformesComponent {
       terceros: this.tercerosEditList(formData),
       conductor: this.hasTerceros ? this.conductor : '',
       dni_conductor: this.hasTerceros ? this.dni_conductor : '',
+      mail_asegurado: this.email,
     };
     formData.append('form', JSON.stringify(informe));
     if (!onlyUpload) {
@@ -1384,6 +1391,7 @@ export class InformesComponent {
       conductor: this.conductor,
       dni_conductor: this.dni_conductor,
       amp_denuncia: this.amp_denuncia,
+      mail_asegurado: this.email,
     };
     const lastPage: LastPage = {
       relevamiento: this.relevamiento,
@@ -1484,6 +1492,7 @@ export class InformesComponent {
       component.instance.amp_denuncia = t.amp_denuncia!;
       component.instance.patente = t.patente;
       component.instance.readonly = readonly!;
+      component.instance.email = t.mail_tercero;
       component.instance.tercero = t;
       component.instance.delete.subscribe(() => {
         component.destroy();
@@ -1540,6 +1549,7 @@ export class InformesComponent {
           anio: t.anio,
           poliza: t.poliza,
           cobertura: t.cobertura,
+          mail_tercero: t.email,
         });
       });
       return terceros;
@@ -1643,6 +1653,7 @@ export class InformesComponent {
           anio: t.anio,
           poliza: t.poliza,
           cobertura: t.cobertura,
+          mail_tercero: t.email,
         });
       });
       return terceros;
@@ -1704,82 +1715,5 @@ export class InformesComponent {
         true
       );
     }
-  }
-  async updateBeforeClose() {
-    const formData = new FormData();
-    const editedImages: AdjuntoI[] = [];
-    this.images.forEach((img, index) => {
-      //* Si la imagen fue editada
-      if (img.id === 0) {
-        formData.append(
-          'files',
-          dataURLtoFile(img.img, 'newFile', img.mimeType)
-        );
-        editedImages.push({
-          adjunto: '',
-          dot: img.dot?.code,
-          descripcion: img.comment,
-          type: img.type,
-          index,
-        });
-      }
-      if (img.edited && img.id !== 0) {
-        formData.append(
-          'files',
-          dataURLtoFile(img.img, 'newFile', img.mimeType)
-        );
-        //? Creamos un nuevo registro
-        editedImages.push({
-          adjunto: '',
-          dot: img.dot?.code,
-          descripcion: img.comment,
-          type: img.type,
-          index,
-        });
-        //! Quitamos el adjunto editado para que se elimine de la base de datos
-        // if (
-        //   this.pericia &&
-        //   this.pericia.informe &&
-        //   this.pericia.informe.adjuntos
-        // ) {
-        //   this.pericia.informe.adjuntos =
-        //     this.pericia?.informe?.adjuntos.filter((i) => {
-        //       return i.id !== img.id;
-        //     });
-        // }
-      } else {
-        //* Caso contrario, solo modificamos estas propiedades
-        const ad = this.pericia?.informe?.adjuntos.find((i) => i.id === img.id);
-        if (ad) {
-          ad.index = index;
-          ad.descripcion = img.comment;
-          ad.dot = img.dot?.code;
-          editedImages.push(ad);
-        }
-      }
-    });
-    const informe: InformeI = {
-      id: this.pericia?.informe?.id,
-      tipo_siniestro: this.tipo_siniestro,
-      n_siniestro: this.n_siniestro,
-      n_denuncia: this.n_denuncia,
-      nombre_asegurado: this.nombre_asegurado,
-      dir_asegurado: this.dir_asegurado,
-      tel_asegurado: this.tel_asegurado,
-      veh_asegurado: this.veh_asegurado,
-      patente_asegurado: this.patente_asegurado,
-      hecho: this.hecho,
-      n_poliza: this.n_poliza,
-      tipo_cobertura: this.tipo_cobertura,
-      amp_denuncia: this.amp_denuncia,
-      conclusion: this.conclusion,
-      text_anio: this.text_anio,
-      adjuntos: editedImages,
-      relevamiento: this.relevamiento,
-      pericia: this.pericia!,
-      terceros: this.tercerosEditList(formData),
-      conductor: this.hasTerceros ? this.conductor : '',
-      dni_conductor: this.hasTerceros ? this.dni_conductor : '',
-    };
   }
 }

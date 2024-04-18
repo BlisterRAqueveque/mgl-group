@@ -45,6 +45,7 @@ export interface TerceroI {
   patente: string;
   amp_denuncia?: string;
   aseguradora: string;
+  mail_tercero: string
 
   anio: number;
   poliza: string;

@@ -107,6 +107,14 @@ export const tercerosPdf = async (
           fontSize: 16,
           margin: [14, 0, 0, 8],
         },
+        t.email
+          ? {
+              text: `Correo electrónico: ${t.email ? t.email : 'Sin información'}`,
+              alignment: 'left',
+              fontSize: 16,
+              margin: [14, 0, 0, 8],
+            }
+          : '',
         {
           text: `Vehículo: ${t.veh ? t.veh : 'Sin información'}`,
           alignment: 'left',

@@ -19,6 +19,7 @@ export interface FirstPage {
   conductor: string;
   dni_conductor: string;
   amp_denuncia: string;
+  mail_asegurado: string;
 }
 
 export interface LastPage {

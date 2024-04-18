@@ -44,6 +44,7 @@ export class TercerosComponent {
   @Input() tel!: string;
   @Input() veh!: string;
   @Input() patente!: string;
+  @Input() email!: string;
 
   @Input() anio!: number;
   @Input() poliza!: string;

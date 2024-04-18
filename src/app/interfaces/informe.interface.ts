@@ -10,6 +10,7 @@ export interface InformeI {
   dir_asegurado: string;
   tel_asegurado: string;
   veh_asegurado: string;
+  mail_asegurado: string;
   patente_asegurado: string;
   hecho: string;
   n_poliza: string;

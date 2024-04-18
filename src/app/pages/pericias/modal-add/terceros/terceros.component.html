@@ -1,34 +1,3 @@
-<!-- <div class="grid grid-cols-12 border-solid border-2 border-gray-100 p-2 rounded-md mb-2">
-  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-    <input pInputText id="nombre" type="text" class="mt-1 p-3 w-full border border-gray-300
-          rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese nombre y apellido"
-      [(ngModel)]="nombre" [readonly]="readonly">
-  </div>
-
-  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-    <input pInputText id="dni" type="text" class="mt-1 p-3 w-full border border-gray-300
-          rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese DNI" [(ngModel)]="dni"
-      [readonly]="readonly">
-  </div>
-
-  <div class="px-2 flex flex-col" [ngClass]="{ 'lg:col-span-3 sm:col-span-9 md:col-span-6 col-span-9': !readonly, 
-    'lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12': readonly }">
-    <input pInputText id="aseguradora" type="text" class="mt-1 p-3 w-full border border-gray-300
-          rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese aseguradora"
-      [(ngModel)]="aseguradora" [readonly]="readonly">
-  </div>
-
-  @if (!readonly) {
-  <div class="lg:col-span-1 md:col-span-2 sm:col-span-3 col-span-3 px-2 flex flex-col">
-    <div class="w-full h-full mt-1 bg-red-900 rounded-lg shadow-md shadow-black/75 flex justify-center items-center"
-      pRipple (click)="onDelete()">
-      <ng-icon name="heroTrashSolid" size="1.6rem" color="white" />
-    </div>
-  </div>
-  }
-</div> -->
-
-
 <div class="relative">
   @if (!readonly) {
   <div class="w-10 h-10 bg-red-600 rounded-full absolute top-3 right-3 z-20 shadow-md shadow-black/75
@@ -63,6 +32,13 @@
           <input pInputText id="teléfono" type="text" class="mt-1 p-3 w-full border border-gray-300
                 rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese teléfono" [(ngModel)]="tel"
             [readonly]="readonly">
+        </div>
+
+        <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+          <label class="text-sm font-medium text-gray-700 w-full">Correo electrónico</label>
+          <input pInputText id="teléfono" type="text" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese correo electrónico"
+            [(ngModel)]="email" [readonly]="readonly">
         </div>
 
         <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
