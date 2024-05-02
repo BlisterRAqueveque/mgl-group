@@ -101,17 +101,20 @@ export class AttachmentsComponent {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
           const imageUrl = e.target!.result !== null ? e.target!.result : '';
+          const compressedImageUrl = await this.compressImage(
+            imageUrl.toString()
+          );
           //* Se almacenan en la lista
           this.images.push({
             id: 0,
-            img: imageUrl.toString(),
+            img: compressedImageUrl,
             dot: undefined,
             comment: '',
             type: this.type,
             mimeType: 'image/jpeg',
-            originalImg: imageUrl.toString(),
+            originalImg: compressedImageUrl,
             edited: false,
           });
           this.hasChange.emit(this.type);
@@ -264,14 +267,15 @@ export class AttachmentsComponent {
     if (files && files.length > 0) {
       for (let i = 0; i < files.length; i++) {
         const adjunto = await convertFileToBase64(files[i]);
+        const compressedAdjunto = await this.compressImage(adjunto);
         this.images.push({
           id: 0,
-          img: adjunto,
+          img: compressedAdjunto,
           dot: undefined,
           comment: '',
           type: this.type,
           mimeType: 'image/jpeg',
-          originalImg: adjunto,
+          originalImg: compressedAdjunto,
           edited: false,
         });
         this.hasChange.emit(this.type);
@@ -282,5 +286,32 @@ export class AttachmentsComponent {
   @Output() hasChange = new EventEmitter<string>();
   changeImages() {
     this.hasChange.emit(this.type);
+  }
+
+  async compressImage(imageUrl: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d')!;
+        canvas.width = img.width;
+        canvas.height = img.height;
+        // Draw image onto canvas with desired quality
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+        // Convert canvas to base64 encoded image
+        canvas.toBlob(
+          (blob) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              resolve(reader.result as string);
+            };
+            reader.readAsDataURL(blob!);
+          },
+          'image/jpeg',
+          0.2
+        ); // Adjust compression quality here (0.7 means 70% quality)
+      };
+      img.src = imageUrl;
+    });
   }
 }

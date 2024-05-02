@@ -126,11 +126,11 @@ export class TercerosInformeComponent {
           img_list.forEach((d, i) => {
             switch (i) {
               case 0: {
-                d.comment = 'Frente latera izquierdo';
+                d.comment = 'Frente lateral izquierdo';
                 break;
               }
               case 1: {
-                d.comment = 'Frente latera derecho';
+                d.comment = 'Frente lateral derecho';
                 break;
               }
               case 2: {

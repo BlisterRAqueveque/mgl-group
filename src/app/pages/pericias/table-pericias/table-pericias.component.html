@@ -1,5 +1,18 @@
 <app-filter-pericias (changeInput)="filter($event)" />
 
+<p-tabView id="tab-view" [scrollable]="true" (onChange)="changeTab($event)">
+  <p-tabPanel header="Abiertas">
+  </p-tabPanel>
+  <p-tabPanel header="Cerradas">
+  </p-tabPanel>
+  <p-tabPanel header="Con informes">
+  </p-tabPanel>
+  <p-tabPanel header="Informes faltantes">
+  </p-tabPanel>
+  <p-tabPanel header="Próximas a vencer">
+  </p-tabPanel>
+</p-tabView>
+
 <p-paginator #paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
   [totalRecords]="totalRecords" [style]="{ 'width': '100%' }" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
 
@@ -18,6 +31,7 @@
       <th>Siniestro n°</th>
       <th>Denuncia n°</th>
       <th>Nombre asegurado</th>
+      <th>Días restantes</th>
       <th>Acciones</th>
     </tr>
   </ng-template>
@@ -61,6 +75,12 @@
       </td>
       <td>
         <p tooltipPosition="bottom" pTooltip="{{pericia.nombre_asegurado}}">{{pericia.nombre_asegurado}}</p>
+      </td>
+      <td>
+        <p tooltipPosition="bottom" pTooltip=""
+          class="text-green-700 font-bold {{returnDelayTime(setDifferenceDate(pericia.fecha_asignado, pericia.abierta))}}">
+          {{setDifferenceDate(pericia.fecha_asignado, pericia.abierta) !== -1 ? setDifferenceDate(pericia.fecha_asignado, pericia.abierta) + ' / 10' : 'N/A' }}
+        </p>
       </td>
       <td class="flex justify-around">
         <app-wp-button *render="['admin']" tooltipPosition="bottom" pTooltip="Enviar mensaje" #wp

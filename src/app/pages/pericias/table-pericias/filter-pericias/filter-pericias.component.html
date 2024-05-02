@@ -7,7 +7,7 @@
       <label htmlFor="id">#ID</label>
     </span>
   </div>
-  <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12">
+  <!-- <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12">
     <span class="p-float-label">
       <p-dropdown (onChange)="changeInput('activo', activo.value ? activo.value.value : '')" #activo id="activo"
         optionLabel="label" [options]="open_list" placeholder="Seleccione..." [showClear]="true" panelStyleClass="panel"
@@ -15,7 +15,7 @@
         (onClear)="changeInput('activo', '')"></p-dropdown>
       <label htmlFor="activo">Estado</label>
     </span>
-  </div>
+  </div> -->
   <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12">
     <span class="p-float-label">
       <p-calendar class="pl-2" (onSelect)="changeInput('fecha_creado', fecha_creado.value)"

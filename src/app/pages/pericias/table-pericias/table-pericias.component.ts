@@ -23,6 +23,7 @@ import { PdfButtonComponent } from '../../../shared/pdf-button/pdf-button.compon
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth/auth.service';
 import { RenderDirective } from '../../../directives/render.directive';
+import { TabViewChangeEvent, TabViewModule } from 'primeng/tabview';
 
 @Component({
   selector: 'app-table-pericias',
@@ -40,6 +41,7 @@ import { RenderDirective } from '../../../directives/render.directive';
     StateButtonComponent,
     PdfButtonComponent,
     RenderDirective,
+    TabViewModule,
   ],
   providers: [
     provideIcons({
@@ -68,6 +70,7 @@ export class TablePericiasComponent {
     this.params = this.params.set('page', 1);
     this.params = this.params.set('perPage', 10);
     this.params = this.params.set('sortBy', 'DESC');
+    this.params = this.params.set('activo', 1);
     this.getHistoric();
   }
 
@@ -292,5 +295,64 @@ Patente: ${pericia.patente_asegurado ?? 'sin datos'}.
 
   openPericia(id: number) {
     this.router.navigate(['informes'], { queryParams: { pericia: id } });
+  }
+
+  changeTab(ev: TabViewChangeEvent) {
+    switch (ev.index) {
+      case 0: {
+        this.params = this.params.set('activo', 1);
+        this.params = this.params.delete('informe');
+        this.params = this.params.delete('limite');
+        this.getHistoric();
+        break;
+      }
+      case 1: {
+        this.params = this.params.set('activo', 0);
+        this.params = this.params.delete('informe');
+        this.params = this.params.delete('limite');
+        this.getHistoric();
+        break;
+      }
+      case 2: {
+        this.params = this.params.set('informe', 1);
+        this.params = this.params.set('activo', 1);
+        this.params = this.params.delete('limite');
+        this.getHistoric();
+        break;
+      }
+      case 3: {
+        this.params = this.params.set('informe', 0);
+        this.params = this.params.set('activo', 1);
+        this.params = this.params.delete('limite');
+        this.getHistoric();
+        break;
+      }
+      case 4: {
+        this.params = this.params.set('limite', 1);
+        this.params = this.params.set('activo', 1);
+        this.params = this.params.delete('informe');
+        this.getHistoric();
+        break;
+      }
+    }
+  }
+
+  setDifferenceDate(date: string, state: boolean) {
+    if (state) {
+      const fromDate = new Date(date);
+      const today = new Date();
+      const differenceMS = today.getTime() - fromDate.getTime();
+      const differenceDays = Math.floor(differenceMS / (1000 * 60 * 60 * 24));
+      return differenceDays;
+    } else {
+      return -1;
+    }
+  }
+
+  returnDelayTime(days: number) {
+    if (days === -1) return '';
+    if (days >= 7) return 'danger';
+    if (days < 7 && days >= 4) return 'warning';
+    else return '';
   }
 }

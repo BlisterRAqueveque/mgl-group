@@ -25,11 +25,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { RenderDirective } from '../../directives/render.directive';
 import { Images } from '../../interfaces/images.interface';
-import {
-  AdjuntoI,
-  InformeI,
-  originalDots,
-} from '../../interfaces/informe.interface';
+import { AdjuntoI, InformeI } from '../../interfaces/informe.interface';
 import { FirstPage, LastPage } from '../../interfaces/pdf.interface';
 import { PericiaI, TerceroI } from '../../interfaces/pericia.interface';
 import { AuthService } from '../../services/auth/auth.service';
@@ -45,6 +41,7 @@ import { viewPdfTerceros } from './reports/informe-vial';
 import { TablePericiasInformesComponent } from './table-pericias-informes/table-pericias-informes.component';
 import { viewPdfRuedas } from './reports/informe-robo-rueda';
 import { viewPdfBase } from './reports/informe-base';
+import { Roles, UsuarioI } from '../../interfaces/user-token.interface';
 
 @Component({
   selector: 'app-informes',
@@ -90,6 +87,15 @@ export class InformesComponent {
     private readonly route: ActivatedRoute,
     private readonly periciaService: PericiaService
   ) {}
+
+  terminado = false;
+  admin = false;
+  user!: UsuarioI;
+
+  async ngOnInit() {
+    this.user = (await this.auth.returnUserInfo()) as UsuarioI;
+    this.admin = this.user.rol === Roles.admin;
+  }
 
   /** @description Revisamos los params para ver si no enviaron desde otro lugar el id de la pericia */
   async ngAfterViewInit() {
@@ -217,6 +223,7 @@ export class InformesComponent {
 
   async initModule(pericia: PericiaI) {
     this.dialog.loading = true;
+    this.terminado = false;
     this.close = false;
     this.hasTerceros = pericia.tipo_siniestro
       ? pericia.tipo_siniestro.nombre!.includes('vial')!
@@ -226,9 +233,15 @@ export class InformesComponent {
       : false;
     //* Si la pericia no tiene un informe asignado, debe crear uno nuevo
     if (!pericia.informe) {
-      this.tipo_siniestro = pericia.tipo_siniestro?.nombre!;
-      this.n_siniestro = pericia.n_siniestro?.toString()!;
-      this.n_denuncia = pericia.n_denuncia?.toString()!;
+      this.tipo_siniestro = pericia.tipo_siniestro
+        ? pericia.tipo_siniestro?.nombre!
+        : '';
+      this.n_siniestro = pericia.n_siniestro
+        ? pericia.n_siniestro?.toString()!
+        : '';
+      this.n_denuncia = pericia.n_denuncia
+        ? pericia.n_denuncia?.toString()!
+        : '';
       this.nombre_asegurado = pericia.nombre_asegurado;
       this.dir_asegurado = pericia.dir_asegurado;
       this.tel_asegurado = pericia.tel_asegurado;
@@ -237,6 +250,9 @@ export class InformesComponent {
       this.conductor = pericia.conductor!;
       this.dni_conductor = pericia.dni_conductor!;
       this.email = pericia.mail_asegurado;
+      this.n_poliza = pericia.poliza;
+      this.tipo_cobertura = pericia.cobertura;
+      this.text_anio = pericia.anio ? pericia.anio.toString() : '';
       this.initComponent(pericia.terceros, !pericia.abierta);
     } else {
       this.tipo_siniestro = pericia.informe.tipo_siniestro;
@@ -246,6 +262,8 @@ export class InformesComponent {
       this.dir_asegurado = pericia.informe.dir_asegurado;
       this.tel_asegurado = pericia.informe.tel_asegurado;
       this.veh_asegurado = pericia.informe.veh_asegurado;
+
+      this.terminado = pericia.informe.terminado!;
 
       this.patente_asegurado = pericia.informe.patente_asegurado;
       this.patente =
@@ -284,6 +302,13 @@ export class InformesComponent {
       this.dni_conductor = pericia.informe.dni_conductor!;
 
       const url = environment.imagesUrl;
+
+      //! Se agregan los que no están en el informe, pero si se agregaron en la pericia
+      const faltan = pericia.terceros?.filter((i) => {
+        return !pericia.informe?.terceros?.some((item) => item.id === i.id);
+      });
+      if (faltan)
+        pericia.informe.terceros = [...pericia.informe?.terceros!, ...faltan];
       this.initComponent(pericia.informe.terceros, !pericia.abierta);
       if (pericia.informe.adjuntos)
         pericia.informe.adjuntos.sort((a, b) => a.index - b.index);
@@ -672,24 +697,37 @@ export class InformesComponent {
   // ---------------------------------------------------------------------------->
   /**                           Sección carga informes                          */
   pericia!: PericiaI | null;
+  verInforme = true; //TODO PONER TRUE
 
   /** @description Muestra el dialogo de confirmación de carga */
   onUploadInforme() {
-    if (this.pericia) {
+    if (this.verInforme) {
       this.dialog.confirm(
-        'Confirmación de carga',
-        '¿Está seguro/a de cargar el informe creado? El mismo se le asignará a la pericia seleccionada.',
+        'Pre visualización del informe',
+        'Se abrirá una nueva pestaña con la visual del informe. Luego de verificado todo, lo podrá cargar.',
         () => {
-          this.uploadInforme();
+          this.verInforme = false;
+          this.viewPdf();
         }
       );
     } else {
-      this.dialog.alertMessage(
-        'Error de carga',
-        'No se selecciono ninguna pericia, no se puede continuar',
-        () => {},
-        true
-      );
+      if (this.pericia) {
+        this.dialog.confirm(
+          'Confirmación de carga',
+          '¿Está seguro/a de cargar el informe creado? El mismo se le asignará a la pericia seleccionada.',
+          () => {
+            this.uploadInforme();
+            this.verInforme = true;
+          }
+        );
+      } else {
+        this.dialog.alertMessage(
+          'Error de carga',
+          'No se selecciono ninguna pericia, no se puede continuar',
+          () => {},
+          true
+        );
+      }
     }
   }
   /** @description Carga el informe finalizado */
@@ -816,6 +854,7 @@ export class InformesComponent {
     this.informeService.insert(formData).subscribe({
       next: (data) => {
         this.table.getHistoric();
+        this.pericia!.informe = data;
         this.dialog.alertMessage(
           'Confirmación de carga',
           'El informe se cargó con éxito.',
@@ -837,16 +876,29 @@ export class InformesComponent {
   }
 
   async onUpdateInforme() {
-    this.dialog.confirm(
-      'Confirmación de carga',
-      '¿Está seguro de querer modificar el siguiente informe?',
-      async () => {
-        await this.updateInforme();
-      }
-    );
+    if (this.verInforme) {
+      this.dialog.confirm(
+        'Pre visualización del informe',
+        'Se abrirá una nueva pestaña con la visual del informe. Luego de verificado todo, lo podrá cargar.',
+        () => {
+          this.verInforme = false;
+          this.viewPdf();
+        }
+      );
+    } else {
+      this.dialog.confirm(
+        'Confirmación de carga',
+        '¿Está seguro de querer modificar el siguiente informe?',
+        async () => {
+          await this.updateInforme();
+          this.verInforme = true;
+        }
+      );
+    }
   }
-  async updateInforme(onlyUpload?: boolean) {
+  async updateInforme(onlyUpload?: boolean, terminado?: boolean) {
     this.dialog.loading = true;
+    this.terminado = terminado ? terminado : false;
     const formData = new FormData();
     const editedImages: AdjuntoI[] = [];
     this.documents.forEach((img, index) => {
@@ -1324,6 +1376,8 @@ export class InformesComponent {
       conductor: this.hasTerceros ? this.conductor : '',
       dni_conductor: this.hasTerceros ? this.dni_conductor : '',
       mail_asegurado: this.email,
+      terminado: terminado ? terminado : false,
+      corregido: this.admin,
     };
     formData.append('form', JSON.stringify(informe));
     if (!onlyUpload) {
@@ -1494,6 +1548,10 @@ export class InformesComponent {
       component.instance.readonly = readonly!;
       component.instance.email = t.mail_tercero;
       component.instance.tercero = t;
+      component.instance.anio = t.anio;
+      component.instance.poliza = t.poliza;
+      component.instance.cobertura = t.cobertura;
+      component.instance.amp_denuncia = t.amp_denuncia!;
       component.instance.delete.subscribe(() => {
         component.destroy();
         this.tercerosComponents = this.tercerosComponents.filter(
@@ -1558,104 +1616,152 @@ export class InformesComponent {
     }
   }
   tercerosEditList(formData: FormData): TerceroI[] | undefined {
+    //! 27/04/2024 () => Si existen terceros, se edita, sino, se carga uno nuevo!
     if (this.hasTerceros) {
       const terceros: TerceroI[] = [];
-      const editedImages: AdjuntoI[] = [];
       this.tercerosComponents.forEach((t) => {
-        t.documents.forEach((img, index) => {
-          //* Si la imagen fue editada
-          if (img.id === 0) {
-            formData.append(
-              'files',
-              dataURLtoFile(img.img, 'newFile', img.mimeType)
-            );
-            editedImages.push({
-              adjunto: '',
-              dot: img.dot?.code,
-              descripcion: img.comment,
-              type: img.type,
-              index,
-            });
-          }
-          if (img.edited && img.id !== 0) {
-            formData.append(
-              'files',
-              dataURLtoFile(img.img, 'newFile', img.mimeType)
-            );
-            //? Creamos un nuevo registro
-            editedImages.push({
-              adjunto: '',
-              dot: img.dot?.code,
-              descripcion: img.comment,
-              type: img.type,
-              index,
-            });
-          } else {
-            //* Caso contrario, solo modificamos estas propiedades
-            const ad = t.tercero.adjuntos!.find((i) => i.id === img.id);
-            if (ad) {
-              ad.index = index;
-              ad.descripcion = img.comment;
-              ad.dot = img.dot?.code;
-              editedImages.push(ad);
+        const editedImages: AdjuntoI[] = [];
+        if (t.tercero) {
+          t.documents.forEach((img, index) => {
+            console.log(t.tercero, t.documents);
+            //* Si la imagen fue editada
+            if (img.id === 0) {
+              formData.append(
+                'files',
+                dataURLtoFile(img.img, 'newFile', img.mimeType)
+              );
+              editedImages.push({
+                adjunto: '',
+                dot: img.dot?.code,
+                descripcion: img.comment,
+                type: img.type,
+                index,
+              });
             }
-          }
-        });
-        t.car.forEach((img, index) => {
-          //* Si la imagen fue editada
-          if (img.id === 0) {
-            formData.append(
-              'files',
-              dataURLtoFile(img.img, 'newFile', img.mimeType)
-            );
-            editedImages.push({
-              adjunto: '',
-              dot: img.dot?.code,
-              descripcion: img.comment,
-              type: img.type,
-              index,
-            });
-          }
-          if (img.edited && img.id !== 0) {
-            formData.append(
-              'files',
-              dataURLtoFile(img.img, 'newFile', img.mimeType)
-            );
-            //? Creamos un nuevo registro
-            editedImages.push({
-              adjunto: '',
-              dot: img.dot?.code,
-              descripcion: img.comment,
-              type: img.type,
-              index,
-            });
-          } else {
-            //* Caso contrario, solo modificamos estas propiedades
-            const ad = t.tercero?.adjuntos!.find((i) => i.id === img.id);
-            if (ad) {
-              ad.index = index;
-              ad.descripcion = img.comment;
-              ad.dot = img.dot?.code;
-              editedImages.push(ad);
+            if (img.edited && img.id !== 0) {
+              formData.append(
+                'files',
+                dataURLtoFile(img.img, 'newFile', img.mimeType)
+              );
+              //? Creamos un nuevo registro
+              editedImages.push({
+                adjunto: '',
+                dot: img.dot?.code,
+                descripcion: img.comment,
+                type: img.type,
+                index,
+              });
+            } else {
+              //* Caso contrario, solo modificamos estas propiedades
+              const ad = t.tercero.adjuntos!.find((i) => i.id === img.id);
+              if (ad) {
+                ad.index = index;
+                ad.descripcion = img.comment;
+                ad.dot = img.dot?.code;
+                editedImages.push(ad);
+              }
             }
-          }
-        });
-        terceros.push({
-          id: t.id,
-          nombre: t.nombre,
-          domicilio: t.domicilio,
-          tel: t.tel,
-          veh: t.veh,
-          amp_denuncia: t.amp_denuncia,
-          aseguradora: t.aseguradora,
-          patente: t.patente,
-          adjuntos: editedImages,
-          anio: t.anio,
-          poliza: t.poliza,
-          cobertura: t.cobertura,
-          mail_tercero: t.email,
-        });
+          });
+          t.car.forEach((img, index) => {
+            //* Si la imagen fue editada
+            if (img.id === 0) {
+              formData.append(
+                'files',
+                dataURLtoFile(img.img, 'newFile', img.mimeType)
+              );
+              editedImages.push({
+                adjunto: '',
+                dot: img.dot?.code,
+                descripcion: img.comment,
+                type: img.type,
+                index,
+              });
+            }
+            if (img.edited && img.id !== 0) {
+              formData.append(
+                'files',
+                dataURLtoFile(img.img, 'newFile', img.mimeType)
+              );
+              //? Creamos un nuevo registro
+              editedImages.push({
+                adjunto: '',
+                dot: img.dot?.code,
+                descripcion: img.comment,
+                type: img.type,
+                index,
+              });
+            } else {
+              //* Caso contrario, solo modificamos estas propiedades
+              const ad = t.tercero?.adjuntos!.find((i) => i.id === img.id);
+              if (ad) {
+                ad.index = index;
+                ad.descripcion = img.comment;
+                ad.dot = img.dot?.code;
+                editedImages.push(ad);
+              }
+            }
+          });
+          terceros.push({
+            id: t.id,
+            nombre: t.nombre,
+            domicilio: t.domicilio,
+            tel: t.tel,
+            veh: t.veh,
+            amp_denuncia: t.amp_denuncia,
+            aseguradora: t.aseguradora,
+            patente: t.patente,
+            adjuntos: editedImages,
+            anio: t.anio,
+            poliza: t.poliza,
+            cobertura: t.cobertura,
+            mail_tercero: t.email,
+          });
+        } else {
+          console.log(t.tercero);
+          t.documents.forEach((img, index) => {
+            formData.append(
+              'files',
+              dataURLtoFile(img.img, 'newFile', img.mimeType)
+            );
+            editedImages.push({
+              adjunto: '',
+              dot: img.dot?.code,
+              descripcion: img.comment,
+              type: img.type,
+              index,
+            });
+          });
+          t.car.forEach((img, index) => {
+            formData.append(
+              'files',
+              dataURLtoFile(img.img, 'newFile', img.mimeType)
+            );
+            editedImages.push({
+              adjunto: '',
+              dot: img.dot?.code,
+              descripcion: img.comment,
+              type: img.type,
+              index,
+            });
+          });
+          terceros.push({
+            id: t.id,
+            nombre: t.nombre,
+            domicilio: t.domicilio,
+            tel: t.tel,
+            veh: t.veh,
+            amp_denuncia: t.amp_denuncia,
+            aseguradora: t.aseguradora,
+            patente: t.patente,
+            adjuntos: editedImages,
+            anio: t.anio,
+            poliza: t.poliza,
+            cobertura: t.cobertura,
+            mail_tercero: t.email,
+          });
+        }
       });
+      console.log(terceros);
       return terceros;
     } else {
       return [];
@@ -1715,5 +1821,15 @@ export class InformesComponent {
         true
       );
     }
+  }
+
+  terminarInforme() {
+    this.dialog.confirm(
+      'Dar el informe por finalizado',
+      'Esta a punto de dar el informe como finalizado para su revisión, ¿Desea continuar?',
+      () => {
+        this.updateInforme(false, true);
+      }
+    );
   }
 }

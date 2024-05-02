@@ -17,6 +17,15 @@
       Cerrar informe <ng-icon class="ml-2" name="heroDocumentCheckSolid" />
     </div>
     }
+
+    @if(pericia?.informe) {
+    @if(!terminado) {
+    <div class="ml-3 cursor-pointer p-4 rounded-full bg-emerald-900 text-white mb-4 flex flex-row
+          justify-center items-center shadow-lg shadow-gray-500/50" pRipple (click)="terminarInforme()">
+      Terminar informe <ng-icon class="ml-2" name="heroDocumentCheckSolid" />
+    </div>
+    }
+    }
   </div>
 
   <div class="hide w-full" [ngClass]="{ 'show': close }">
@@ -297,9 +306,9 @@
     </div>
   </p-dialog>
 
-  @if(!close) {
+  <!-- @if(!close && !terminado) { -->
   <app-button [text]="!pericia?.informe ? 'Cargar informe' : 'Modificar informe'"
     [moreWidth]="!pericia?.informe ? false : true" [upload]="true"
     (click)="!pericia?.informe ? onUploadInforme() : onUpdateInforme()" />
-  }
+  <!-- } -->
 </div>

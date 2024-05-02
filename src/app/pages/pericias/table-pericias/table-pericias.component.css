@@ -1,0 +1,40 @@
+:host ::ng-deep p-tabView#tab-view .p-tabview-nav-link {
+  padding: 12px;
+  transition: all 500ms;
+  border: solid 1px rgba(128, 128, 128, 0.267);
+}
+
+:host ::ng-deep p-tabView#tab-view li {
+  padding: 0 5px 0 0;
+}
+
+:host ::ng-deep p-tabView#tab-view .p-tabview-nav {
+  background: none !important;
+}
+
+:host ::ng-deep p-tabView#tab-view .p-tabview-nav-link:hover {
+  border-bottom: solid 1.5px blue;
+  background: #1f2937;
+  color: white;
+}
+
+:host ::ng-deep p-tabView#tab-view .p-tabview-panels {
+  border: solid 1px rgba(128, 128, 128, 0.267);
+}
+
+:host ::ng-deep p-tabView#tab-view .p-highlight > .p-tabview-nav-link {
+  background: #1f2937;
+  color: white;
+}
+
+:host ::ng-deep p-tabView#tab-view .p-tabview-panels {
+  display: none;
+}
+
+.danger {
+  color: rgba(255, 6, 6, 0.979);
+}
+
+.warning {
+  color: rgb(250, 141, 98);
+}

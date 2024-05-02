@@ -53,7 +53,7 @@ export const viewPdfTerceros = async (
         alignment: 'center',
       };
     },
-    //! Esto es el margin de la página, y el canvas de la línea que lo redea
+    //! Esto es el margin de la página, y el canvas de la línea que lo rodea
     //pageMargins: [20, 70, 20, 35], // [left, top, right, bottom]
     pageMargins: [20, 50, 20, 35], // [left, top, right, bottom]
     background: function (currentPage) {
@@ -109,7 +109,9 @@ export const tercerosPdf = async (
         },
         t.email
           ? {
-              text: `Correo electrónico: ${t.email ? t.email : 'Sin información'}`,
+              text: `Correo electrónico: ${
+                t.email ? t.email : 'Sin información'
+              }`,
               alignment: 'left',
               fontSize: 16,
               margin: [14, 0, 0, 8],
@@ -127,29 +129,31 @@ export const tercerosPdf = async (
           fontSize: 16,
           margin: [14, 0, 0, 8],
         },
-        {
-          stack: [
-            {
-              text: 'Ampliación de denuncia',
-              alignment: 'center',
-              fontSize: 20,
-              margin: [0, 20],
-            },
-          ],
-        },
-        {
-          stack: [
-            {
-              text: t.amp_denuncia
-                ? t.amp_denuncia
-                : 'No se cargó una ampliación de denuncia',
-              alignment: 'left',
-              fontSize: 16,
-              margin: [14, 0, 0, 10],
-              pageBreak: 'after',
-            },
-          ],
-        },
+        t.amp_denuncia
+          ? {
+              stack: [
+                {
+                  text: 'Ampliación de denuncia',
+                  alignment: 'center',
+                  fontSize: 20,
+                  margin: [0, 20],
+                },
+              ],
+            }
+          : '',
+        t.amp_denuncia
+          ? {
+              stack: [
+                {
+                  text: t.amp_denuncia,
+                  alignment: 'left',
+                  fontSize: 16,
+                  margin: [14, 0, 0, 10],
+                  pageBreak: 'after',
+                },
+              ],
+            }
+          : '',
         await imagesPage(t.documents, false),
         await imagesPage(t.car, false, true),
       ],
