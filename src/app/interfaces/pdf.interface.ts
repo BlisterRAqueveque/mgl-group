@@ -20,6 +20,7 @@ export interface FirstPage {
   dni_conductor: string;
   amp_denuncia: string;
   mail_asegurado: string;
+  hasAmpDenuncia: boolean;
 }
 
 export interface LastPage {

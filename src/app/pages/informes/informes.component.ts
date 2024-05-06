@@ -88,6 +88,9 @@ export class InformesComponent {
     private readonly periciaService: PericiaService
   ) {}
 
+  videoTutorial = false;
+  videoUrl = `${environment.imagesUrl}Tutorial.mp4`;
+
   terminado = false;
   admin = false;
   user!: UsuarioI;
@@ -255,6 +258,12 @@ export class InformesComponent {
       this.text_anio = pericia.anio ? pericia.anio.toString() : '';
       this.initComponent(pericia.terceros, !pericia.abierta);
     } else {
+      //Si el informe no tiene ampliación de denuncia
+      this.hasAmpDenuncia =
+        pericia.informe.amp_denuncia !== undefined &&
+        pericia.informe.amp_denuncia !== null &&
+        pericia.informe.amp_denuncia !== '';
+
       this.tipo_siniestro = pericia.informe.tipo_siniestro;
       this.n_siniestro = pericia.informe.n_siniestro;
       this.n_denuncia = pericia.informe.n_denuncia;
@@ -316,6 +325,7 @@ export class InformesComponent {
         const img = await imgToBase64(url + a.adjunto);
         switch (a.type) {
           case 'documents': {
+            if (a.descripcion === 'Retiro de denuncia') this.retDenuncia = true;
             this.documents.push({
               id: a?.id!,
               img: img as string,
@@ -463,11 +473,11 @@ export class InformesComponent {
   setList(img_list: Images[], type: string) {
     switch (type) {
       case 'documents': {
-        if (img_list.length > 0) {
+        if (img_list.length > 0 && this.hasAmpDenuncia) {
           img_list.forEach((d, i) => {
             switch (i) {
               case 0: {
-                d.comment = 'Ampliación de denuncia';
+                d.comment = this.tipoAmpDenuncia;
                 break;
               }
               case 1: {
@@ -491,6 +501,44 @@ export class InformesComponent {
                 break;
               }
               case 6: {
+                d.comment = 'Cédula verde reverso';
+                break;
+              }
+              default: {
+                img_list.pop();
+                this.dialog.alertMessage(
+                  'No disponible',
+                  '¡No se pueden cargar mas imágenes en esta sección!',
+                  () => {},
+                  true
+                );
+              }
+            }
+          });
+        } else if (img_list.length > 0 && !this.hasAmpDenuncia) {
+          img_list.forEach((d, i) => {
+            switch (i) {
+              case 0: {
+                d.comment = 'DNI anverso';
+                break;
+              }
+              case 1: {
+                d.comment = 'DNI reverso';
+                break;
+              }
+              case 2: {
+                d.comment = 'Carnet de conducir anverso';
+                break;
+              }
+              case 3: {
+                d.comment = 'Carnet de conducir reverso';
+                break;
+              }
+              case 4: {
+                d.comment = 'Cédula verde anverso';
+                break;
+              }
+              case 5: {
                 d.comment = 'Cédula verde reverso';
                 break;
               }
@@ -697,7 +745,7 @@ export class InformesComponent {
   // ---------------------------------------------------------------------------->
   /**                           Sección carga informes                          */
   pericia!: PericiaI | null;
-  verInforme = true; //TODO PONER TRUE
+  verInforme = false; //TODO PONER TRUE
 
   /** @description Muestra el dialogo de confirmación de carga */
   onUploadInforme() {
@@ -717,7 +765,7 @@ export class InformesComponent {
           '¿Está seguro/a de cargar el informe creado? El mismo se le asignará a la pericia seleccionada.',
           () => {
             this.uploadInforme();
-            this.verInforme = true;
+            this.verInforme = false;
           }
         );
       } else {
@@ -838,7 +886,7 @@ export class InformesComponent {
       hecho: this.hecho,
       n_poliza: this.n_poliza,
       tipo_cobertura: this.tipo_cobertura,
-      amp_denuncia: this.amp_denuncia,
+      amp_denuncia: this.hasAmpDenuncia ? this.amp_denuncia : '',
       conclusion: this.conclusion,
       text_anio: this.text_anio,
       adjuntos: adjuntos,
@@ -891,7 +939,7 @@ export class InformesComponent {
         '¿Está seguro de querer modificar el siguiente informe?',
         async () => {
           await this.updateInforme();
-          this.verInforme = true;
+          this.verInforme = false;
         }
       );
     }
@@ -1365,7 +1413,7 @@ export class InformesComponent {
       hecho: this.hecho,
       n_poliza: this.n_poliza,
       tipo_cobertura: this.tipo_cobertura,
-      amp_denuncia: this.amp_denuncia,
+      amp_denuncia: this.hasAmpDenuncia ? this.amp_denuncia : '',
       conclusion: this.conclusion,
       text_anio: this.text_anio,
       adjuntos: editedImages,
@@ -1378,6 +1426,7 @@ export class InformesComponent {
       mail_asegurado: this.email,
       terminado: terminado ? terminado : false,
       corregido: this.admin,
+      fecha_terminado: terminado ? new Date() : null,
     };
     formData.append('form', JSON.stringify(informe));
     if (!onlyUpload) {
@@ -1446,6 +1495,7 @@ export class InformesComponent {
       dni_conductor: this.dni_conductor,
       amp_denuncia: this.amp_denuncia,
       mail_asegurado: this.email,
+      hasAmpDenuncia: this.hasAmpDenuncia,
     };
     const lastPage: LastPage = {
       relevamiento: this.relevamiento,
@@ -1460,7 +1510,8 @@ export class InformesComponent {
         this.documents,
         this.car,
         this.damages,
-        this.others
+        this.others,
+        !this.pericia?.abierta!
       );
     else if (this.isRoboRueda)
       viewPdfRuedas(
@@ -1473,10 +1524,18 @@ export class InformesComponent {
         this.rdd,
         this.rti,
         this.rtd,
-        this.rda
+        this.rda,
+        !this.pericia?.abierta!
       );
     else {
-      viewPdfBase(firstPage, lastPage, this.documents, this.car, this.others);
+      viewPdfBase(
+        firstPage,
+        lastPage,
+        this.documents,
+        this.car,
+        this.others,
+        !this.pericia?.abierta!
+      );
     }
   }
 
@@ -1510,6 +1569,8 @@ export class InformesComponent {
         const img = await imgToBase64(url + a.adjunto);
         switch (a.type) {
           case 'documents': {
+            if (a.descripcion === 'Retiro de denuncia')
+              component.instance.retDenuncia = true;
             component.instance.documents.push({
               id: a?.id!,
               img: img as string,
@@ -1552,6 +1613,10 @@ export class InformesComponent {
       component.instance.poliza = t.poliza;
       component.instance.cobertura = t.cobertura;
       component.instance.amp_denuncia = t.amp_denuncia!;
+      component.instance.hasAmpDenuncia =
+        t.amp_denuncia !== null &&
+        t.amp_denuncia !== undefined &&
+        t.amp_denuncia !== '';
       component.instance.delete.subscribe(() => {
         component.destroy();
         this.tercerosComponents = this.tercerosComponents.filter(
@@ -1832,4 +1897,8 @@ export class InformesComponent {
       }
     );
   }
+
+  hasAmpDenuncia = true;
+  retDenuncia = false;
+  tipoAmpDenuncia = 'Ampliación de denuncia';
 }

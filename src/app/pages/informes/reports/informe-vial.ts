@@ -14,7 +14,8 @@ export const viewPdfTerceros = async (
   documentsList: Images[],
   carList: Images[],
   damagesList: Images[],
-  otherList: Images[]
+  otherList: Images[],
+  close: boolean
 ) => {
   const first = await firstPage(firstPageI);
   const documents = await imagesPage(documentsList, false);
@@ -72,7 +73,11 @@ export const viewPdfTerceros = async (
       };
     },
   };
-  pdfMake.createPdf(dd, undefined, pdfMake.fonts).open();
+  if (!close) pdfMake.createPdf(dd, undefined, pdfMake.fonts).open();
+  else
+    pdfMake
+      .createPdf(dd, undefined, pdfMake.fonts)
+      .download(firstPageI.nombre_asegurado);
 };
 
 export const tercerosPdf = async (
@@ -129,7 +134,7 @@ export const tercerosPdf = async (
           fontSize: 16,
           margin: [14, 0, 0, 8],
         },
-        t.amp_denuncia
+        t.hasAmpDenuncia
           ? {
               stack: [
                 {
@@ -141,7 +146,7 @@ export const tercerosPdf = async (
               ],
             }
           : '',
-        t.amp_denuncia
+        t.hasAmpDenuncia
           ? {
               stack: [
                 {
@@ -154,7 +159,9 @@ export const tercerosPdf = async (
               ],
             }
           : '',
-        await imagesPage(t.documents, false),
+        t.hasAmpDenuncia
+          ? await imagesPage(t.documents, false)
+          : await imagesPage(t.documents, false, true),
         await imagesPage(t.car, false, true),
       ],
     });

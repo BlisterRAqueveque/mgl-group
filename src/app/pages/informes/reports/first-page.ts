@@ -5,6 +5,7 @@ import { FirstPage } from '../../../interfaces/pdf.interface';
 
 export const firstPage = async (firstPageI: FirstPage) => {
   const img = await imgToBase64Original(`${environment.webUrl}assets/logo.png`);
+  console.log(img);
   const content: Content = [
     {
       stack: [
@@ -258,7 +259,7 @@ export const firstPage = async (firstPageI: FirstPage) => {
       ],
     },
     // Aca hay un salto de pagina
-    firstPageI.amp_denuncia
+    firstPageI.hasAmpDenuncia
       ? {
           stack: [
             {
@@ -270,11 +271,11 @@ export const firstPage = async (firstPageI: FirstPage) => {
           ],
         }
       : '',
-    firstPageI.amp_denuncia
+    firstPageI.hasAmpDenuncia
       ? {
           stack: [
             {
-              text: firstPageI.amp_denuncia,
+              text: firstPageI.amp_denuncia ?? 'Sin información cargada',
               alignment: 'left',
               fontSize: 16,
               margin: [14, 0, 0, 10],

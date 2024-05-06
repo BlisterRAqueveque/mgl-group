@@ -1,5 +1,6 @@
 <div>
-  <h1 class="text-center my-6 text-2xl md:text-4xl">Informe de investigación</h1>
+  <h1 class="text-center mt-6 mb-3 text-2xl md:text-4xl">Informe de investigación</h1>
+  <p class="cursor-pointer text-center mb-3" (click)="videoTutorial = true">Video de ayuda</p>
   <div class="w-full flex justify-center items-center">
     <div class="mr-3 cursor-pointer p-4 rounded-full bg-gray-900 text-white mb-4 flex flex-row
       justify-center items-center shadow-lg shadow-gray-500/50" pRipple (click)="selectPericia()">
@@ -8,7 +9,7 @@
 
     <div class="ml-3 cursor-pointer p-4 rounded-full bg-red-700 text-white mb-4 flex flex-row
       justify-center items-center shadow-lg shadow-gray-500/50" pRipple (click)="viewPdf()">
-      Visualizar PDF <ng-icon class="ml-2" name="heroDocumentSolid" />
+      {{pericia?.abierta ? 'Visualizar PDF' : 'Descargar PDF'}} <ng-icon class="ml-2" name="heroDocumentSolid" />
     </div>
 
     @if(pericia?.abierta) {
@@ -19,10 +20,10 @@
     }
 
     @if(pericia?.informe) {
-    @if(!terminado) {
+    @if(!terminado && !admin) {
     <div class="ml-3 cursor-pointer p-4 rounded-full bg-emerald-900 text-white mb-4 flex flex-row
           justify-center items-center shadow-lg shadow-gray-500/50" pRipple (click)="terminarInforme()">
-      Terminar informe <ng-icon class="ml-2" name="heroDocumentCheckSolid" />
+      Enviar informe <ng-icon class="ml-2" name="heroDocumentCheckSolid" />
     </div>
     }
     }
@@ -176,10 +177,34 @@
       <!-- Ampliación de denuncia -->
       <h1 class="text-center my-6 text-2xl md:text-4xl">Ampliación de denuncia</h1>
       <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-6 px-2 flex flex-col">
+          <div class="flex items-center my-2 ml-2">
+            <p-checkbox [(ngModel)]="hasAmpDenuncia" [binary]="true" [disabled]="!pericia"
+              (ngModelChange)="setList(documents, 'documents'); retDenuncia = false; tipoAmpDenuncia = 'Ampliación de denuncia'" />
+            <label class="ml-2">¿Cuenta con ampliación de denuncia?</label>
+          </div>
+        </div>
+        <div class="col-span-6 px-2 flex flex-col">
+          <div class="flex items-center my-2 ml-2">
+            <p-checkbox [(ngModel)]="retDenuncia" [binary]="true" [disabled]="!pericia || !hasAmpDenuncia"
+              (ngModelChange)="retDenuncia ? tipoAmpDenuncia = 'Retiro de denuncia' :
+                tipoAmpDenuncia = 'Ampliación de denuncia'; setList(documents, 'documents');" />
+            <label class="ml-2">¿Es retiro de denuncia?</label>
+          </div>
+        </div>
+      </div>
+      <div class="w-full hide" [ngClass]="{ 'show': !hasAmpDenuncia }">
+        <div>
+          <h1 class="p-4 rounded-md text-start text-sm bg-orange-400" [ngClass]="{'mb-3': close}">Al desmarcar esta
+            casilla, no podrá cargar la imagen correspondiente a la ampliación de denuncia. Si alguna se encontraba
+            cargada, sera borrada (la última de la lista).</h1>
+        </div>
+      </div>
+      <div class="grid grid-cols-12 gap-4">
         <div class="col-span-12 px-2 flex flex-col">
           <textarea pInputTextarea class="p-3 border border-gray-300 rounded-md focus:outline-none
         focus:border-indigo-500 mt-4 w-full" placeholder="Ingrese ampliación de denuncia." rows="5"
-            [(ngModel)]="amp_denuncia" [disabled]="!pericia"></textarea>
+            [(ngModel)]="amp_denuncia" [disabled]="!pericia || !hasAmpDenuncia"></textarea>
         </div>
       </div>
       <!-- !INPUT DE IMÁGENES -->
@@ -307,8 +332,17 @@
   </p-dialog>
 
   <!-- @if(!close && !terminado) { -->
-  <app-button [text]="!pericia?.informe ? 'Cargar informe' : 'Modificar informe'"
-    [moreWidth]="!pericia?.informe ? false : true" [upload]="true"
+  <app-button [text]="'Carga parcial'" [upload]="true"
     (click)="!pericia?.informe ? onUploadInforme() : onUpdateInforme()" />
   <!-- } -->
 </div>
+
+<p-dialog header="Video tutorial" [(visible)]="videoTutorial" [modal]="true" [style]="{ width: '90vw', height: '90vh' }"
+  [draggable]="false" [resizable]="false">
+  <div class="w-full h-full flex justify-center items-center">
+    <video controls width="600">
+      <source [src]="videoUrl" type="video/mp4">
+      Tu navegador no soporta la etiqueta de video.
+    </video>
+  </div>
+</p-dialog>

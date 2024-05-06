@@ -20,7 +20,8 @@ export const viewPdfRuedas = async (
   rddList: Images[],
   rtiList: Images[],
   rtdList: Images[],
-  rdaList: Images[]
+  rdaList: Images[],
+  close: boolean
 ) => {
   const first = await firstPage(firstPageI);
   const documents = await imagesPage(documentsList, false);
@@ -84,7 +85,11 @@ export const viewPdfRuedas = async (
       };
     },
   };
-  pdfMake.createPdf(dd, undefined, pdfMake.fonts).open();
+  if (!close) pdfMake.createPdf(dd, undefined, pdfMake.fonts).open();
+  else
+    pdfMake
+      .createPdf(dd, undefined, pdfMake.fonts)
+      .download(firstPageI.nombre_asegurado);
 };
 
 const imagesRuedas = async (images: Images[]) => {

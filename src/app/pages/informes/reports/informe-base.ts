@@ -11,7 +11,8 @@ export const viewPdfBase = async (
   lastPageI: LastPage,
   documentsList: Images[],
   carList: Images[],
-  otherList: Images[]
+  otherList: Images[],
+  close: boolean
 ) => {
   const first = await firstPage(firstPageI);
   const documents = await imagesPage(documentsList, false);
@@ -59,5 +60,9 @@ export const viewPdfBase = async (
       };
     },
   };
-  pdfMake.createPdf(dd, undefined, pdfMake.fonts).open();
+  if (!close) pdfMake.createPdf(dd, undefined, pdfMake.fonts).open();
+  else
+    pdfMake
+      .createPdf(dd, undefined, pdfMake.fonts)
+      .download(firstPageI.nombre_asegurado);
 };

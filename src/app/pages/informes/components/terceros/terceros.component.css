@@ -11,3 +11,19 @@
 :host ::ng-deep p-accordion#terceros .p-accordion-content {
   border: solid 1px #222c39c5;
 }
+
+.hide {
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: grid;
+  grid-template-rows: 0fr;
+}
+
+.hide > div {
+  overflow: hidden;
+}
+
+.show {
+  grid-template-rows: 1fr;
+  transition: all 0.3s ease;
+}

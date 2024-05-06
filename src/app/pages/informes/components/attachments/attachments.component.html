@@ -15,7 +15,8 @@
           flex justify-center items-center flex-col bg-gray-100 p-4 rounded-xl shadow-gray-500/50 shadow-lg"
             *ngFor="let img of images; let i = index">
             <div class="relative">
-                <img [src]="img.img" alt="" class="max-w-full max-h-80 md:max-h-60 w-auto h-auto object-cover">
+                <img [src]="img.img" alt="" class="max-w-full max-h-80 md:max-h-60 w-auto h-auto object-cover"
+                    loading="lazy">
                 <div class="absolute top-0 left-0 w-full h-full bg-black/50 opacity-0 transition-all duration-500
               hover:opacity-100 flex justify-center items-center cursor-pointer" (click)="editImage(i)"
                     pTooltip="Click en la imagen para editarla" tooltipPosition="bottom">

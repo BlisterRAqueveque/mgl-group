@@ -16,7 +16,6 @@ export interface InformeI {
   n_poliza: string;
   tipo_cobertura: string;
   amp_denuncia: string;
-  terminado?: boolean;
   corregido?: boolean;
   relevamiento: string;
   conclusion: string;
@@ -28,6 +27,8 @@ export interface InformeI {
   terceros?: TerceroI[];
   conductor?: string;
   dni_conductor?: string;
+  terminado?: boolean;
+  fecha_terminado?: Date | null;
 }
 
 export interface AdjuntoI {

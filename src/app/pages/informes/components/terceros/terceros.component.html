@@ -83,12 +83,38 @@
             [(ngModel)]="cobertura" [readonly]="readonly">
         </div>
 
-        <div class="col-span-12 px-2 flex flex-col">
-          <label class="text-sm font-medium text-gray-700 w-full">Ampliación de denuncia</label>
-          <textarea pInputTextarea id="amp_denuncia" type="text" class="mt-1 p-3 w-full border border-gray-300
-                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese ampliación de denuncia"
-            [(ngModel)]="amp_denuncia" [readonly]="readonly"></textarea>
+        <div class="lg:col-span-12 px-2 flex flex-col">
+          <div class="grid grid-cols-12 border-solid">
+            <div class="col-span-6 px-2 flex flex-col">
+              <div class="flex items-center my-2 ml-2">
+                <p-checkbox [(ngModel)]="hasAmpDenuncia" [binary]="true"
+                  (ngModelChange)="setList(documents, 'documents'); retDenuncia = false; tipoAmpDenuncia = 'Ampliación de denuncia'" />
+                <label class="ml-2">¿Cuenta con ampliación de denuncia?</label>
+              </div>
+            </div>
+            <div class="col-span-6 px-2 flex flex-col">
+              <div class="flex items-center my-2 ml-2">
+                <p-checkbox [(ngModel)]="retDenuncia" [binary]="true" [disabled]="!hasAmpDenuncia" (ngModelChange)="retDenuncia ? tipoAmpDenuncia = 'Retiro de denuncia' :
+                      tipoAmpDenuncia = 'Ampliación de denuncia'; setList(documents, 'documents');" />
+                <label class="ml-2">¿Es retiro de denuncia?</label>
+              </div>
+            </div>
+          </div>
+
         </div>
+      </div>
+      <div class="w-full hide" [ngClass]="{ 'show': !hasAmpDenuncia }">
+        <div>
+          <h1 class="p-4 rounded-md text-start text-sm bg-orange-400">Al desmarcar esta
+            casilla, no podrá cargar la imagen correspondiente a la ampliación de denuncia. Si alguna se encontraba
+            cargada, sera borrada (la última de la lista).</h1>
+        </div>
+      </div>
+      <div class="col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full">Ampliación de denuncia</label>
+        <textarea pInputTextarea id="amp_denuncia" type="text" class="mt-1 p-3 w-full border border-gray-300
+                rounded-md focus:outline-none focus:border-indigo-500" placeholder="Ingrese ampliación de denuncia"
+          [(ngModel)]="amp_denuncia" [readonly]="readonly" [disabled]="!hasAmpDenuncia"></textarea>
       </div>
       <hr class="my-10">
       <app-attachments [helpText]="'Agregue aquí: Ampliación de denuncia y documentación del asegurado.'"

@@ -17,6 +17,7 @@ import { AttachmentsComponent } from '../attachments/attachments.component';
 import { Images } from '../../../../interfaces/images.interface';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { TerceroI } from '../../../../interfaces/pericia.interface';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-terceros-informe',
@@ -31,6 +32,7 @@ import { TerceroI } from '../../../../interfaces/pericia.interface';
     NgIcon,
     InputTextareaModule,
     AttachmentsComponent,
+    CheckboxModule,
   ],
   providers: [
     provideIcons({
@@ -61,6 +63,9 @@ export class TercerosInformeComponent {
   documents: Images[] = [];
   car: Images[] = [];
 
+  hasAmpDenuncia = true;
+  retDenuncia = false;
+  tipoAmpDenuncia = 'Ampliación de denuncia';
   @ViewChild('dialog') dialog!: DialogComponent;
   @Output() delete = new EventEmitter<boolean>();
   onDelete() {
@@ -78,44 +83,84 @@ export class TercerosInformeComponent {
       case 'documents': {
         if (img_list.length > 0) {
           img_list.forEach((d, i) => {
-            switch (i) {
-              case 0: {
-                d.comment = 'Ampliación de denuncia';
-                break;
+            if (img_list.length > 0 && this.hasAmpDenuncia) {
+              switch (i) {
+                case 0: {
+                  d.comment = this.tipoAmpDenuncia;
+                  break;
+                }
+                case 1: {
+                  d.comment = 'DNI anverso';
+                  break;
+                }
+                case 2: {
+                  d.comment = 'DNI reverso';
+                  break;
+                }
+                case 3: {
+                  d.comment = 'Carnet de conducir anverso';
+                  break;
+                }
+                case 4: {
+                  d.comment = 'Carnet de conducir reverso';
+                  break;
+                }
+                case 5: {
+                  d.comment = 'Cédula verde anverso';
+                  break;
+                }
+                case 6: {
+                  d.comment = 'Cédula verde reverso';
+                  break;
+                }
+                default: {
+                  img_list.pop();
+                  this.dialog.alertMessage(
+                    'No disponible',
+                    '¡No se pueden cargar mas imágenes en esta sección!',
+                    () => {},
+                    true
+                  );
+                }
               }
-              case 1: {
-                d.comment = 'DNI anverso';
-                break;
-              }
-              case 2: {
-                d.comment = 'DNI reverso';
-                break;
-              }
-              case 3: {
-                d.comment = 'Carnet de conducir anverso';
-                break;
-              }
-              case 4: {
-                d.comment = 'Carnet de conducir reverso';
-                break;
-              }
-              case 5: {
-                d.comment = 'Cédula verde anverso';
-                break;
-              }
-              case 6: {
-                d.comment = 'Cédula verde reverso';
-                break;
-              }
-              default: {
-                img_list.pop();
-                this.dialog.alertMessage(
-                  'No disponible',
-                  '¡No se pueden cargar mas imágenes en esta sección!',
-                  () => {},
-                  true
-                );
-              }
+            } else if (img_list.length > 0 && !this.hasAmpDenuncia) {
+              img_list.forEach((d, i) => {
+                switch (i) {
+                  case 0: {
+                    d.comment = 'DNI anverso';
+                    break;
+                  }
+                  case 1: {
+                    d.comment = 'DNI reverso';
+                    break;
+                  }
+                  case 2: {
+                    d.comment = 'Carnet de conducir anverso';
+                    break;
+                  }
+                  case 3: {
+                    d.comment = 'Carnet de conducir reverso';
+                    break;
+                  }
+                  case 4: {
+                    d.comment = 'Cédula verde anverso';
+                    break;
+                  }
+                  case 5: {
+                    d.comment = 'Cédula verde reverso';
+                    break;
+                  }
+                  default: {
+                    img_list.pop();
+                    this.dialog.alertMessage(
+                      'No disponible',
+                      '¡No se pueden cargar mas imágenes en esta sección!',
+                      () => {},
+                      true
+                    );
+                  }
+                }
+              });
             }
           });
         }

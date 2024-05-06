@@ -360,8 +360,10 @@
                 <h1 class="text-xl mb-3">Datos de terceros</h1>
               </div>
               @for (tercero of pericia?.terceros; track $index) {
-              <app-terceros [id]="tercero.id!" [nombre]="tercero.nombre" [dni]="'tercero.dni'"
-                [aseguradora]="tercero.aseguradora" [readonly]="true" />
+              <app-terceros [readonly]="true" [id]="tercero.id!" [nombre]="tercero.nombre!"
+                [aseguradora]="tercero.aseguradora" [domicilio]="tercero.domicilio" [tel]="tercero.tel"
+                [veh]="tercero.veh" [patente]="tercero.patente" [email]="tercero.mail_tercero" [anio]="tercero.anio"
+                [poliza]="tercero.poliza" [cobertura]="tercero.cobertura" />
               }
             </div>
           </div>
