@@ -270,6 +270,15 @@ export class ModalAddComponent {
       },
       error: (e) => {
         switch (e.status) {
+          case 409: {
+            this.dialog.alertMessage(
+              'Error de carga',
+              '¡Ya existe una pericia con esta información!.',
+              () => {},
+              true
+            );
+            break;
+          }
           default: {
             this.dialog.alertMessage(
               'Error de carga',

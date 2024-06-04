@@ -762,7 +762,8 @@ export class InformesComponent {
       if (this.pericia) {
         this.dialog.confirm(
           'Confirmación de carga',
-          '¿Está seguro/a de cargar el informe creado? El mismo se le asignará a la pericia seleccionada.',
+          `¿Está seguro/a de cargar en FORMA PARCIAL el informe creado? El mismo se le asignará a la pericia seleccionada.
+          Recuerde que una vez terminado el mismo, deberá enviarlo para su revisión.`,
           () => {
             this.uploadInforme();
             this.verInforme = false;
@@ -905,7 +906,7 @@ export class InformesComponent {
         this.pericia!.informe = data;
         this.dialog.alertMessage(
           'Confirmación de carga',
-          'El informe se cargó con éxito.',
+          'El informe se cargó con éxito. Recuerde que una vez terminado el mismo, deberá enviarlo para su revisión.',
           () => {
             this.setDefault();
           }
@@ -936,7 +937,8 @@ export class InformesComponent {
     } else {
       this.dialog.confirm(
         'Confirmación de carga',
-        '¿Está seguro de querer modificar el siguiente informe?',
+        `¿Está seguro/a de cargar en FORMA PARCIAL el informe creado? El mismo se le asignará a la pericia seleccionada.
+          Recuerde que una vez terminado el mismo, deberá enviarlo para su revisión.`,
         async () => {
           await this.updateInforme();
           this.verInforme = false;
@@ -1437,7 +1439,7 @@ export class InformesComponent {
             this.table.getHistoric();
             this.dialog.alertMessage(
               'Confirmación de carga',
-              'El informe se modificó con éxito.',
+              'El informe se modificó con éxito. Recuerde que una vez terminado el mismo, deberá enviarlo para su revisión.',
               () => {
                 this.setDefault();
               }

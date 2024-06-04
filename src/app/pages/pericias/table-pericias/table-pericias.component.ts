@@ -303,6 +303,7 @@ Patente: ${pericia.patente_asegurado ?? 'sin datos'}.
         this.params = this.params.set('activo', 1);
         this.params = this.params.delete('informe');
         this.params = this.params.delete('limite');
+        this.params = this.params.delete('terminado');
         this.getHistoric();
         break;
       }
@@ -310,19 +311,23 @@ Patente: ${pericia.patente_asegurado ?? 'sin datos'}.
         this.params = this.params.set('activo', 0);
         this.params = this.params.delete('informe');
         this.params = this.params.delete('limite');
+        this.params = this.params.delete('terminado');
         this.getHistoric();
         break;
       }
       case 2: {
         this.params = this.params.set('informe', 1);
+        this.params = this.params.set('terminado', 1);
         this.params = this.params.set('activo', 1);
         this.params = this.params.delete('limite');
         this.getHistoric();
         break;
       }
       case 3: {
-        this.params = this.params.set('informe', 0);
+        //* Con informes parciales
+        this.params = this.params.set('informe', 1);
         this.params = this.params.set('activo', 1);
+        this.params = this.params.set('terminado', 0);
         this.params = this.params.delete('limite');
         this.getHistoric();
         break;
@@ -330,7 +335,16 @@ Patente: ${pericia.patente_asegurado ?? 'sin datos'}.
       case 4: {
         this.params = this.params.set('limite', 1);
         this.params = this.params.set('activo', 1);
+        this.params = this.params.delete('terminado');
         this.params = this.params.delete('informe');
+        this.getHistoric();
+        break;
+      }
+      case 5: {
+        this.params = this.params.set('informe', 0);
+        this.params = this.params.set('activo', 1);
+        this.params = this.params.delete('terminado');
+        this.params = this.params.delete('limite');
         this.getHistoric();
         break;
       }

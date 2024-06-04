@@ -5,7 +5,9 @@
   </p-tabPanel>
   <p-tabPanel header="Cerradas">
   </p-tabPanel>
-  <p-tabPanel header="Con informes">
+  <p-tabPanel header="Con informes terminados">
+  </p-tabPanel>
+  <p-tabPanel header="Con informes parciales">
   </p-tabPanel>
   <p-tabPanel header="Informes faltantes">
   </p-tabPanel>
@@ -14,7 +16,9 @@
 </p-tabView>
 
 <p-paginator #paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
-  [totalRecords]="totalRecords" [style]="{ 'width': '100%' }" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
+  [totalRecords]="totalRecords" [style]="{ 'width': '100%' }" [rowsPerPageOptions]="[10, 20, 30]"
+  currentPageReportTemplate="Mostrando {first} de {last} | Total: {totalRecords} registros"
+  [showCurrentPageReport]="true" id="paginator" />
 
 <p-table #table [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
   [styleClass]="'p-datatable-sm mt-3'" [value]="pericias" dataKey="id" (onSort)="onSort($event)">
@@ -93,7 +97,9 @@
 </p-table>
 
 <p-paginator #paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
-  [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
+  [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]"
+  currentPageReportTemplate="Mostrando {first} de {last} | Total: {totalRecords} registros"
+  [showCurrentPageReport]="true" id="paginator" />
 
 
 <p-dialog header="Conexión del dispositivo" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }"

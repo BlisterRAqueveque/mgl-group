@@ -110,17 +110,6 @@
           [(ngModel)]="patente_asegurado">
       </div>
 
-      <!-- Usuario verificador -->
-      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
-        <label class="text-sm font-medium text-gray-700 w-full"
-          [ngClass]="{ 'text-red-600': (error && !selectedVerificador), 'text-gray-700': !(error && !selectedVerificador) }">{{ (error && !selectedVerificador) ? '¡Campo obligatorio!' : 'Verificador' }}</label>
-        <p-dropdown id="drop" class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
-          focus:border-indigo-500" appendTo="body" [options]="verificadores" [(ngModel)]="selectedVerificador"
-          optionLabel="nombre" placeholder="Seleccione verificador" panelStyleClass="panel"
-          [style]="{ 'width': '100%' }" [(ngModel)]="selectedVerificador"
-          [ngClass]="{ 'border-red-600': (error && !selectedVerificador), 'border-gray-300': !(error && !selectedVerificador) }"></p-dropdown>
-      </div>
-
       <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
         <label class="text-sm font-medium text-gray-700 w-full">Año</label>
         <input class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
@@ -142,6 +131,17 @@
         <input [disabled]="hasCobertura" class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
           focus:border-indigo-500" [(ngModel)]="cobertura" placeholder="Ingrese la cobertura" type="text" />
         <p-checkbox [(ngModel)]="hasCobertura" class="mt-2" label="¿Se conoce la cobertura?" [binary]="true" />
+      </div>
+
+      <!-- Usuario verificador -->
+      <div class="lg:col-span-4 sm:col-span-12 md:col-span-6 col-span-12 px-2 flex flex-col">
+        <label class="text-sm font-medium text-gray-700 w-full"
+          [ngClass]="{ 'text-red-600': (error && !selectedVerificador), 'text-gray-700': !(error && !selectedVerificador) }">{{ (error && !selectedVerificador) ? '¡Campo obligatorio!' : 'Verificador' }}</label>
+        <p-dropdown id="drop" class="mt-1 w-full border border-gray-300 rounded-md focus:outline-none
+          focus:border-indigo-500" appendTo="body" [options]="verificadores" [(ngModel)]="selectedVerificador"
+          optionLabel="nombre" placeholder="Seleccione verificador" panelStyleClass="panel"
+          [style]="{ 'width': '100%' }" [(ngModel)]="selectedVerificador"
+          [ngClass]="{ 'border-red-600': (error && !selectedVerificador), 'border-gray-300': !(error && !selectedVerificador) }"></p-dropdown>
       </div>
 
       <!-- Datos de siniestro vial -->

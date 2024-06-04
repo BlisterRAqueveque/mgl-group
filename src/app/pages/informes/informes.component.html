@@ -20,7 +20,7 @@
     }
 
     @if(pericia?.informe) {
-    @if(!terminado && !admin) {
+    @if((!terminado && !admin) || user.superuser) {
     <div class="ml-3 cursor-pointer p-4 rounded-full bg-emerald-900 text-white mb-4 flex flex-row
           justify-center items-center shadow-lg shadow-gray-500/50" pRipple (click)="terminarInforme()">
       Enviar informe <ng-icon class="ml-2" name="heroDocumentCheckSolid" />

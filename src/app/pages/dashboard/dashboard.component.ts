@@ -13,6 +13,11 @@ import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { DashboardI } from '../../interfaces/dashboard.interface';
 import { RenderDirective } from '../../directives/render.directive';
 import { HttpParams } from '@angular/common/http';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import {
+  heroCalendarSolid,
+  heroUserCircleSolid,
+} from '@ng-icons/heroicons/solid';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,7 +29,9 @@ import { HttpParams } from '@angular/common/http';
     LottieComponent,
     CommonModule,
     RenderDirective,
+    NgIconComponent,
   ],
+  providers: [provideIcons({ heroCalendarSolid, heroUserCircleSolid })],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -56,6 +63,8 @@ export class DashboardComponent {
         console.log(e);
       },
     });
+
+    this.getInformeData();
   }
 
   getFormatDate(): string {
@@ -108,5 +117,50 @@ export class DashboardComponent {
 
   animationCreated(animationItem: AnimationItem): void {
     //console.log(animationItem);
+  }
+
+  cantidad = 10;
+  usuarios: UsuarioI[] = [];
+  getInformeData() {
+    const { lunes, domingo } = this.obtenerFechasLunesYDomingo();
+    let params = new HttpParams();
+    if (this.user.rol !== 'admin') {
+      params = params.set('usuario', this.user.id!);
+    }
+    console.log(lunes, domingo);
+    params = params.set('desde', lunes.toString());
+    params = params.set('hasta', domingo.toString());
+    this.dashboardService.getInformeData(params).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.cantidad = data.count;
+        this.usuarios = data.data;
+      },
+      error: (e) => {
+        console.log(e);
+      },
+    });
+  }
+
+  obtenerFechasLunesYDomingo(): { lunes: Date; domingo: Date } {
+    const fechaActual = new Date();
+    const diaActual = fechaActual.getDay(); // 0 (Domingo) a 6 (Sábado)
+    let offsetLunes = 0;
+    if (diaActual === 0) {
+      offsetLunes = -6; // Si es domingo, retrocede 6 días al lunes de esta semana
+    } else {
+      offsetLunes = 1 - diaActual; // Retrocede al lunes de esta semana
+    }
+
+    const lunes = new Date();
+    lunes.setDate(fechaActual.getDate() + offsetLunes);
+
+    const domingo = new Date(lunes);
+    while (domingo.getDay() !== 0) {
+      domingo.setDate(domingo.getDate() + 1);
+    }
+    domingo.setDate(domingo.getDate() + 1);
+
+    return { lunes, domingo };
   }
 }

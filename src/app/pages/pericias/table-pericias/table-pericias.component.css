@@ -38,3 +38,16 @@
 .warning {
   color: rgb(250, 141, 98);
 }
+:host ::ng-deep p-paginator#paginator .p-highlight {
+  position: relative; /* Agregamos posición relativa */
+  color: #1f2937;
+}
+:host ::ng-deep p-paginator#paginator .p-highlight::before {
+  content: "";
+  width: 25px;
+  height: 25px;
+  border-radius: 99999px;
+  border: solid #1f2937 3px;
+  position: absolute;
+  opacity: 90%;
+}
