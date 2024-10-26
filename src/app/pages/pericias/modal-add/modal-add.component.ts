@@ -102,7 +102,7 @@ export class ModalAddComponent {
         this.verificadores = data.verificadores;
       },
       error: (e) => {
-        console.log(e);
+        console.error(e);
       },
     });
   }
@@ -145,7 +145,6 @@ export class ModalAddComponent {
 
       this.cobertura = pericia.cobertura;
       this.hasCobertura = this.cobertura === null || this.cobertura === '';
-      console.log(this.hasAnio, this.hasCobertura, this.hasPoliza);
       if (this.tercerosContainer) this.initComponent(pericia.terceros);
     }
     this.visible = true;
@@ -370,7 +369,6 @@ export class ModalAddComponent {
 
   @Output() emitUpdatePericia = new EventEmitter<PericiaI>();
   update(pericia: PericiaI) {
-    console.log(pericia);
     this.dialog.loading = true;
     this.periciaService.update(this.pericia?.id!, pericia).subscribe({
       next: (data) => {
@@ -388,7 +386,7 @@ export class ModalAddComponent {
         );
       },
       error: (e) => {
-        console.log(e);
+        console.error(e);
         this.dialog.alertMessage(
           'Error de carga',
           'No se pudo editar la pericia, hubo un error de servidor.',
@@ -417,7 +415,7 @@ export class ModalAddComponent {
             );
           },
           error: (e) => {
-            console.log(e);
+            console.error(e);
             this.dialog.alertMessage(
               'Error de carga',
               'No se pudo editar la pericia, hubo un error de servidor.',

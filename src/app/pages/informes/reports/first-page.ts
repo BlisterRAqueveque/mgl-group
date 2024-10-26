@@ -5,7 +5,6 @@ import { FirstPage } from '../../../interfaces/pdf.interface';
 
 export const firstPage = async (firstPageI: FirstPage) => {
   const img = await imgToBase64Original(`${environment.webUrl}assets/logo.png`);
-  console.log(img);
   const content: Content = [
     {
       stack: [

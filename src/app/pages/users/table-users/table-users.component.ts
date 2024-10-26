@@ -72,7 +72,7 @@ export class TableUsersComponent {
         this.table.loading = false;
       },
       error: (e) => {
-        console.log(e);
+        console.error(e);
         this.table.loading = false;
       },
     });

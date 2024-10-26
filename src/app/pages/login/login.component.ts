@@ -53,7 +53,7 @@ export class LoginComponent {
       );
       this.dialog.loading = false;
     } catch (e: any) {
-      console.log(e);
+      console.error(e);
       switch (e.status) {
         case 401: {
           //! Acceso no autorizado.
@@ -143,7 +143,7 @@ export class LoginComponent {
                 );
               },
               error: (e) => {
-                console.log(e);
+                console.error(e);
                 this.dialog.alertMessage(
                   'Error de carga',
                   'Ocurrió un error al dar de alta la nueva contraseña. Intente mas tarde.',

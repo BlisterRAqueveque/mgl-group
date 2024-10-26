@@ -91,7 +91,7 @@ export class TablePericiasComponent {
       },
       error: (e) => {
         this.table.loading = false;
-        console.log(e);
+        console.error(e);
       },
     });
   }
@@ -201,24 +201,24 @@ export class TablePericiasComponent {
   async sendMessage(pericia: PericiaI) {
     if (pericia.abierta) {
       //* Revisamos el estado del dispositivo conectado
-      await this.checkDeviceStatus();
-      if (!this.connectionError) {
-        if (this.isDeviceConnected) {
-          this.confirmMessage(pericia);
-        } else {
-          //Se comienza el proceso de emparejamiento
-          this.websocketService.initSocket(); //* Conexión al servidor
-          this.receiveSocketResponse();
-          this.visible = true;
-        }
-      } else {
-        this.dialog.alertMessage(
-          'Error interno',
-          'Ocurrió un error al intentar conectarse al servidor.',
-          () => {},
-          true
-        );
-      }
+      // await this.checkDeviceStatus();
+      // if (!this.connectionError) {
+      // if (this.isDeviceConnected) {
+      this.confirmMessage(pericia);
+      // } else {
+      //   //Se comienza el proceso de emparejamiento
+      //   this.websocketService.initSocket(); //* Conexión al servidor
+      //   this.receiveSocketResponse();
+      //   this.visible = true;
+      // }
+      // } else {
+      //   this.dialog.alertMessage(
+      //     'Error interno',
+      //     'Ocurrió un error al intentar conectarse al servidor.',
+      //     () => {},
+      //     true
+      //   );
+      // }
     } else {
       this.dialog.alertMessage(
         'Pericia cerrada',
@@ -246,15 +246,21 @@ Tipo de siniestro: ${
     }.
 Vehículo: ${pericia.veh_asegurado ?? 'sin datos'}.
 Patente: ${pericia.patente_asegurado ?? 'sin datos'}.
-*¡Que tenga un excelente día!* 😁`;
+*¡Que tenga un excelente día!*`;
 
     this.dialog.confirm(
       'Confirmación',
       '¿Enviar mensaje con los datos al verificador?',
       () => {
-        this.whatsappService
-          .sendMessage('549' + pericia.verificador?.tel!, message)
-          .subscribe((data) => console.log(data));
+        window.open(
+          `https://wa.me/549${
+            pericia?.verificador?.tel
+          }?text=${encodeURIComponent(message)}`,
+          '_blank'
+        );
+        // this.whatsappService
+        //   .sendMessage('549' + pericia.verificador?.tel!, message)
+        //   .subscribe((data) => console.error(data));
       }
     );
   }
@@ -279,7 +285,7 @@ Patente: ${pericia.patente_asegurado ?? 'sin datos'}.
               );
             },
             error: (e) => {
-              console.log(e);
+              console.error(e);
               this.dialog.alertMessage(
                 'Error de carga',
                 'Ocurrió un error al intentar cambiar el estado.',

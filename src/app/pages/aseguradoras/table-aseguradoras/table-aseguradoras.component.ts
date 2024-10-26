@@ -62,7 +62,7 @@ export class TableAseguradorasComponent {
       },
       error: (e) => {
         this.table.loading = false;
-        console.log(e);
+        console.error(e);
       },
     });
   }

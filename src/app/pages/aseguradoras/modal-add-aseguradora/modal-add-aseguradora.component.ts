@@ -206,7 +206,7 @@ export class ModalAddAseguradoraComponent {
           );
         },
         error: (e) => {
-          console.log(e);
+          console.error(e);
           this.dialog.alertMessage(
             'Error de carga',
             'No se pudo editar la aseguradora, hubo un error de servidor.',
@@ -237,7 +237,7 @@ export class ModalAddAseguradoraComponent {
               );
             },
             error: (e) => {
-              console.log(e);
+              console.error(e);
               this.dialog.alertMessage(
                 'Error de carga',
                 'No se pudo editar la aseguradora, hubo un error de servidor.',
@@ -270,7 +270,7 @@ export class ModalAddAseguradoraComponent {
             );
           },
           error: (e) => {
-            console.log(e);
+            console.error(e);
             this.dialog.alertMessage(
               'Error de carga',
               'No se pudo eliminar la aseguradora, hubo un error de servidor.',

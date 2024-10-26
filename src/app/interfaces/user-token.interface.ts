@@ -33,6 +33,8 @@ export interface UsuarioI {
   aseguradora?: AseguradoraI[];
 
   informes?: InformeI[];
+
+  nombre_completo?: string;
 }
 
 export enum Roles {

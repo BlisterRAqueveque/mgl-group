@@ -125,7 +125,7 @@ export class InformesComponent {
             () => {},
             true
           );
-          console.log(e);
+          console.error(e);
         },
       });
     }
@@ -913,7 +913,7 @@ export class InformesComponent {
         );
       },
       error: (e) => {
-        console.log(e);
+        console.error(e);
         this.dialog.alertMessage(
           'Error de carga',
           'Ocurrió un error en la carga.',
@@ -1446,7 +1446,7 @@ export class InformesComponent {
             );
           },
           error: (e) => {
-            console.log(e);
+            console.error(e);
             this.dialog.alertMessage(
               'Error de carga',
               'Ocurrió un error en la carga.',
@@ -1461,7 +1461,7 @@ export class InformesComponent {
           this.informeService.update(this.pericia?.informe?.id!, formData)
         );
       } catch (error) {
-        console.log(error);
+        console.error(error);
         this.dialog.alertMessage(
           'Error de carga',
           'Ocurrió un error al intentar cerrar el informe.',
@@ -1690,7 +1690,6 @@ export class InformesComponent {
         const editedImages: AdjuntoI[] = [];
         if (t.tercero) {
           t.documents.forEach((img, index) => {
-            console.log(t.tercero, t.documents);
             //* Si la imagen fue editada
             if (img.id === 0) {
               formData.append(
@@ -1784,7 +1783,6 @@ export class InformesComponent {
             mail_tercero: t.email,
           });
         } else {
-          console.log(t.tercero);
           t.documents.forEach((img, index) => {
             formData.append(
               'files',
@@ -1828,7 +1826,6 @@ export class InformesComponent {
           });
         }
       });
-      console.log(terceros);
       return terceros;
     } else {
       return [];
@@ -1870,7 +1867,7 @@ export class InformesComponent {
             );
           },
           error: (e) => {
-            console.log(e);
+            console.error(e);
             this.dialog.alertMessage(
               'Error de carga',
               'Ocurrió un error al intentar cerrar el informe.',
@@ -1880,7 +1877,7 @@ export class InformesComponent {
           },
         });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.dialog.alertMessage(
         'Error de carga',
         'Ocurrió un error al intentar cerrar el informe.',
@@ -2388,7 +2385,7 @@ export class InformesComponent {
             );
           },
           error: (e) => {
-            console.log(e);
+            console.error(e);
             this.dialog.alertMessage(
               'Error de carga',
               'Ocurrió un error en la carga.',
@@ -2403,7 +2400,7 @@ export class InformesComponent {
           this.informeService.update(this.pericia?.informe?.id!, formData)
         );
       } catch (error) {
-        console.log(error);
+        console.error(error);
         this.dialog.alertMessage(
           'Error de carga',
           'Ocurrió un error al intentar cerrar el informe.',

@@ -241,7 +241,7 @@ export class ModalAddUsersComponent {
           );
         },
         error: (e) => {
-          console.log(e);
+          console.error(e);
           this.dialog.alertMessage(
             'Error de carga',
             'No se pudo editar el asesor, hubo un error de servidor.',
@@ -270,7 +270,7 @@ export class ModalAddUsersComponent {
             );
           },
           error: (e) => {
-            console.log(e);
+            console.error(e);
             this.dialog.alertMessage(
               'Error de carga',
               'No se pudo editar el asesor, hubo un error de servidor.',
@@ -302,7 +302,7 @@ export class ModalAddUsersComponent {
               );
             },
             error: (e) => {
-              console.log(e);
+              console.error(e);
               this.dialog.alertMessage(
                 'Error de carga.',
                 'Ocurrió un error en la carga. Intente nuevamente.'

@@ -1,21 +1,20 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UserWithToken } from '../../interfaces/user-token.interface';
+import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import {
   BehaviorSubject,
   EMPTY,
   catchError,
   firstValueFrom,
-  ignoreElements,
   map,
   of,
   switchMap,
   take,
-  tap,
+  tap
 } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { CookieService } from 'ngx-cookie-service';
-import { Router } from '@angular/router';
+import { UserWithToken } from '../../interfaces/user-token.interface';
 import { handleError } from '../../tools/tools';
 
 const USER_COOKIE_KEY = 'x-token';

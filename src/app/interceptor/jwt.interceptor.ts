@@ -23,8 +23,17 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   //! And send to the server
   return next(req).pipe(
     catchError((e) => {
+      console.error(e);
       const CODES = [401, 403];
-      if (CODES.includes(e.status)) {
+      const response = e.error;
+      if (
+        CODES.includes(e.status) &&
+        (response
+          ? response.message.toLowerCase() !== 'not found' &&
+            response.message.toLowerCase() !== 'wrong credentials' &&
+            response.message.toLowerCase() !== 'server error'
+          : true)
+      ) {
         auth.logout();
       }
       return throwError(() => e);

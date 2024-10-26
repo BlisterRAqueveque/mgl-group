@@ -202,7 +202,7 @@ export class ModalAddSiniestroComponent {
         );
       },
       error: (e) => {
-        console.log(e);
+        console.error(e);
         this.dialog.alertMessage(
           'Error de carga',
           'No se pudo editar el siniestro, hubo un error de servidor.',
@@ -231,7 +231,7 @@ export class ModalAddSiniestroComponent {
             );
           },
           error: (e) => {
-            console.log(e);
+            console.error(e);
             this.dialog.alertMessage(
               'Error de carga',
               'No se pudo editar el siniestro, hubo un error de servidor.',
@@ -264,7 +264,7 @@ export class ModalAddSiniestroComponent {
             );
           },
           error: (e) => {
-            console.log(e);
+            console.error(e);
             this.dialog.alertMessage(
               'Error de carga',
               'No se pudo eliminar el siniestro, hubo un error de servidor.',

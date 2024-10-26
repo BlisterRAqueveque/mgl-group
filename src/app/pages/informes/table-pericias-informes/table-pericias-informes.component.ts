@@ -69,7 +69,7 @@ export class TablePericiasInformesComponent {
       },
       error: (e) => {
         this.table.loading = false;
-        console.log(e);
+        console.error(e);
       },
     });
   }

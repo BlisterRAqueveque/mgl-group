@@ -60,7 +60,7 @@ export class DashboardComponent {
         this.dashboard = data;
       },
       error: (e) => {
-        console.log(e);
+        console.error(e);
       },
     });
 
@@ -116,7 +116,7 @@ export class DashboardComponent {
   };
 
   animationCreated(animationItem: AnimationItem): void {
-    //console.log(animationItem);
+    //console.error(animationItem);
   }
 
   cantidad = 10;
@@ -127,17 +127,15 @@ export class DashboardComponent {
     if (this.user.rol !== 'admin') {
       params = params.set('usuario', this.user.id!);
     }
-    console.log(lunes, domingo);
     params = params.set('desde', lunes.toString());
     params = params.set('hasta', domingo.toString());
     this.dashboardService.getInformeData(params).subscribe({
       next: (data) => {
-        console.log(data);
         this.cantidad = data.count;
         this.usuarios = data.data;
       },
       error: (e) => {
-        console.log(e);
+        console.error(e);
       },
     });
   }
